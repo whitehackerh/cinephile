@@ -1,0 +1,31 @@
+# --- env ---
+*.env
+
+# --- Rust ---
+/server/target/
+
+# --- Node.js / Next.js ---
+/client/node_modules/
+/client/.next/
+/client/out/
+/client/build/
+/client/.pnp
+/client/.pnp.*
+/client/.yarn/*
+!/client/.yarn/patches
+!/client/.yarn/plugins
+!/client/.yarn/releases
+!/client/.yarn/versions
+/client/coverage/
+/client/.vercel
+/client/*.tsbuildinfo
+/client/next-env.d.ts
+
+# --- DB ---
+/postgres_data/
+
+# --- other ---
+**/*.log*
+.DS_Store
+Thumbs.db
+*.pem
