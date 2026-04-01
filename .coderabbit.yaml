@@ -1,0 +1,24 @@
+language: "ja-JP"
+
+reviews:
+  profile: "assertive"
+  high_level_summary: true
+  instructions: >
+    あなたはフルスタックエンジニアとしてレビューしてください。
+    
+    【Rust (server)】
+    - 所有権、ライフタイムの扱いが適切か。
+    - Clean Architectureの各レイヤーの依存関係が正しいか。
+    
+    【Next.js (client)】
+    - コンポーネントの分割が適切か。
+    - TypeScriptの型定義が疎かになっていないか。
+    
+    【共通】
+    - APIキーやDB接続情報などの機密情報がハードコードされていないか厳重にチェックしてください。
+
+  path_filters:
+    - "!**/target/**"
+    - "!**/node_modules/**"
+    - "!**/.next/**"
+    - "!**/*.lock"
