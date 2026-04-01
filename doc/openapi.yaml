@@ -1,0 +1,53 @@
+openapi: 3.1.0
+info:
+  title: Cinephile API
+  version: 1.0.0
+  description: API for managing viewing history for movies and TV series
+
+servers:
+  - url: http://localhost:8000/API
+    description: Local development server
+
+paths:
+  /signup:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user
+      description: Register a new User
+      operationId: signUp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+      responses:
+        '201':
+          description: User Created successfully. No content returned.
+        '400':
+          description: Invalid input data.
+        '409':
+          description: Email address already exists.
+
+components:
+  schemas:
+    SignUpRequest:
+      type: object
+      required:
+        - email
+        - password
+        - name
+      properties:
+        email:
+          type: string
+          format: email
+          example: "user@example.com"
+        password:
+          type: string
+          format: password
+          writeOnly: true
+          exapmle: "password"
+        name:
+          type: string
+          example: "John Doe"
