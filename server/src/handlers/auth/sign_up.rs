@@ -1,15 +1,18 @@
 use axum::{
     extract::State,
-    http::StatusCode,
+    http::{StatusCode, Uri},
     response::IntoResponse,
     Json,
 };
 use std::sync::Arc;
+use serde_json::{json, Value};
 use crate::usecases::dto::SignUpInput;
 use crate::usecases::port::sign_up::SignUpUseCase;
 use crate::handlers::auth::schema::SignUpRequest;
+use crate::handlers::schema::ApiResponse;
 
 pub async fn signup_handler(
+    uri: Uri,
     State(usecase): State<Arc<dyn SignUpUseCase + Send + Sync>>,
     Json(payload): Json<SignUpRequest>,
 ) -> impl IntoResponse {
@@ -19,10 +22,8 @@ pub async fn signup_handler(
         password: payload.password,
     };
 
-    let result = usecase.execute(input).await;
-
-    match result {
-        Ok(_) => (StatusCode::CREATED).into_response(),
-        Err(e) => e.into_response(),
+    match usecase.execute(input).await {
+        Ok(_) => (StatusCode::CREATED, Json(ApiResponse::<Value>::success(uri.to_string(), json!({})))).into_response(),
+        Err(e) => ApiResponse::<Value>::from_error(&uri, e).into_response(),
     }
 }

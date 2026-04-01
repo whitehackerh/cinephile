@@ -5,7 +5,7 @@ info:
   description: API for managing viewing history for movies and TV series
 
 servers:
-  - url: http://localhost:8000/API
+  - url: http://localhost:8080/api
     description: Local development server
 
 paths:
@@ -25,13 +25,52 @@ paths:
       responses:
         '201':
           description: User Created successfully. No content returned.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        type: object
         '400':
           description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         '409':
           description: Email address already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
 
 components:
   schemas:
+    ApiResponse:
+      type: object
+      properties:
+        uri:
+          type: string
+          example: "/api/signup"
+        timestamp:
+          type: string
+          format: date-time
+        data:
+          type: object
+          nullable: true
+        error:
+          $ref: '#/components/schemas/ApiErrorDetail'
+
+    ApiErrorDetail:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+
     SignUpRequest:
       type: object
       required:
@@ -47,7 +86,7 @@ components:
           type: string
           format: password
           writeOnly: true
-          exapmle: "password"
+          example: "password"
         name:
           type: string
           example: "John Doe"
