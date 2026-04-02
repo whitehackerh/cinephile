@@ -105,6 +105,7 @@ components:
       content:
         application/json:
           schema:
+            $ref: '#/components/schemas/ApiResponse'
 
     Error.InternalServer:
       description: Internal Server Error

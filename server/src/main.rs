@@ -1,11 +1,9 @@
-use axum::{Router};
 use std::env;
-use serde_json::json;
 use std::net::SocketAddr;
 use sqlx::postgres::PgPoolOptions;
 use tower_http::services::ServeDir;
 use utoipa_swagger_ui::{SwaggerUi, Config};
-use server::{AppRegistry, AppState};
+use server::AppRegistry;
 use server::infrastructure::ui::router::create_router;
 
 #[tokio::main]
