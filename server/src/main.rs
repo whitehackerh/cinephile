@@ -21,7 +21,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .await?;
     let shared_state = AppRegistry::build(pool).await;
 
-    let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
+    let listener = tokio::net::TcpListener::bind(addr).await?;
 
     let app = create_router(shared_state)
         .merge(SwaggerUi::new("/swagger-ui")

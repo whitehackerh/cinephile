@@ -42,18 +42,11 @@ impl<T> ApiResponse<T> {
     }
 
     pub fn from_error(uri: &Uri, err: AppError) -> (StatusCode, Json<ApiResponse<Value>>) {
-        let status = match err {
-            AppError::EntityNotFound(_) => StatusCode::NOT_FOUND,
-            AppError::AlreadyExists(_) => StatusCode::CONFLICT,
-            AppError::Validation(_) => StatusCode::BAD_REQUEST,
-            AppError::Infrastructure(_) => StatusCode::INTERNAL_SERVER_ERROR,
-        };
-
-        let code = match err {
-            AppError::EntityNotFound(_) => "NOT_FOUND",
-            AppError::AlreadyExists(_) => "ALREADY_EXISTS",
-            AppError::Validation(_) => "VALIDATION_ERROR",
-            AppError::Infrastructure(_) => "INTERNAL_SERVER_ERROR",
+        let (status, code) = match &err {
+            AppError::EntityNotFound(_) => (StatusCode::NOT_FOUND, "NOT_FOUND"),
+            AppError::AlreadyExists(_) => (StatusCode::CONFLICT, "ALREADY_EXISTS"),
+            AppError::Validation(_) => (StatusCode::BAD_REQUEST, "VALIDATION_ERROR"),
+            AppError::Infrastructure(_) => (StatusCode::INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR"),
         };
 
         (status, Json(ApiResponse::<Value>::error(
