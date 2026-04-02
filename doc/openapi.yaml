@@ -1,0 +1,115 @@
+openapi: 3.1.0
+info:
+  title: Cinephile API
+  version: 1.0.0
+  description: API for managing viewing history for movies and TV series
+
+servers:
+  - url: http://localhost:8080/api
+    description: Local development server
+
+paths:
+  /signup:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user
+      description: Register a new User
+      operationId: signUp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+      responses:
+        '201':
+          description: User Created successfully. No content returned.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        type: object
+        '400':
+          $ref: '#/components/responses/Error.BadRequest'
+        '409':
+          $ref: '#/components/responses/Error.Conflict'
+        '500':
+          $ref: '#/components/responses/Error.InternalServer'
+
+components:
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        uri:
+          type: string
+          example: "/api/signup"
+        timestamp:
+          type: string
+          format: date-time
+        data:
+          type: object
+          nullable: true
+        error:
+          $ref: '#/components/schemas/ApiErrorDetail'
+
+    ApiErrorDetail:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+
+    SignUpRequest:
+      type: object
+      required:
+        - email
+        - password
+        - name
+      properties:
+        email:
+          type: string
+          format: email
+          example: "user@example.com"
+        password:
+          type: string
+          format: password
+          writeOnly: true
+          example: "password"
+        name:
+          type: string
+          example: "John Doe"
+
+  responses:
+    Error.BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+
+    Error.Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+
+    Error.Conflict:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+
+    Error.InternalServer:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'

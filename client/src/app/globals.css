@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gold: #d4af37;
+  --color-cinema-black: #050505;
+}
+
+:root {
+  background-color: var(--color-cinema-black);
+  color: #e5e7eb;
+}
+
+body {
+  @apply min-h-screen;
+}

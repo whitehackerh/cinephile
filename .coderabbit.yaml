@@ -1,0 +1,23 @@
+language: "ja-JP"
+
+tone_instructions: >
+  あなたはフルスタックエンジニアとしてレビューしてください。
+  APIキーやDB接続情報などの機密情報がハードコードされていないか厳重にチェックしてください。
+
+reviews:
+  profile: "assertive"
+  high_level_summary: true
+  path_instructions:
+    - path: "server/**/*.rs"
+      instructions: |
+        所有権、ライフタイムの扱いが適切か。不必要な .clone() がないか。
+        Clean Architectureの各レイヤーの依存関係が正しいか。
+    - path: "client/**/*.{ts,tsx}"
+      instructions: |
+        コンポーネントの分割が適切か。
+        TypeScriptの型定義が疎かになっていないか。
+  path_filters:
+    - "!**/target/**"
+    - "!**/node_modules/**"
+    - "!**/.next/**"
+    - "!**/*.lock"
