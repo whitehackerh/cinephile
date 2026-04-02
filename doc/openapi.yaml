@@ -34,11 +34,11 @@ paths:
                       data:
                         type: object
         '400':
-          $ref: '#/components/responses/BadRequestError'
+          $ref: '#/components/responses/Error.BadRequest'
         '409':
-          $ref: '#/components/responses/ConflictError'
+          $ref: '#/components/responses/Error.Conflict'
         '500':
-          $ref: '#/components/responses/InternalServerError'
+          $ref: '#/components/responses/Error.InternalServer'
 
 components:
   schemas:
@@ -102,6 +102,12 @@ components:
 
     Error.Conflict:
       description: Conflict
+      content:
+        application/json:
+          schema:
+
+    Error.InternalServer:
+      description: Internal Server Error
       content:
         application/json:
           schema:

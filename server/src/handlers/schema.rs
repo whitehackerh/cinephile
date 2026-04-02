@@ -49,10 +49,15 @@ impl<T> ApiResponse<T> {
             AppError::Infrastructure(_) => (StatusCode::INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR"),
         };
 
+        let message = match &err {
+            AppError::Infrastructure(_) => "Internal server error".to_string(),
+            _ => err.to_string(),
+        };
+
         (status, Json(ApiResponse::<Value>::error(
             uri.to_string(),
             code,
-            &err.to_string()
+            &message
         )))
     }
 }
