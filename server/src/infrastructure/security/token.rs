@@ -6,13 +6,13 @@ use uuid::Uuid;
 use crate::usecases::security::token::TokenManager;
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Claims {
+pub(crate) struct Claims {
     pub sub: String,
     pub iat: u64,
     pub exp: u64,
 }
 
-pub struct JwtTokenManager {
+pub(crate) struct JwtTokenManager {
     secret: String,
 }
 

@@ -6,7 +6,7 @@ use chrono::{DateTime, Utc};
 use crate::domain::errors::AppError;
 
 #[derive(Serialize)]
-pub struct ApiResponse<T> {
+pub(crate) struct ApiResponse<T> {
     pub uri: String,
     pub timestamp: DateTime<Utc>,
     pub data: Option<T>,
@@ -14,7 +14,7 @@ pub struct ApiResponse<T> {
 }
 
 #[derive(Serialize)]
-pub struct ApiErrorDetail {
+pub(crate) struct ApiErrorDetail {
     pub code: String,
     pub message: String,
 }

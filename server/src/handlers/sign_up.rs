@@ -12,7 +12,7 @@ use crate::usecases::port::sign_up::SignUpUseCase;
 use crate::handlers::base_response::ApiResponse;
 
 #[derive(Deserialize)]
-pub struct SignUpRequest {
+pub(crate) struct SignUpRequest {
     pub name: String,
     pub email: String,
     pub password: String,

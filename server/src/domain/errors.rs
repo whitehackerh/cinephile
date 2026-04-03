@@ -1,7 +1,7 @@
 use thiserror::Error;
 
 #[derive(Debug, Error, Clone)]
-pub enum AppError {
+pub(crate) enum AppError {
     #[error("Entity not found: {0}")]
     EntityNotFound(String),
 

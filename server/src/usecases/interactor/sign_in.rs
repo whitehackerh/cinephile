@@ -8,7 +8,7 @@ use crate::usecases::repository::user::UserRepository;
 use crate::usecases::security::password::PasswordManager;
 use crate::usecases::security::token::TokenManager;
 
-pub struct SignInInteractor {
+pub(crate) struct SignInInteractor {
     user_repository: Arc<dyn UserRepository + Send + Sync>,
     token_manager: Arc<dyn TokenManager>,
     password_manager: Arc<dyn PasswordManager>,

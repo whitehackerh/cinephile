@@ -3,7 +3,7 @@ use sqlx::PgPool;
 use crate::domain::entities::user::User;
 use crate::usecases::repository::user::UserRepository;
 
-pub struct PostgresUserRepository {
+pub(crate) struct PostgresUserRepository {
     pool: PgPool,
 }
 

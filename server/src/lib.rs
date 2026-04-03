@@ -1,6 +1,6 @@
-pub mod domain;
-pub mod usecases;
-pub mod handlers;
+pub(crate) mod domain;
+pub(crate) mod usecases;
+pub(crate) mod handlers;
 pub mod infrastructure;
 
 use std::sync::Arc;

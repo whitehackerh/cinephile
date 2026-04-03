@@ -4,8 +4,7 @@ use sqlx::postgres::PgPoolOptions;
 use tower_http::services::ServeDir;
 use tower_http::cors::{Any, CorsLayer};
 use utoipa_swagger_ui::{SwaggerUi, Config};
-use server::AppRegistry;
-use server::infrastructure::ui::router::create_router;
+use server::{AppRegistry, infrastructure::ui::router::create_router};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {

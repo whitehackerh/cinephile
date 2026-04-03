@@ -9,7 +9,7 @@ use crate::usecases::port::sign_up::SignUpUseCase;
 use crate::usecases::repository::user::UserRepository;
 use crate::usecases::security::password::PasswordManager;
 
-pub struct SignUpInteractor {
+pub(crate) struct SignUpInteractor {
     user_repository: Arc<dyn UserRepository + Send + Sync>,
     password_manager: Arc<dyn PasswordManager>,
 }

@@ -3,7 +3,7 @@ use argon2::{
     Argon2,
 };
 use crate::usecases::security::password::PasswordManager as PasswordManagerTrait;
-pub struct PasswordManager;
+pub(crate) struct PasswordManager;
 
 impl PasswordManager {
     pub fn new() -> Self {

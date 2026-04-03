@@ -1,8 +1,8 @@
-pub struct SignInInput {
+pub(crate) struct SignInInput {
     pub email: String,
     pub password: String,
 }
 
-pub struct SignInOutput {
+pub(crate) struct SignInOutput {
     pub token: String
 }

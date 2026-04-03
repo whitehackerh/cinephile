@@ -1,4 +1,4 @@
-pub struct SignUpInput {
+pub(crate) struct SignUpInput {
     pub name: String,
     pub email: String,
     pub password: String,

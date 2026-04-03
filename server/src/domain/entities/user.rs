@@ -2,7 +2,7 @@ use uuid::Uuid;
 use crate::domain::errors::AppError;
 
 #[derive(Debug, Clone)]
-pub struct User {
+pub(crate) struct User {
     id: Uuid,
     name: String,
     email: String,
