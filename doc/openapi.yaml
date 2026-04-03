@@ -133,6 +133,7 @@ components:
         password:
           type: string
           format: password
+          writeOnly: true
           example: "password"
 
   responses:
