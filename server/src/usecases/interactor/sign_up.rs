@@ -4,18 +4,22 @@ use uuid::Uuid;
 
 use crate::domain::errors::AppError;
 use crate::domain::entities::user::User;
-use crate::infrastructure::security::password::PasswordManager;
-use crate::usecases::dto::SignUpInput;
+use crate::usecases::dto::sign_up::SignUpInput;
 use crate::usecases::port::sign_up::SignUpUseCase;
 use crate::usecases::repository::user::UserRepository;
+use crate::usecases::security::password::PasswordManager;
 
 pub struct SignUpInteractor {
     user_repository: Arc<dyn UserRepository + Send + Sync>,
+    password_manager: Arc<dyn PasswordManager>,
 }
 
 impl SignUpInteractor {
-    pub fn new(user_repository: Arc<dyn UserRepository + Send + Sync>) -> Self {
-        Self { user_repository }
+    pub fn new(
+        user_repository: Arc<dyn UserRepository + Send + Sync>,
+        password_manager: Arc<dyn PasswordManager>,
+    ) -> Self {
+        Self { user_repository, password_manager }
     }
 }
 
@@ -30,7 +34,7 @@ impl SignUpUseCase for SignUpInteractor {
             return Err(AppError::AlreadyExists("Email already taken".into()));
         }
 
-        let hashed_password = PasswordManager::hash(&input.password)
+        let hashed_password =self.password_manager.hash(&input.password)
             .map_err(|e| AppError::Infrastructure(e.into()))?;
 
         let user = User::new(

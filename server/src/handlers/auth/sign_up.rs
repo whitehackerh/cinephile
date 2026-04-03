@@ -6,7 +6,7 @@ use axum::{
 };
 use std::sync::Arc;
 use serde_json::{json, Value};
-use crate::usecases::dto::SignUpInput;
+use crate::usecases::dto::sign_up::SignUpInput;
 use crate::usecases::port::sign_up::SignUpUseCase;
 use crate::handlers::auth::schema::SignUpRequest;
 use crate::handlers::schema::ApiResponse;

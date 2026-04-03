@@ -1,6 +1,6 @@
 use async_trait::async_trait;
 use crate::domain::errors::AppError;
-use crate::usecases::dto::SignUpInput;
+use crate::usecases::dto::sign_up::SignUpInput;
 
 #[async_trait]
 pub trait SignUpUseCase: Send + Sync {

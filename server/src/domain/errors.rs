@@ -1,6 +1,6 @@
 use thiserror::Error;
 
-#[derive(Debug, Error, Clone)] // Cloneがあると扱いやすいです
+#[derive(Debug, Error, Clone)]
 pub enum AppError {
     #[error("Entity not found: {0}")]
     EntityNotFound(String),
@@ -13,4 +13,7 @@ pub enum AppError {
 
     #[error("Infrastructure error: {0}")]
     Infrastructure(String),
+
+    #[error("Unauthorized: {0}")]
+    Unauthorized(String),
 }

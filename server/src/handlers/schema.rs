@@ -47,6 +47,7 @@ impl<T> ApiResponse<T> {
             AppError::AlreadyExists(_) => (StatusCode::CONFLICT, "ALREADY_EXISTS"),
             AppError::Validation(_) => (StatusCode::BAD_REQUEST, "VALIDATION_ERROR"),
             AppError::Infrastructure(_) => (StatusCode::INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR"),
+            AppError::Unauthorized(_) => (StatusCode::UNAUTHORIZED, "UNAUTHORIZED"),
         };
 
         let message = match &err {
