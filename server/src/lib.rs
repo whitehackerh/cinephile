@@ -17,12 +17,12 @@ use crate::usecases::security::password::PasswordManager as PasswordManagerTrait
 use crate::usecases::security::token::TokenManager;
 
 pub struct AppRegistry {
-    pub signup_usecase: Arc<dyn SignUpUseCase + Send + Sync>,
-    pub signin_usecase: Arc<dyn SignInUseCase + Send + Sync>,
+    pub(crate) signup_usecase: Arc<dyn SignUpUseCase + Send + Sync>,
+    pub(crate) signin_usecase: Arc<dyn SignInUseCase + Send + Sync>,
 }
 
 #[derive(Clone)]
-pub struct AppState(pub Arc<AppRegistry>);
+pub(crate) struct AppState(pub Arc<AppRegistry>);
 
 impl AppRegistry {
     pub async fn build(pool: PgPool) -> Arc<Self> {
