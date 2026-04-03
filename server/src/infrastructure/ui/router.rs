@@ -2,8 +2,8 @@ use axum::{routing::{get, post}, Router, middleware::from_fn_with_state};
 use std::sync::Arc;
 use crate::AppRegistry;
 use crate::AppState;
-use crate::handlers::auth::sign_up::signup_handler;
-use crate::handlers::auth::sign_in::signin_handler;
+use crate::handlers::sign_up::signup_handler;
+use crate::handlers::sign_in::signin_handler;
 // use crate::infrastructure::middleware::auth_guard;
 
 pub fn create_router(registry: Arc<AppRegistry>) -> Router {

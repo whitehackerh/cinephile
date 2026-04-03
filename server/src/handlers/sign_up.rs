@@ -8,8 +8,8 @@ use std::sync::Arc;
 use serde_json::{json, Value};
 use crate::usecases::dto::sign_up::SignUpInput;
 use crate::usecases::port::sign_up::SignUpUseCase;
-use crate::handlers::auth::schema::SignUpRequest;
-use crate::handlers::schema::ApiResponse;
+use crate::handlers::schema::sign_up::SignUpRequest;
+use crate::handlers::schema::base_response::ApiResponse;
 
 pub async fn signup_handler(
     uri: Uri,
