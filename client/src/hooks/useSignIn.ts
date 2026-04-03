@@ -1,43 +1,33 @@
 import { useState } from 'react';
 import { AxiosError } from 'axios';
 import { apiService } from '@/service/api';
-import { signUpSchema } from '@/lib/validations/auth';
+import { signInSchema } from '@/lib/validations/auth';
 import { ApiResponse } from '@/types/api';
 import { useRouter } from 'next/navigation';
 
-export const useSignUp = () => {
+export const useSignIn = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const router = useRouter();
 
-  const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
-    // 状態のリセット
     setIsSubmitting(true);
     setErrors([]);
 
-    // フォームデータの抽出
     const formData = new FormData(event.currentTarget);
     const data = Object.fromEntries(formData.entries());
 
-    // 1. Zodによるバリデーション実行
-    const result = signUpSchema.safeParse(data);
-
-    // バリデーション失敗時の処理
+    const result = signInSchema.safeParse(data);
     if (!result.success) {
-      // ZodErrorの型定義に合わせ、flatten() または issues からメッセージを抽出
       const fieldErrors = result.error.flatten().fieldErrors;
-      const errorMessages = Object.values(fieldErrors).flat().filter(Boolean) as string[];
-      
-      setErrors(errorMessages.map(msg => msg.toUpperCase()));
+      setErrors(Object.values(fieldErrors).flat().map(msg => msg!.toUpperCase()));
       setIsSubmitting(false);
       return;
     }
 
-    // 2. API Request
     try {
-      const response = await apiService.signUp(result.data)
+      const response = await apiService.signIn(result.data);
 
       if (response.data) {
         router.push('/');
@@ -45,17 +35,12 @@ export const useSignUp = () => {
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse<null>>;
       const serverError = axiosError.response?.data?.error;
-      const fallbackMsg = 'CONNECTION ERROR TO SERVER';
-      
+      const fallbackMsg = 'INVALID EMAIL OR PASSWORD';
       setErrors([(serverError?.message || fallbackMsg).toUpperCase()]);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  return {
-    handleSignUp,
-    isSubmitting,
-    errors
-  };
+  return { handleSignIn, isSubmitting, errors };
 };
