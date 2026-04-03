@@ -39,6 +39,42 @@ paths:
           $ref: '#/components/responses/Error.Conflict'
         '500':
           $ref: '#/components/responses/Error.InternalServer'
+  /signin:
+    post:
+      tags:
+        - Authentication
+      summary: SignIn
+      description: Authenticate user and return a token in the header
+      operationId: signIn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignInRequest'
+      responses:
+        '200':
+          description: SignIn successfully. Token returned in Authorization header.
+          headers:
+            Authorization:
+              description: "Bearer {created token}"
+              schema:
+                type: string
+                example: "Bearer abcdefg123..."
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        type: object
+        '400':
+          $ref: '#/components/responses/Error.BadRequest'
+        '401':
+          $ref: '#/components/responses/Error.Unauthorized'
+        '500':
+          $ref: '#/components/responses/Error.InternalServer'
 
 components:
   schemas:
@@ -84,6 +120,21 @@ components:
         name:
           type: string
           example: "John Doe"
+    SignInRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "user@example.com"
+        password:
+          type: string
+          format: password
+          writeOnly: true
+          example: "password"
 
   responses:
     Error.BadRequest:

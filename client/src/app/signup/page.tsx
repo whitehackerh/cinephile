@@ -3,7 +3,7 @@ import { useSignUp } from '@/hooks/useSignUp';
 
 export default function SignUpPage() {
   // message ではなく、errors と success を受け取るように修正
-  const { handleSignUp, isSubmitting, errors, success } = useSignUp();
+  const { handleSignUp, isSubmitting, errors } = useSignUp();
 
   return (
     <div className="max-w-sm mx-auto space-y-16 py-12">
@@ -34,13 +34,6 @@ export default function SignUpPage() {
         <button type="submit" disabled={isSubmitting} className="w-full bg-gold text-black py-5 text-[10px] font-bold uppercase tracking-[0.5em] hover:brightness-110 disabled:opacity-50 transition-all cursor-pointer">
           {isSubmitting ? 'Processing...' : 'Create Account'}
         </button>
-
-        {/* 成功時の表示 */}
-        {success && (
-          <p className="text-[10px] text-green-500 text-center tracking-[0.2em] uppercase">
-            Account created successfully.
-          </p>
-        )}
 
         {/* エラー時の表示（errors配列をループで回す） */}
         {errors.length > 0 && (

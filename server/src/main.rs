@@ -23,7 +23,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cors = CorsLayer::new()
         .allow_origin("http://localhost:3000".parse::<axum::http::HeaderValue>().unwrap())
         .allow_methods([axum::http::Method::GET, axum::http::Method::POST, axum::http::Method::OPTIONS])
-        .allow_headers([axum::http::header::CONTENT_TYPE]);
+        .allow_headers([axum::http::header::CONTENT_TYPE, axum::http::header::AUTHORIZATION])
+        .expose_headers([axum::http::header::AUTHORIZATION]);
 
     let listener = tokio::net::TcpListener::bind(addr).await?;
 
