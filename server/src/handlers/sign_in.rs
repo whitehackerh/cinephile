@@ -4,12 +4,18 @@ use axum::{
     response::IntoResponse,
     Json,
 };
+use serde::Deserialize;
 use std::sync::Arc;
 use serde_json::{json, Value};
 use crate::usecases::dto::sign_in::SignInInput;
 use crate::usecases::port::sign_in::SignInUseCase;
-use crate::handlers::schema::sign_in::SignInRequest;
-use crate::handlers::schema::base_response::ApiResponse;
+use crate::handlers::base_response::ApiResponse;
+
+#[derive(Deserialize)]
+pub struct SignInRequest {
+    pub email: String,
+    pub password: String,
+}
 
 pub async fn signin_handler(
     uri: Uri,

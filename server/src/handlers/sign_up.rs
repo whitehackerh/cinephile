@@ -4,12 +4,19 @@ use axum::{
     response::IntoResponse,
     Json,
 };
+use serde::Deserialize;
 use std::sync::Arc;
 use serde_json::{json, Value};
 use crate::usecases::dto::sign_up::SignUpInput;
 use crate::usecases::port::sign_up::SignUpUseCase;
-use crate::handlers::schema::sign_up::SignUpRequest;
-use crate::handlers::schema::base_response::ApiResponse;
+use crate::handlers::base_response::ApiResponse;
+
+#[derive(Deserialize)]
+pub struct SignUpRequest {
+    pub name: String,
+    pub email: String,
+    pub password: String,
+}
 
 pub async fn signup_handler(
     uri: Uri,
