@@ -10,11 +10,9 @@ export const signUpSchema = z.object({
 
 export type SignUpRequest = z.infer<typeof signUpSchema>;
 
-export const signInSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z
-    .string()
-    .min(1, 'Password is required')
+export const signInSchema = signUpSchema.pick({
+  email: true,
+  password: true,
 });
 
 export type SignInRequest = z.infer<typeof signInSchema>;

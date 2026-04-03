@@ -32,7 +32,9 @@ authClient.interceptors.response.use(
     if (error.response?.status === 401) {
       if (typeof window !== 'undefined') {
         localStorage.removeItem('auth_token');
-        window.location.href = '/signin';
+        if (window.location.pathname !== '/signin') {
+          window.location.href = '/signin';
+        }
       }
     }
     return Promise.reject(error);
