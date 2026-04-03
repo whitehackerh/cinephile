@@ -61,6 +61,14 @@ paths:
               schema:
                 type: string
                 example: "Bearer abcdefg123..."
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - properties:
+                      data:
+                        type: object
         '400':
           $ref: '#/components/responses/Error.BadRequest'
         '401':
