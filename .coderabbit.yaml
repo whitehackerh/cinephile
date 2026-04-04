@@ -1,12 +1,18 @@
 language: "ja-JP"
 
 tone_instructions: >
-  あなたはフルスタックエンジニアとしてレビューしてください。
-  APIキーやDB接続情報などの機密情報がハードコードされていないか厳重にチェックしてください。
+  あなたはシニアフルスタックエンジニア、およびシステムアーキテクトとしてレビューしてください。
+  APIキーやDB接続情報などの機密情報のチェックはもちろん、システム全体の設計、スケーラビリティ、長期的な保守性についても洞察を提供してください。
 
 reviews:
   profile: "assertive"
   high_level_summary: true
+  sequence_diagrams: true
+  high_level_summary_in_walkthrough: true
+  review_details: true
+  related_issues: true
+  related_prs: true
+  estimate_code_review_effort: true
   path_instructions:
     - path: "server/**/*.rs"
       instructions: |
