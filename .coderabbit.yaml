@@ -1,17 +1,24 @@
 language: "ja-JP"
 
 tone_instructions: >
-  あなたはフルスタックエンジニアとしてレビューしてください。
-  APIキーやDB接続情報などの機密情報がハードコードされていないか厳重にチェックしてください。
+  あなたはシニアフルスタックエンジニア、およびシステムアーキテクトとしてレビューしてください。
+  APIキーやDB接続情報などの機密情報のチェックはもちろん、システム全体の設計、スケーラビリティ、長期的な保守性についても洞察を提供してください。
 
 reviews:
   profile: "assertive"
   high_level_summary: true
+  sequence_diagrams: true
+  high_level_summary_in_walkthrough: true
+  review_details: true
+  related_issues: true
+  related_prs: true
+  estimate_code_review_effort: true
   path_instructions:
     - path: "server/**/*.rs"
       instructions: |
         所有権、ライフタイムの扱いが適切か。不必要な .clone() がないか。
-        Clean Architectureの各レイヤーの依存関係が正しいか。
+        Clean Architectureの各レイヤー（Domain, UseCase, Infrastructure）の依存関係が正しいか。
+        内側のレイヤーに書くべき実装が、外側に漏れ出していないか厳重に確認してください。
     - path: "client/**/*.{ts,tsx}"
       instructions: |
         コンポーネントの分割が適切か。
