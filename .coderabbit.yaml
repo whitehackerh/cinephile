@@ -17,7 +17,8 @@ reviews:
     - path: "server/**/*.rs"
       instructions: |
         所有権、ライフタイムの扱いが適切か。不必要な .clone() がないか。
-        Clean Architectureの各レイヤーの依存関係が正しいか。
+        Clean Architectureの各レイヤー（Domain, UseCase, Infrastructure）の依存関係が正しいか。
+        内側のレイヤーに書くべき実装が、外側に漏れ出していないか厳重に確認してください。
     - path: "client/**/*.{ts,tsx}"
       instructions: |
         コンポーネントの分割が適切か。
