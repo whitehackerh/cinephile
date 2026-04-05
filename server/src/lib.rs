@@ -1,6 +1,7 @@
 pub(crate) mod domain;
 pub(crate) mod usecases;
 pub(crate) mod handlers;
+pub(crate) mod middleware;
 pub mod infrastructure;
 
 use std::sync::Arc;
@@ -19,6 +20,7 @@ use crate::usecases::security::token::TokenManager;
 pub struct AppRegistry {
     pub(crate) signup_usecase: Arc<dyn SignUpUseCase + Send + Sync>,
     pub(crate) signin_usecase: Arc<dyn SignInUseCase + Send + Sync>,
+    pub(crate) token_manager: Arc<JwtTokenManager>,
 }
 
 #[derive(Clone)]
@@ -45,6 +47,7 @@ impl AppRegistry {
         Arc::new(Self {
             signup_usecase,
             signin_usecase,
+            token_manager,
         })
     }
 }
@@ -60,3 +63,9 @@ macro_rules! impl_from_ref {
 }
 impl_from_ref!(SignUpUseCase, signup_usecase);
 impl_from_ref!(SignInUseCase, signin_usecase);
+
+impl axum::extract::FromRef<AppState> for Arc<JwtTokenManager> {
+    fn from_ref(state: &AppState) -> Self {
+        state.0.token_manager.clone()
+    }
+}

@@ -1,5 +1,5 @@
 use chrono::{Duration, Utc};
-use jsonwebtoken::{encode, EncodingKey, Header};
+use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, Validation};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -13,12 +13,29 @@ pub(crate) struct Claims {
 }
 
 pub(crate) struct JwtTokenManager {
-    secret: String,
+    decoding_key: DecodingKey,
+    encoding_key: EncodingKey,
 }
 
 impl JwtTokenManager {
     pub fn new(secret: String) -> Self {
-        Self { secret }
+        let bytes = secret.as_bytes();
+        Self {
+            decoding_key: DecodingKey::from_secret(bytes),
+            encoding_key: EncodingKey::from_secret(bytes),
+        }
+    }
+
+    pub fn verify_and_extract(&self, token: &str) -> Result<Uuid, jsonwebtoken::errors::Error> {
+        let validation = Validation::default();
+        let token_data = decode::<Claims>(
+            token,
+            &self.decoding_key,
+            &validation,
+        )?;
+
+        Uuid::parse_str(&token_data.claims.sub)
+            .map_err(|_| jsonwebtoken::errors::ErrorKind::InvalidToken.into())
     }
 }
 
@@ -43,7 +60,7 @@ impl TokenManager for JwtTokenManager {
         encode(
             &Header::default(),
             &claims,
-            &EncodingKey::from_secret(self.secret.as_ref()),
+            &self.encoding_key,
         )
         .map_err(|e| format!("Token generation failed: {}", e))
     }
