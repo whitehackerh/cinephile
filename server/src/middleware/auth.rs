@@ -20,13 +20,12 @@ impl AuthMiddleware {
         next: Next,
     ) -> Result<Response, StatusCode> {
         let auth_header = auth_header.ok_or(StatusCode::UNAUTHORIZED)?;
-        let token = auth_header.token();
 
         let user_id = token_manager
-            .verify_and_extract(token)
+            .verify_and_extract(auth_header.token())
             .map_err(|_| StatusCode::UNAUTHORIZED)?;
 
-        request.extensions_mut().insert(AuthUser::new(user_id, token.to_string()));
+        request.extensions_mut().insert(AuthUser::new(user_id));
 
         Ok(next.run(request).await)
     }
