@@ -75,30 +75,6 @@ paths:
           $ref: '#/components/responses/Error.Unauthorized'
         '500':
           $ref: '#/components/responses/Error.InternalServer'
-  /signout:
-    post:
-      tags:
-       - Authentication
-      summary: SignOut
-      description: |
-        Logout user. Since we use JWT, the server returns 200 regardless of token validity. 
-        Client should delete the token upon receiving a response.
-      operationId: signOut
-      security:
-        - bearerAuth: []
-      responses:
-        '200':
-          description: Signed out successfully (or error ignored).
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/ApiResponse'
-                  - properties:
-                      data:
-                        type: object
-        '500':
-          $ref: '#/components/responses/Error.InternalServer'
 
 components:
   securitySchemes:
