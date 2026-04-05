@@ -4,19 +4,18 @@ use crate::AppRegistry;
 use crate::AppState;
 use crate::handlers::sign_up::signup_handler;
 use crate::handlers::sign_in::signin_handler;
-// use crate::infrastructure::middleware::auth_guard;
+use crate::middleware::auth::AuthMiddleware;
 
 pub fn create_router(registry: Arc<AppRegistry>) -> Router {
+    let protected_routes = Router::new()
+        // .route("/xx", get(xxxx))
+        .layer(from_fn_with_state(AppState(registry.clone()), AuthMiddleware::auth_middleware));
+    
     let public_routes = Router::<AppState>::new()
             .route("/signup", post(signup_handler))
             .route("/signin", post(signin_handler));
 
-    // let protected_routes = Router::new()
-    //     .route("/me", get(crate::handlers::user::me_handler))
-    //     .layer(from_fn_with_state(shared_state.clone(), auth_guard));
-
     Router::new()
-        .nest("/api", public_routes)
-        // .nest("/api/auth", protected_routes)
+        .nest("/api", public_routes.merge(protected_routes))
         .with_state(AppState(registry))
 }
