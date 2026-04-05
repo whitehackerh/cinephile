@@ -77,6 +77,12 @@ paths:
           $ref: '#/components/responses/Error.InternalServer'
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
   schemas:
     ApiResponse:
       type: object

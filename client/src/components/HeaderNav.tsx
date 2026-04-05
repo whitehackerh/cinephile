@@ -11,7 +11,7 @@ export default function HeaderNav() {
     setIsLoggedIn(!!token);
   }, []);
 
-  const handleLogout = () => {
+  const handleSignout = () => {
     localStorage.removeItem('auth_token');
     window.location.href = '/signin';
   };
@@ -22,10 +22,10 @@ export default function HeaderNav() {
       
       {isLoggedIn ? (
         <button 
-          onClick={handleLogout}
+          onClick={handleSignout}
           className="hover:text-red-500 transition-colors uppercase"
         >
-          Logout
+          Signout
         </button>
       ) : (
         <>

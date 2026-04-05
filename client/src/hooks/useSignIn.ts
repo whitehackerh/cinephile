@@ -30,7 +30,7 @@ export const useSignIn = () => {
       const response = await apiService.signIn(result.data);
 
       if (response.data) {
-        router.push('/');
+        window.location.href = '/';
       }
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse<null>>;
