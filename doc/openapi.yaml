@@ -128,6 +128,11 @@ components:
   schemas:
     ApiResponse:
       type: object
+      required:
+        - uri
+        - timestamp
+        - data
+        - error
       properties:
         uri:
           type: string
@@ -146,6 +151,9 @@ components:
 
     ApiErrorDetail:
       type: object
+      required:
+        - code
+        - message
       properties:
         code:
           type: string
@@ -190,7 +198,11 @@ components:
     
     SearchResponse:
       type: object
-      required: [works, page, total_pages, total_results]
+      required:
+        - works
+        - page
+        - total_pages
+        - total_results
       properties:
         works:
           type: array
@@ -213,6 +225,7 @@ components:
         - media_type
         - id
         - overview
+        - poster_path
       properties:
         media_type:
           type: string
@@ -231,7 +244,9 @@ components:
         - $ref: '#/components/schemas/WorkBase'
         - type: object
           required:
+            - media_type
             - title
+            - release_date
           properties:
             media_type:
               const: movie
@@ -248,7 +263,9 @@ components:
         - $ref: '#/components/schemas/WorkBase'
         - type: object
           required:
+            - media_type
             - name
+            - first_air_date
           properties:
             media_type:
               const: tv
