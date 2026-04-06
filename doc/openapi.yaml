@@ -76,6 +76,41 @@ paths:
         '500':
           $ref: '#/components/responses/Error.InternalServer'
 
+  /search:
+    get:
+      tags:
+        - Search
+      summary: Multi-content search
+      description: Returns a list of movies and TV shows matching the query.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          description: Search keywords
+          required: true
+          schema:
+            type: string
+            minLength: 1
+      responses:
+        '200':
+          description: Search results retrieved successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SearchResponse'
+        '400':
+          $ref: '#/components/responses/Error.BadRequest'
+        '401':
+          $ref: '#/components/responses/Error.Unauthorized'
+        '500':
+          $ref: '#/components/responses/Error.InternalServer'
+
 components:
   securitySchemes:
     bearerAuth:
@@ -98,6 +133,7 @@ components:
           nullable: true
         error:
           $ref: '#/components/schemas/ApiErrorDetail'
+          nullable: true
 
     ApiErrorDetail:
       type: object
@@ -126,6 +162,7 @@ components:
         name:
           type: string
           example: "John Doe"
+
     SignInRequest:
       type: object
       required:
@@ -141,6 +178,66 @@ components:
           format: password
           writeOnly: true
           example: "password"
+    
+    SearchResponse:
+      type: object
+      properties:
+        works:
+          type: array
+          items:
+            $ref: '#/components/schemas/Work'
+    
+    Work:
+      type: object
+      required:
+        - media_type
+        - id
+        - overview
+      properties:
+        media_type:
+          type: string
+          enum: [movie, tv]
+          description: "Discriminator to distinguish between movie and tv"
+        id:
+          type: integer
+          description: "TMDB ID"
+        overview:
+          type: string
+        poster_path:
+          type: string
+          nullable: true
+      discriminator:
+        propertyName: media_type
+        mapping:
+          movie: '#/components/schemas/MovieSummary'
+          tv: '#/components/schemas/TvSummary'
+      oneOf:
+        - $ref: '#/components/schemas/MovieSummary'
+        - $ref: '#/components/schemas/TvSummary'
+    
+    MovieSummary:
+      allOf:
+        - $ref: '#/components/schemas/Work'
+        - type: object
+          properties:
+            title:
+              type: string
+            release_date: 
+              type: string
+              format: date
+              nullable: true
+    
+    TvSummary:
+      allOf:
+        - $ref: '#/components/schemas/Work'
+        - type: object
+          properties:
+            name:
+              type: string
+            first_air_date: 
+              type: string 
+              format: date
+              nullable: true
 
   responses:
     Error.BadRequest:
