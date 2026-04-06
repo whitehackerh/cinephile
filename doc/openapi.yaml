@@ -199,10 +199,13 @@ components:
             $ref: '#/components/schemas/Work'
         page:
           type: integer
+          minimum: 1
         total_pages:
           type: integer
+          minimum: 1
         total_results:
           type: integer
+          minimum: 0
     
     WorkBase:
       type: object
