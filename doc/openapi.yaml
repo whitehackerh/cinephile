@@ -92,6 +92,13 @@ paths:
           schema:
             type: string
             minLength: 1
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
       responses:
         '200':
           description: Search results retrieved successfully.
@@ -183,11 +190,19 @@ components:
     
     SearchResponse:
       type: object
+      required: [works, page, total_pages, total_results]
       properties:
         works:
           type: array
+          maxItems: 20
           items:
             $ref: '#/components/schemas/Work'
+        page:
+          type: integer
+        total_pages:
+          type: integer
+        total_results:
+          type: integer
     
     WorkBase:
       type: object
