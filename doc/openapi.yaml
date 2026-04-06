@@ -129,11 +129,13 @@ components:
           type: string
           format: date-time
         data:
-          type: object
-          nullable: true
+          oneOf:
+            - type: object
+            - type: 'null'
         error:
-          $ref: '#/components/schemas/ApiErrorDetail'
-          nullable: true
+          oneOf:
+            - $ref: '#/components/schemas/ApiErrorDetail'
+            - type: 'null'
 
     ApiErrorDetail:
       type: object
@@ -204,8 +206,9 @@ components:
         overview:
           type: string
         poster_path:
-          type: string
-          nullable: true
+          oneOf:
+            - type: string
+            - type: 'null'
       discriminator:
         propertyName: media_type
         mapping:
@@ -223,9 +226,10 @@ components:
             title:
               type: string
             release_date: 
-              type: string
-              format: date
-              nullable: true
+              oneOf:
+                - type: string
+                  format: date
+                - type: 'null'
     
     TvSummary:
       allOf:
@@ -235,9 +239,10 @@ components:
             name:
               type: string
             first_air_date: 
-              type: string 
-              format: date
-              nullable: true
+              oneOf:
+                - type: string
+                  format: date
+                - type: 'null'
 
   responses:
     Error.BadRequest:
