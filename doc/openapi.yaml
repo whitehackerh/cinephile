@@ -189,7 +189,7 @@ components:
           items:
             $ref: '#/components/schemas/Work'
     
-    Work:
+    WorkBase:
       type: object
       required:
         - media_type
@@ -199,30 +199,24 @@ components:
         media_type:
           type: string
           enum: [movie, tv]
-          description: "Discriminator to distinguish between movie and tv"
         id:
           type: integer
-          description: "TMDB ID"
         overview:
           type: string
         poster_path:
           oneOf:
             - type: string
             - type: 'null'
-      discriminator:
-        propertyName: media_type
-        mapping:
-          movie: '#/components/schemas/MovieSummary'
-          tv: '#/components/schemas/TvSummary'
-      oneOf:
-        - $ref: '#/components/schemas/MovieSummary'
-        - $ref: '#/components/schemas/TvSummary'
     
     MovieSummary:
       allOf:
-        - $ref: '#/components/schemas/Work'
+        - $ref: '#/components/schemas/WorkBase'
         - type: object
+          required:
+            - title
           properties:
+            media_type:
+              const: movie
             title:
               type: string
             release_date: 
@@ -233,9 +227,13 @@ components:
     
     TvSummary:
       allOf:
-        - $ref: '#/components/schemas/Work'
+        - $ref: '#/components/schemas/WorkBase'
         - type: object
+          required:
+            - name
           properties:
+            media_type:
+              const: tv
             name:
               type: string
             first_air_date: 
@@ -243,6 +241,17 @@ components:
                 - type: string
                   format: date
                 - type: 'null'
+
+    Work:
+      type: object
+      discriminator:
+        propertyName: media_type
+        mapping:
+          movie: '#/components/schemas/MovieSummary'
+          tv: '#/components/schemas/TvSummary'
+      oneOf:
+        - $ref: '#/components/schemas/MovieSummary'
+        - $ref: '#/components/schemas/TvSummary'
 
   responses:
     Error.BadRequest:
