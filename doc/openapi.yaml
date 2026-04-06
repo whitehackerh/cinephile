@@ -30,9 +30,12 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/ApiResponse'
-                  - properties:
+                  - type: object
+                    properties:
                       data:
                         type: object
+                      error:
+                        type: 'null'
         '400':
           $ref: '#/components/responses/Error.BadRequest'
         '409':
@@ -66,9 +69,12 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/ApiResponse'
-                  - properties:
+                  - type: object
+                    properties:
                       data:
                         type: object
+                      error:
+                        type: 'null'
         '400':
           $ref: '#/components/responses/Error.BadRequest'
         '401':
@@ -111,6 +117,8 @@ paths:
                     properties:
                       data:
                         $ref: '#/components/schemas/SearchResponse'
+                      error:
+                        type: 'null'
         '400':
           $ref: '#/components/responses/Error.BadRequest'
         '401':
