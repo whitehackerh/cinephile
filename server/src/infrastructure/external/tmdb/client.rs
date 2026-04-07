@@ -55,20 +55,26 @@ impl TmdbGateway for TmdbClient {
 
         let works = tmdb_res.results.into_iter().filter_map(|media| {
             match media {
-                TmdbMedia::Movie(m) => Some(Work::Movie(MovieSummary {
-                    id: m.id,
-                    title: m.title,
-                    overview: m.overview,
-                    poster_path: m.poster_path,
-                    release_date: m.release_date,
-                })),
-                TmdbMedia::Tv(t) => Some(Work::Tv(TvSummary {
-                    id: t.id,
-                    name: t.name,
-                    overview: t.overview,
-                    poster_path: t.poster_path,
-                    first_air_date: t.first_air_date,
-                })),
+                TmdbMedia::Movie(m) => {
+                    let title = m.title?; 
+                    Some(Work::Movie(MovieSummary {
+                        id: m.id,
+                        title,
+                        overview: m.overview,
+                        poster_path: m.poster_path,
+                        release_date: m.release_date,
+                    }))
+                },
+                TmdbMedia::Tv(t) => {
+                    let name = t.name?;
+                    Some(Work::Tv(TvSummary {
+                        id: t.id,
+                        name,
+                        overview: t.overview,
+                        poster_path: t.poster_path,
+                        first_air_date: t.first_air_date,
+                    }))
+                },
                 TmdbMedia::Unknown => None,
             }
         }).collect();

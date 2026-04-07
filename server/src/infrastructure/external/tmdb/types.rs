@@ -22,17 +22,25 @@ pub enum TmdbMedia {
 #[derive(Debug, Deserialize)]
 pub struct TmdbMovie {
     pub id: i32,
-    pub title: String,
-    pub overview: String,
+    #[serde(default)]
+    pub title: Option<String>,
+    #[serde(default)]
+    pub overview: Option<String>,
+    #[serde(default)]
     pub poster_path: Option<String>,
+    #[serde(default)]
     pub release_date: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct TmdbTv {
     pub id: i32,
-    pub name: String,
-    pub overview: String,
+    #[serde(default)]
+    pub name: Option<String>,
+    #[serde(default)]
+    pub overview: Option<String>,
+    #[serde(default)]
     pub poster_path: Option<String>,
+    #[serde(default)]
     pub first_air_date: Option<String>,
 }

@@ -27,7 +27,7 @@ pub(crate) enum Work {
 pub(crate) struct MovieSummary {
     pub id: i32,
     pub title: String,
-    pub overview: String,
+    pub overview: Option<String>,
     pub poster_path: Option<String>,
     pub release_date: Option<String>,
 }
@@ -36,7 +36,7 @@ pub(crate) struct MovieSummary {
 pub(crate) struct TvSummary {
     pub id: i32,
     pub name: String,
-    pub overview: String,
+    pub overview: Option<String>,
     pub poster_path: Option<String>,
     pub first_air_date: Option<String>,
 }
