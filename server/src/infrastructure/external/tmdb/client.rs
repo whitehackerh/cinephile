@@ -40,8 +40,8 @@ impl TmdbGateway for TmdbClient {
         let response = self.http_client
             .get(format!("{}/search/multi", self.base_url))
             .query(&[
-                ("api_key", &self.api_key),
-                ("query", &query.to_string()),
+                ("api_key", self.api_key.as_str()),
+                ("query", query),
                 ("page", &page.to_string()),
             ])
             .send()
