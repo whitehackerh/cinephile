@@ -50,8 +50,8 @@ pub(crate) struct AppState(pub Arc<AppRegistry>);
 impl AppRegistry {
     pub async fn build(pool: PgPool) -> Arc<Self> {
         let jwt_secret = std::env::var("JWT_SECRET_KEY").expect("JWT_SECRET must be set");
-        let tmdb_api_key = std::env::var("TMDB_API_KEY").expect("tMDB_API_KEY must be set");
-        let tmdb_base_url = std::env::var("TMDB_BASE_URL").expect("tMDB_BASE_URL must be set");
+        let tmdb_api_key = std::env::var("TMDB_API_KEY").expect("TMDB_API_KEY must be set");
+        let tmdb_base_url = std::env::var("TMDB_BASE_URL").expect("TMDB_BASE_URL must be set");
 
         let user_repository = Arc::new(PostgresUserRepository::new(pool));
         let password_manager = Arc::new(PasswordManager::new());

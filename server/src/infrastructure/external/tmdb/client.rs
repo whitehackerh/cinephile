@@ -24,7 +24,10 @@ pub struct TmdbClient {
 impl TmdbClient {
     pub fn new(api_key: String, base_url: String) -> Self {
         Self {
-            http_client: Client::new(),
+            http_client: Client::builder()
+                .timeout(std::time::Duration::from_secs(10))
+                .build()
+                .unwrap_or_default(),
             api_key,
             base_url,
         }
@@ -33,7 +36,7 @@ impl TmdbClient {
 
 #[async_trait]
 impl TmdbGateway for TmdbClient {
-    async fn fetch_search_results(&self, query: &str, page: i32) -> Result<SearchOutput, AppError> {
+    async fn fetch_search_results(&self, query: &str, page: u32) -> Result<SearchOutput, AppError> {
         let response = self.http_client
             .get(format!("{}/search/multi", self.base_url))
             .query(&[

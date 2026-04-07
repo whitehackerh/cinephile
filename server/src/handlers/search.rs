@@ -23,9 +23,9 @@ use crate::{
 #[derive(Debug, Serialize, Deserialize)]
 pub(crate) struct SearchResponse {
     pub works: Vec<Work>,
-    pub page: i32,
-    pub total_pages: i32,
-    pub total_results: i32,
+    pub page: u32,
+    pub total_pages: u32,
+    pub total_results: u32,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -90,7 +90,7 @@ impl From<WorkDto> for Work {
 #[derive(Deserialize)]
 pub(crate) struct SearchParams {
     q: String,
-    page: Option<i32>,
+    page: Option<u32>,
 }
 
 pub async fn search_handler(

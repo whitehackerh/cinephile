@@ -26,12 +26,16 @@ impl SearchInteractor {
 #[async_trait]
 impl SearchUseCase for SearchInteractor {
     async fn execute(&self, input: SearchInput) -> Result<SearchOutput, AppError> {
-        if input.query.trim().is_empty() {
+        let query = input.query.trim();
+        if query.is_empty() {
             return Err(AppError::Validation("Query cannot be empty".to_string()));
+        }
+        if input.page < 1 {
+            return Err(AppError::Validation("Page must be greater than or equal to 1".to_string()));
         }
 
         let output = self.tmdb_gateway
-            .fetch_search_results(&input.query, input.page)
+            .fetch_search_results(query, input.page)
             .await?;
 
         Ok(output)

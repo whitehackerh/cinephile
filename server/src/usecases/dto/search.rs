@@ -3,15 +3,15 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Deserialize)]
 pub(crate) struct SearchInput {
     pub query: String,
-    pub page: i32,
+    pub page: u32,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub(crate) struct SearchOutput {
     pub works: Vec<Work>,
-    pub page: i32,
-    pub total_pages: i32,
-    pub total_results: i32,
+    pub page: u32,
+    pub total_pages: u32,
+    pub total_results: u32,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

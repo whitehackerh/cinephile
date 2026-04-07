@@ -2,10 +2,10 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct TmdbSearchResponse {
-    pub page: i32,
+    pub page: u32,
     pub results: Vec<TmdbMedia>,
-    pub total_pages: i32,
-    pub total_results: i32,
+    pub total_pages: u32,
+    pub total_results: u32,
 }
 
 #[derive(Debug, Deserialize)]
