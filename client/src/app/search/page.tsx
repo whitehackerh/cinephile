@@ -51,7 +51,7 @@ export default function SearchPage() {
         {results && (
         <div className="space-y-8">
             <div className="flex justify-between items-end border-b border-gray-800 pb-4">
-            <h2 className="text-xl font-semibold">Results for "{query}"</h2>
+            <h2 className="text-xl font-semibold">Results for "{currentQuery}"</h2>
             <span className="text-gray-500 text-sm">{results.total_results} items found</span>
             </div>
             
