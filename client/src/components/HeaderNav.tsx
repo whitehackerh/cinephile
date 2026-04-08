@@ -30,7 +30,7 @@ export default function HeaderNav() {
             onClick={handleSignout}
             className="hover:text-red-500 transition-colors uppercase"
           >
-            Signout
+            Sign out
           </button>
         </>
       ) : (
