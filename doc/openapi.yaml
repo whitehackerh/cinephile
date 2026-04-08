@@ -30,9 +30,12 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/ApiResponse'
-                  - properties:
+                  - type: object
+                    properties:
                       data:
                         type: object
+                      error:
+                        type: 'null'
         '400':
           $ref: '#/components/responses/Error.BadRequest'
         '409':
@@ -66,9 +69,56 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/ApiResponse'
-                  - properties:
+                  - type: object
+                    properties:
                       data:
                         type: object
+                      error:
+                        type: 'null'
+        '400':
+          $ref: '#/components/responses/Error.BadRequest'
+        '401':
+          $ref: '#/components/responses/Error.Unauthorized'
+        '500':
+          $ref: '#/components/responses/Error.InternalServer'
+
+  /search:
+    get:
+      tags:
+        - Search
+      summary: Multi-content search
+      description: Returns a list of movies and TV shows matching the query.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          description: Search keywords
+          required: true
+          schema:
+            type: string
+            minLength: 1
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+      responses:
+        '200':
+          description: Search results retrieved successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/SearchResponse'
+                      error:
+                        type: 'null'
         '400':
           $ref: '#/components/responses/Error.BadRequest'
         '401':
@@ -86,6 +136,11 @@ components:
   schemas:
     ApiResponse:
       type: object
+      required:
+        - uri
+        - timestamp
+        - data
+        - error
       properties:
         uri:
           type: string
@@ -94,13 +149,19 @@ components:
           type: string
           format: date-time
         data:
-          type: object
-          nullable: true
+          oneOf:
+            - type: object
+            - type: 'null'
         error:
-          $ref: '#/components/schemas/ApiErrorDetail'
+          oneOf:
+            - $ref: '#/components/schemas/ApiErrorDetail'
+            - type: 'null'
 
     ApiErrorDetail:
       type: object
+      required:
+        - code
+        - message
       properties:
         code:
           type: string
@@ -126,6 +187,7 @@ components:
         name:
           type: string
           example: "John Doe"
+
     SignInRequest:
       type: object
       required:
@@ -141,6 +203,98 @@ components:
           format: password
           writeOnly: true
           example: "password"
+    
+    SearchResponse:
+      type: object
+      required:
+        - works
+        - page
+        - total_pages
+        - total_results
+      properties:
+        works:
+          type: array
+          maxItems: 20
+          items:
+            $ref: '#/components/schemas/Work'
+        page:
+          type: integer
+          minimum: 1
+        total_pages:
+          type: integer
+          minimum: 1
+        total_results:
+          type: integer
+          minimum: 0
+    
+    WorkBase:
+      type: object
+      required:
+        - media_type
+        - id
+        - overview
+        - poster_path
+      properties:
+        media_type:
+          type: string
+          enum: [movie, tv]
+        id:
+          type: integer
+        overview:
+          type: string
+        poster_path:
+          oneOf:
+            - type: string
+            - type: 'null'
+    
+    MovieSummary:
+      allOf:
+        - $ref: '#/components/schemas/WorkBase'
+        - type: object
+          required:
+            - media_type
+            - title
+            - release_date
+          properties:
+            media_type:
+              const: movie
+            title:
+              type: string
+            release_date: 
+              oneOf:
+                - type: string
+                  format: date
+                - type: 'null'
+    
+    TvSummary:
+      allOf:
+        - $ref: '#/components/schemas/WorkBase'
+        - type: object
+          required:
+            - media_type
+            - name
+            - first_air_date
+          properties:
+            media_type:
+              const: tv
+            name:
+              type: string
+            first_air_date: 
+              oneOf:
+                - type: string
+                  format: date
+                - type: 'null'
+
+    Work:
+      type: object
+      discriminator:
+        propertyName: media_type
+        mapping:
+          movie: '#/components/schemas/MovieSummary'
+          tv: '#/components/schemas/TvSummary'
+      oneOf:
+        - $ref: '#/components/schemas/MovieSummary'
+        - $ref: '#/components/schemas/TvSummary'
 
   responses:
     Error.BadRequest:

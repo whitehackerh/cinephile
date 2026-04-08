@@ -1,14 +1,20 @@
 use axum::{routing::{get, post}, Router, middleware::from_fn_with_state};
 use std::sync::Arc;
-use crate::AppRegistry;
-use crate::AppState;
-use crate::handlers::sign_up::signup_handler;
-use crate::handlers::sign_in::signin_handler;
-use crate::middleware::auth::AuthMiddleware;
+
+use crate::{
+    AppRegistry,
+    AppState,
+    handlers::{
+        sign_up::signup_handler,
+        sign_in::signin_handler,
+        search::search_handler,
+    },
+    middleware::auth::AuthMiddleware
+};
 
 pub fn create_router(registry: Arc<AppRegistry>) -> Router {
     let protected_routes = Router::new()
-        // .route("/xx", get(xxxx))
+        .route("/search", get(search_handler))
         .layer(from_fn_with_state(AppState(registry.clone()), AuthMiddleware::auth_middleware));
     
     let public_routes = Router::<AppState>::new()

@@ -2,6 +2,7 @@ import './globals.css';
 import Link from 'next/link';
 import Image from 'next/image';
 import HeaderNav from '@/components/HeaderNav';
+import { TmdbAttribution } from '@/components/common/TmdbAttribution';
 
 export const metadata = {
   title: 'CINEPHILE',
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="pt-32 px-6 min-h-screen bg-cinema-black text-white">
           {children}
         </main>
+        <TmdbAttribution />
       </body>
     </html>
   );
