@@ -17,16 +17,22 @@ export default function HeaderNav() {
   };
 
   return (
-    <nav className="flex gap-10 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 items-center">
-      <Link href="/movies" className="hover:text-gold transition-colors">Movies</Link>
-      
+    <nav className="flex gap-10 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 items-center">     
       {isLoggedIn ? (
-        <button 
-          onClick={handleSignout}
-          className="hover:text-red-500 transition-colors uppercase"
-        >
-          Signout
-        </button>
+        <>
+          <Link 
+            href="/search" 
+            className="hover:text-white transition-colors"
+          >
+            Search
+          </Link>
+          <button 
+            onClick={handleSignout}
+            className="hover:text-red-500 transition-colors uppercase"
+          >
+            Signout
+          </button>
+        </>
       ) : (
         <>
           <Link href="/signin" className="hover:text-gold transition-colors">Sign In</Link>
