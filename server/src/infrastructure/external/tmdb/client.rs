@@ -27,7 +27,7 @@ impl TmdbClient {
             http_client: Client::builder()
                 .timeout(std::time::Duration::from_secs(10))
                 .build()
-                .unwrap_or_default(),
+                .expect("Failed to build HTTP client with timeout"),
             api_key,
             base_url,
         }
