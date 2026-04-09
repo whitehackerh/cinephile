@@ -383,10 +383,12 @@ components:
             - type: integer
             - type: 'null'
         vote_average:
-          type: integer
-          minimum: 0
-          maximum: 100
-          example: 83
+          oneOf:
+            - type: integer
+              minimum: 0
+              maximum: 100
+            - type: 'null'
+          example: 85
         tagline:
           oneOf:
             - type: string
