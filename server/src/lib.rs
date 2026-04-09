@@ -21,11 +21,13 @@ use crate::{
             sign_up::SignUpInteractor,
             sign_in::SignInInteractor,
             search::SearchInteractor,
+            movie::MovieInteractor,
         },
         port::{
             sign_up::SignUpUseCase,
             sign_in::SignInUseCase,
             search::SearchUseCase,
+            movie::MovieUseCase,
         },
         repository::{
             user::UserRepository
@@ -41,6 +43,7 @@ pub struct AppRegistry {
     pub(crate) signup_usecase: Arc<dyn SignUpUseCase + Send + Sync>,
     pub(crate) signin_usecase: Arc<dyn SignInUseCase + Send + Sync>,
     pub(crate) search_usecase: Arc<dyn SearchUseCase + Send + Sync>,
+    pub(crate) movie_usecase: Arc<dyn MovieUseCase + Send + Sync>,
     pub(crate) token_manager: Arc<JwtTokenManager>,
 }
 
@@ -70,11 +73,15 @@ impl AppRegistry {
         let search_usecase = Arc::new(SearchInteractor::new(
             tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>
         ));
+        let movie_usecase = Arc::new(MovieInteractor::new(
+            tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>
+        ));
 
         Arc::new(Self {
             signup_usecase,
             signin_usecase,
             search_usecase,
+            movie_usecase,
             token_manager,
         })
     }
@@ -92,6 +99,7 @@ macro_rules! impl_from_ref {
 impl_from_ref!(SignUpUseCase, signup_usecase);
 impl_from_ref!(SignInUseCase, signin_usecase);
 impl_from_ref!(SearchUseCase, search_usecase);
+impl_from_ref!(MovieUseCase, movie_usecase);
 
 impl axum::extract::FromRef<AppState> for Arc<JwtTokenManager> {
     fn from_ref(state: &AppState) -> Self {

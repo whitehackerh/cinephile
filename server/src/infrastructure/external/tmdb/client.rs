@@ -1,7 +1,13 @@
 use async_trait::async_trait;
 use reqwest::Client;
 use crate::{
-    domain::errors::AppError,
+    domain::{
+        entities::{
+            genre::Genre,
+            movie::Movie,
+        },
+        errors::AppError,
+    },
     usecases::{
         dto::search::{
             SearchOutput,
@@ -13,7 +19,7 @@ use crate::{
     }
 };
 
-use super::types::{TmdbSearchResponse, TmdbMedia};
+use super::types::{TmdbSearchResponse, TmdbMedia, TmdbMovie, TmdbGenre};
 
 pub struct TmdbClient {
     http_client: Client,
@@ -85,5 +91,48 @@ impl TmdbGateway for TmdbClient {
             total_pages: tmdb_res.total_pages,
             total_results: tmdb_res.total_results,
         })
+    }
+
+    async fn fetch_movie_by_id(&self, id: i32) -> Result<Movie, AppError> {
+        let response = self.http_client
+            .get(format!("{}/movie/{}", self.base_url, id))
+            .query(&[
+                ("api_key", self.api_key.as_str()),
+            ])
+            .send()
+            .await
+            .map_err(|e| AppError::Infrastructure(e.to_string()))?;
+
+        let response = response.error_for_status().map_err(|e| {
+            if e.status() == Some(reqwest::StatusCode::NOT_FOUND) {
+                AppError::EntityNotFound(format!("Movie with id {} not found", id))
+            } else {
+                AppError::Infrastructure(format!("TMDB API error: {}", e))
+            }
+        })?;
+
+        let tmdb_res = response
+            .json::<TmdbMovie>()
+            .await
+            .map_err(|e| AppError::Infrastructure(format!("Failed to parse TMDB response: {}", e)))?;
+
+        Ok(
+            Movie::new(
+                tmdb_res.id,
+                tmdb_res.title,
+                tmdb_res.original_title,
+                tmdb_res.over_view,
+                tmdb_res.poster_path,
+                tmdb_res.backdrop_path,
+                tmdb_res.release_date,
+                tmdb_res.runtime,
+                tmdb_res.vote_average.map(|v| v as f64 * 10.0),
+                tmdb_res.tagline,
+                tmdb_res.genres
+                .into_iter()
+                .map(|genre| Genre::new(genre.id, genre.name))
+                .collect(),
+            )
+        )
     }
 }

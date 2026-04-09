@@ -385,9 +385,11 @@ components:
             - type: 'null'
         vote_average:
           oneOf:
-            - type: integer
-              minimum: 0
-              maximum: 100
+            - type: number
+              format: double
+              minimum: 0.00
+              maximum: 100.00
+              example: 84.39
             - type: 'null'
           example: 85
         tagline:

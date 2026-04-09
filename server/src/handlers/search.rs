@@ -20,6 +20,12 @@ use crate::{
     }
 };
 
+#[derive(Deserialize)]
+pub(crate) struct SearchParams {
+    q: String,
+    page: Option<u32>,
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub(crate) struct SearchResponse {
     pub works: Vec<Work>,
@@ -85,12 +91,6 @@ impl From<WorkDto> for Work {
             })
         }
     }
-}
-
-#[derive(Deserialize)]
-pub(crate) struct SearchParams {
-    q: String,
-    page: Option<u32>,
 }
 
 pub async fn search_handler(

@@ -8,6 +8,7 @@ use crate::{
         sign_up::signup_handler,
         sign_in::signin_handler,
         search::search_handler,
+        movie::movie_handler,
     },
     middleware::auth::AuthMiddleware
 };
@@ -15,6 +16,7 @@ use crate::{
 pub fn create_router(registry: Arc<AppRegistry>) -> Router {
     let protected_routes = Router::new()
         .route("/search", get(search_handler))
+        .route("/movie/{id}", get(movie_handler))
         .layer(from_fn_with_state(AppState(registry.clone()), AuthMiddleware::auth_middleware));
     
     let public_routes = Router::<AppState>::new()
