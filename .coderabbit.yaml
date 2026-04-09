@@ -8,7 +8,7 @@ reviews:
   profile: "assertive"
   high_level_summary: true
   sequence_diagrams: true
-  high_level_summary_in_walkthrough: true
+  high_level_summary_in_walkthrough: false
   review_details: true
   related_issues: true
   related_prs: true
