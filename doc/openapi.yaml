@@ -391,6 +391,7 @@ components:
             - type: 'null'
         genres:
           type: array
+          maxItems: 100
           items:
             $ref: '#/components/schemas/Genre'
 
