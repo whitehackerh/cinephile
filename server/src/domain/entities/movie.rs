@@ -87,4 +87,16 @@ impl Movie{
     pub fn genres(&self) -> &Vec<Genre> {
         &self.genres
     }
+
+    pub fn into_parts(self) -> (
+        i32, String, String, Option<String>, Option<String>, 
+        Option<String>, Option<String>, Option<i32>, Option<f64>, 
+        Option<String>, Vec<Genre>
+    ) {
+        (
+            self.id, self.title, self.original_title, self.overview,
+            self.poster_path, self.backdrop_path, self.release_date,
+            self.runtime, self.vote_average, self.tagline, self.genres
+        )
+    }
 }

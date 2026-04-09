@@ -16,4 +16,8 @@ impl Genre {
     pub fn name(&self) -> &str {
         &self.name
     }
+
+    pub fn into_parts(self) -> (i32, String) {
+        ( self.id, self.name )
+    }
 }

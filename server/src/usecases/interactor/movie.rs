@@ -9,7 +9,7 @@ use crate::{
         dto::movie::{
             MovieInput,
             MovieOutput,
-            Genre
+            Genre as GenreDto,
         },
         gateway::tmdb::TmdbGateway,
         port::movie::MovieUseCase,
@@ -37,19 +37,29 @@ impl MovieUseCase for MovieInteractor {
             .fetch_movie_by_id(input.id)
             .await?;
 
+        let (
+            id, title, original_title, overview, poster_path, 
+            backdrop_path, release_date, runtime, vote_average, 
+            tagline, genres
+        ) = movie.into_parts();
+
         Ok(MovieOutput {
-            id: movie.id(),
-            title: movie.title().to_string(),
-            original_title: movie.original_title().to_string(),
-            overview: movie.overview().clone(),
-            poster_path: movie.poster_path().clone(),
-            backdrop_path: movie.backdrop_path().clone(),
-            release_date: movie.release_date().clone(),
-            runtime: movie.runtime(),
-            vote_average: movie.vote_average(),
-            tagline: movie.tagline().clone(),
-            genres: movie.genres().iter()
-                .map(|genre| Genre { id: genre.id(), name: genre.name().to_string() })
+            id,
+            title,
+            original_title,
+            overview,
+            poster_path,
+            backdrop_path,
+            release_date,
+            runtime,
+            vote_average,
+            tagline,
+            genres: genres
+                .into_iter()
+                .map(|g| {
+                    let (g_id, g_name) = g.into_parts();
+                    GenreDto { id: g_id, name: g_name }
+                })
                 .collect(),
         })
     }
