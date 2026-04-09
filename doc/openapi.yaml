@@ -24,7 +24,7 @@ paths:
               $ref: '#/components/schemas/SignUpRequest'
       responses:
         '201':
-          description: User Created successfully. No content returned.
+          description: User created successfully. No content returned.
           content:
             application/json:
               schema:
@@ -37,11 +37,12 @@ paths:
                       error:
                         type: 'null'
         '400':
-          $ref: '#/components/responses/Error.BadRequest'
+          $ref: '#/components/responses/ErrorBadRequest'
         '409':
-          $ref: '#/components/responses/Error.Conflict'
+          $ref: '#/components/responses/ErrorConflict'
         '500':
-          $ref: '#/components/responses/Error.InternalServer'
+          $ref: '#/components/responses/ErrorInternalServer'
+
   /signin:
     post:
       tags:
@@ -76,18 +77,19 @@ paths:
                       error:
                         type: 'null'
         '400':
-          $ref: '#/components/responses/Error.BadRequest'
+          $ref: '#/components/responses/ErrorBadRequest'
         '401':
-          $ref: '#/components/responses/Error.Unauthorized'
+          $ref: '#/components/responses/ErrorUnauthorized'
         '500':
-          $ref: '#/components/responses/Error.InternalServer'
+          $ref: '#/components/responses/ErrorInternalServer'
 
   /search:
     get:
       tags:
-        - Search
+        - Work
       summary: Multi-content search
       description: Returns a list of movies and TV shows matching the query.
+      operationId: search
       security:
         - bearerAuth: []
       parameters:
@@ -120,11 +122,47 @@ paths:
                       error:
                         type: 'null'
         '400':
-          $ref: '#/components/responses/Error.BadRequest'
+          $ref: '#/components/responses/ErrorBadRequest'
         '401':
-          $ref: '#/components/responses/Error.Unauthorized'
+          $ref: '#/components/responses/ErrorUnauthorized'
         '500':
-          $ref: '#/components/responses/Error.InternalServer'
+          $ref: '#/components/responses/ErrorInternalServer'
+
+  /movie/{id}:
+    get:
+      tags:
+        - Work
+      summary: Movie Detail
+      description: Get movie detail data
+      operationId: getMovieById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Movie details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/MovieResponse'
+                      error:
+                        type: 'null'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '401':
+          $ref: '#/components/responses/ErrorUnauthorized'
+        '500':
+          $ref: '#/components/responses/ErrorInternalServer'
 
 components:
   securitySchemes:
@@ -203,7 +241,7 @@ components:
           format: password
           writeOnly: true
           example: "password"
-    
+
     SearchResponse:
       type: object
       required:
@@ -226,7 +264,7 @@ components:
         total_results:
           type: integer
           minimum: 0
-    
+
     WorkBase:
       type: object
       required:
@@ -241,12 +279,14 @@ components:
         id:
           type: integer
         overview:
-          type: string
+          oneOf:
+            - type: string
+            - type: 'null'
         poster_path:
           oneOf:
             - type: string
             - type: 'null'
-    
+
     MovieSummary:
       allOf:
         - $ref: '#/components/schemas/WorkBase'
@@ -260,12 +300,12 @@ components:
               const: movie
             title:
               type: string
-            release_date: 
+            release_date:
               oneOf:
                 - type: string
                   format: date
                 - type: 'null'
-    
+
     TvSummary:
       allOf:
         - $ref: '#/components/schemas/WorkBase'
@@ -279,7 +319,7 @@ components:
               const: tv
             name:
               type: string
-            first_air_date: 
+            first_air_date:
               oneOf:
                 - type: string
                   format: date
@@ -296,29 +336,98 @@ components:
         - $ref: '#/components/schemas/MovieSummary'
         - $ref: '#/components/schemas/TvSummary'
 
+    MovieResponse:
+      allOf:
+        - $ref: '#/components/schemas/Movie'
+
+    Movie:
+      type: object
+      required:
+        - id
+        - title
+        - original_title
+        - overview
+        - poster_path
+        - backdrop_path
+        - release_date
+        - runtime
+        - vote_average
+        - tagline
+        - genres
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        original_title:
+          type: string
+        overview:
+          oneOf:
+            - type: string
+            - type: 'null'
+        poster_path:
+          oneOf:
+            - type: string
+            - type: 'null'
+        backdrop_path:
+          oneOf:
+            - type: string
+            - type: 'null'
+        release_date:
+          oneOf:
+            - type: string
+              format: date
+            - type: 'null'
+        runtime:
+          oneOf:
+            - type: integer
+            - type: 'null'
+        vote_average:
+          type: number
+          format: float
+        tagline:
+          oneOf:
+            - type: string
+            - type: 'null'
+        genres:
+          type: array
+          items:
+            $ref: '#/components/schemas/Genre'
+
+    Genre:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+
   responses:
-    Error.BadRequest:
+    ErrorBadRequest:
       description: Bad Request
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ApiResponse'
 
-    Error.Unauthorized:
+    ErrorUnauthorized:
       description: Unauthorized
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ApiResponse'
 
-    Error.Conflict:
+    ErrorConflict:
       description: Conflict
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ApiResponse'
 
-    Error.InternalServer:
+    ErrorInternalServer:
       description: Internal Server Error
       content:
         application/json:
