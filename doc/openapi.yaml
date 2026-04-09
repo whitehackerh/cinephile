@@ -144,6 +144,7 @@ paths:
           description: Movie ID from TMDB
           schema:
             type: integer
+            minimum: 1
             example: 12345
       responses:
         '200':
