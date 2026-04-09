@@ -10,7 +10,7 @@ pub(crate) struct MovieOutput {
     pub id: i32,
     pub title: String,
     pub original_title: String,
-    pub over_view: Option<String>,
+    pub overview: Option<String>,
     pub poster_path: Option<String>,
     pub backdrop_path: Option<String>,
     pub release_date: Option<String>,

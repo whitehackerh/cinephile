@@ -51,7 +51,7 @@ pub(crate) struct TmdbMovie {
     pub title: String,
     pub original_title: String,
     #[serde(default)]
-    pub over_view: Option<String>,
+    pub overview: Option<String>,
     #[serde(default)]
     pub poster_path: Option<String>,
     #[serde(default)]
@@ -60,7 +60,7 @@ pub(crate) struct TmdbMovie {
     pub release_date: Option<String>,
     pub runtime: Option<i32>,
     #[serde(default)]
-    pub vote_average: Option<f32>,
+    pub vote_average: Option<f64>,
     #[serde(default)]
     pub tagline: Option<String>,
     pub genres: Vec<TmdbGenre>,

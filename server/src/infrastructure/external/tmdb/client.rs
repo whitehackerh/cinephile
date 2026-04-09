@@ -121,7 +121,7 @@ impl TmdbGateway for TmdbClient {
                 tmdb_res.id,
                 tmdb_res.title,
                 tmdb_res.original_title,
-                tmdb_res.over_view,
+                tmdb_res.overview,
                 tmdb_res.poster_path,
                 tmdb_res.backdrop_path,
                 tmdb_res.release_date,

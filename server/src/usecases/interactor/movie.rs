@@ -41,7 +41,7 @@ impl MovieUseCase for MovieInteractor {
             id: movie.id(),
             title: movie.title().to_string(),
             original_title: movie.original_title().to_string(),
-            over_view: movie.over_view().clone(),
+            overview: movie.overview().clone(),
             poster_path: movie.poster_path().clone(),
             backdrop_path: movie.backdrop_path().clone(),
             release_date: movie.release_date().clone(),

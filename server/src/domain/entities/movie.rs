@@ -5,7 +5,7 @@ pub(crate) struct Movie {
     id: i32,
     title: String,
     original_title: String,
-    over_view: Option<String>,
+    overview: Option<String>,
     poster_path: Option<String>,
     backdrop_path: Option<String>,
     release_date: Option<String>,
@@ -20,7 +20,7 @@ impl Movie{
         id: i32,
         title: String,
         original_title: String,
-        over_view: Option<String>,
+        overview: Option<String>,
         poster_path: Option<String>,
         backdrop_path: Option<String>,
         release_date: Option<String>,
@@ -33,7 +33,7 @@ impl Movie{
             id,
             title,
             original_title,
-            over_view,
+            overview,
             poster_path,
             backdrop_path,
             release_date,
@@ -56,8 +56,8 @@ impl Movie{
         &self.original_title
     }
 
-    pub fn over_view(&self) -> &Option<String> {
-        &self.over_view
+    pub fn overview(&self) -> &Option<String> {
+        &self.overview
     }
 
     pub fn poster_path(&self) -> &Option<String> {
