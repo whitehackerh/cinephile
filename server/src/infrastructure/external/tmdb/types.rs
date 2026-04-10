@@ -10,7 +10,7 @@ pub(crate) struct TmdbSearchResponse {
 
 #[derive(Debug, Deserialize)]
 #[serde(tag = "media_type")]
-pub enum TmdbMedia {
+pub(crate) enum TmdbMedia {
     #[serde(rename = "movie")]
     Movie(TmdbMovieSummary),
     #[serde(rename = "tv")]
