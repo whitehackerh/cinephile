@@ -2,6 +2,7 @@ import { publicClient, authClient } from '@/lib/apiClient';
 import { ApiResponse } from '@/types/api';
 import { SignInRequest, SignUpRequest } from '@/lib/validations/auth';
 import { SearchResponse } from '@/types/search';
+import { Movie } from '@/types/movie';
 
 export const apiService = {
   async signUp(data: SignUpRequest) {
@@ -33,5 +34,16 @@ export const apiService = {
       throw new Error('Response data is missing');
     }
     return apiRes.data;
+  },
+
+  async getMovieDetail(id: string): Promise<Movie> {
+    const response = await authClient.get<ApiResponse<Movie>>(`/movie/${id}`, {});
+    if (response.data.error) {
+      throw new Error(response.data.error.message);
+    }
+    if (!response.data.data) {
+      throw new Error('Response data is missing');
+    }
+    return response.data.data
   }
 };
