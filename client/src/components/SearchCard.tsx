@@ -1,16 +1,19 @@
+import Link from 'next/link';
 import Image from 'next/image';
 import { Work } from '@/types/search';
+import { getImageUrl } from '@/utils/tmdb';
 
 export const SearchCard = ({ work }: { work: Work }) => {
   const isMovie = work.media_type === 'movie';
   const title = isMovie ? work.title : work.name;
   const date = isMovie ? work.release_date : work.first_air_date;
-  const posterUrl = work.poster_path 
-    ? `https://image.tmdb.org/t/p/w500${work.poster_path}`
-    : '/no-image.png'; 
+  const posterUrl = getImageUrl(work.poster_path, 'w500');
+  const detailPath = work.media_type === 'movie' 
+    ? `/movie/${work.id}` 
+    : `/tv/${work.id}`;
 
   return (
-    <div className="group relative border border-gray-700 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow bg-gray-800">
+    <Link href={detailPath} className="group relative border border-gray-700 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow bg-gray-800">
       <div className="aspect-[2/3] relative bg-gray-700">
         <Image
           src={posterUrl}
@@ -34,6 +37,6 @@ export const SearchCard = ({ work }: { work: Work }) => {
           {work.overview || 'No description available.'}
         </p>
       </div>
-    </div>
+    </Link>
   );
 };
