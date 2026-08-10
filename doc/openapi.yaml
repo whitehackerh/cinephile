@@ -179,7 +179,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: id
+        - name: series_id
           in: path
           required: true
           description: Tv Series ID from TMDB
@@ -512,10 +512,11 @@ components:
             $ref: '#/components/schemas/Genre'
         seasons_summary:
           type: array
+          maxItems: 100
           items:
-           $ref: '#/components/schemas/SeasonSummary'
+           $ref: '#/components/schemas/TvSeasonSummary'
     
-    SeasonSummary:
+    TvSeasonSummary:
       type: object
       required:
         - id
