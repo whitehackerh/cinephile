@@ -461,13 +461,15 @@ components:
         - title
         - original_title
         - overview
+        - number_of_seasons
+        - number_of_episodes
         - poster_path
         - backdrop_path
         - first_air_date
         - vote_average
         - tagline
         - genres
-        - seasons_summary
+        - season_summaries
       properties:
         id:
           type: integer
@@ -478,6 +480,14 @@ components:
         overview:
           oneOf:
             - type: string
+            - type: 'null'
+        number_of_seasons:
+          oneOf:
+            - type: integer
+            - type: 'null'
+        number_of_episodes:
+          oneOf:
+            - type: integer
             - type: 'null'
         poster_path:
           oneOf:
@@ -510,7 +520,7 @@ components:
           maxItems: 100
           items:
             $ref: '#/components/schemas/Genre'
-        seasons_summary:
+        season_summaries:
           type: array
           maxItems: 100
           items:

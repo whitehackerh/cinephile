@@ -58,16 +58,64 @@ pub(crate) struct TmdbMovie {
     pub backdrop_path: Option<String>,
     #[serde(default)]
     pub release_date: Option<String>,
+    #[serde(default)]
     pub runtime: Option<i32>,
     #[serde(default)]
     pub vote_average: Option<f64>,
     #[serde(default)]
     pub tagline: Option<String>,
-    pub genres: Vec<TmdbGenre>,
+    #[serde(default)]
+    pub genres: Option<Vec<TmdbGenre>>,
 }
 
 #[derive(Debug, Deserialize)]
 pub(crate) struct TmdbGenre {
     pub id: i32,
     pub name: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub(crate) struct TmdbTvSeries {
+    pub id: i32,
+    pub name: String,
+    pub original_name: String,
+    #[serde(default)]
+    pub overview: Option<String>,
+    #[serde(default)]
+    pub number_of_seasons: Option<i32>,
+    #[serde(default)]
+    pub number_of_episodes: Option<i32>,
+    #[serde(default)]
+    pub poster_path: Option<String>,
+    #[serde(default)]
+    pub backdrop_path: Option<String>,
+    #[serde(default)]
+    pub first_air_date: Option<String>,
+    #[serde(default)]
+    pub vote_average: Option<f64>,
+    #[serde(default)]
+    pub tagline: Option<String>,
+    #[serde(default)]
+    pub genres: Option<Vec<TmdbGenre>>,
+    #[serde(default)]
+    pub seasons: Option<Vec<TmdbTvSeasonSummary>>,
+}
+
+#[derive(Debug, Deserialize)]
+pub(crate) struct TmdbTvSeasonSummary {
+    pub id: i32,
+    #[serde(default)]
+    pub season_number: i32,
+    #[serde(default)]
+    pub episode_count: i32,
+    #[serde(default)]
+    pub name: String,
+    #[serde(default)]
+    pub overview: Option<String>,
+    #[serde(default)]
+    pub poster_path: Option<String>,
+    #[serde(default)]
+    pub air_date: Option<String>,
+    #[serde(default)]
+    pub vote_average: Option<f64>
 }

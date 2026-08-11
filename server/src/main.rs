@@ -1,8 +1,9 @@
+use axum::http::HeaderValue;
 use std::env;
 use std::net::SocketAddr;
 use sqlx::postgres::PgPoolOptions;
 use tower_http::services::ServeDir;
-use tower_http::cors::{Any, CorsLayer};
+use tower_http::cors::CorsLayer;
 use utoipa_swagger_ui::{SwaggerUi, Config};
 use server::{AppRegistry, infrastructure::ui::router::create_router};
 
@@ -20,7 +21,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let shared_state = AppRegistry::build(pool).await;
 
     let cors = CorsLayer::new()
-        .allow_origin("http://localhost:3000".parse::<axum::http::HeaderValue>().unwrap())
+        .allow_origin([
+            "http://localhost:3000".parse::<HeaderValue>().unwrap(),
+            "http://127.0.0.1:8080".parse::<HeaderValue>().unwrap(),
+            "http://localhost:8080".parse::<HeaderValue>().unwrap(),
+        ])
         .allow_methods([axum::http::Method::GET, axum::http::Method::POST, axum::http::Method::OPTIONS])
         .allow_headers([axum::http::header::CONTENT_TYPE, axum::http::header::AUTHORIZATION])
         .expose_headers([axum::http::header::AUTHORIZATION]);

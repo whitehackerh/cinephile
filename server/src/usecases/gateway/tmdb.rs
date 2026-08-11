@@ -1,7 +1,10 @@
 use async_trait::async_trait;
 use crate::usecases::dto::search::SearchOutput;
 use crate::domain::{
-    entities::movie::Movie,
+    entities::{
+        movie::Movie,
+        tv_series::TvSeries
+    },
     errors::AppError
 };
 
@@ -9,4 +12,5 @@ use crate::domain::{
 pub(crate) trait TmdbGateway: Send + Sync {
     async fn fetch_search_results(&self, query: &str, page: u32) -> Result<SearchOutput, AppError>;
     async fn fetch_movie_by_id(&self, id: i32) -> Result<Movie, AppError>;
+    async fn fetch_tv_series_by_id(&self, id: i32) -> Result<TvSeries, AppError>;
 }
