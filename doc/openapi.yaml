@@ -172,7 +172,7 @@ paths:
   /tv/{series_id}:
     get:
       tags:
-        - Tv
+        - TV
       summary: Tv Series Detail
       description: Get tv series detail data
       operationId: getTvSeriesById

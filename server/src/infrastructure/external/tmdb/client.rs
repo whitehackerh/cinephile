@@ -151,7 +151,7 @@ impl TmdbGateway for TmdbClient {
 
         let response = response.error_for_status().map_err(|e| {
             if e.status() == Some(reqwest::StatusCode::NOT_FOUND) {
-                AppError::EntityNotFound(format!("Movie with id {} not found", id))
+                AppError::EntityNotFound(format!("TV series with id {} not found", id))
             } else {
                 AppError::Infrastructure(format!("TMDB API error: {}", e))
             }
