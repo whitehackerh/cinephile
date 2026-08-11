@@ -65,12 +65,12 @@ export default function TvSeriesPage({
               {tvSeries.first_air_date && <span>{tvSeries.first_air_date}</span>}
               
               {/* Season & Episode Count */}
-              {tvSeries.number_of_seasons && (
+              {tvSeries.number_of_seasons !== null && (
                 <span className="text-slate-300 font-bold">
                   {tvSeries.number_of_seasons} {tvSeries.number_of_seasons === 1 ? 'Season' : 'Seasons'}
                 </span>
               )}
-              {tvSeries.number_of_episodes && (
+              {tvSeries.number_of_episodes !== null && (
                 <span>
                   ({tvSeries.number_of_episodes} {tvSeries.number_of_episodes === 1 ? 'Episode' : 'Episodes'})
                 </span>
