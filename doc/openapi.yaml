@@ -131,7 +131,7 @@ paths:
   /movie/{id}:
     get:
       tags:
-        - Work
+        - Movie
       summary: Movie Detail
       description: Get movie detail data
       operationId: getMovieById
@@ -158,6 +158,47 @@ paths:
                     properties:
                       data:
                         $ref: '#/components/schemas/Movie'
+                      error:
+                        type: 'null'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '401':
+          $ref: '#/components/responses/ErrorUnauthorized'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '500':
+          $ref: '#/components/responses/ErrorInternalServer'
+
+  /tv/{series_id}:
+    get:
+      tags:
+        - TV
+      summary: Tv Series Detail
+      description: Get tv series detail data
+      operationId: getTvSeriesById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: series_id
+          in: path
+          required: true
+          description: Tv Series ID from TMDB
+          schema:
+            type: integer
+            minimum: 1
+            example: 12345
+      responses:
+        '200':
+          description: Tv Series details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/TvSeries'
                       error:
                         type: 'null'
         '400':
@@ -412,6 +453,121 @@ components:
           type: integer
         name:
           type: string
+
+    TvSeries:
+      type: object
+      required:
+        - id
+        - title
+        - original_title
+        - overview
+        - number_of_seasons
+        - number_of_episodes
+        - poster_path
+        - backdrop_path
+        - first_air_date
+        - vote_average
+        - tagline
+        - genres
+        - season_summaries
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        original_title:
+          type: string
+        overview:
+          oneOf:
+            - type: string
+            - type: 'null'
+        number_of_seasons:
+          oneOf:
+            - type: integer
+            - type: 'null'
+        number_of_episodes:
+          oneOf:
+            - type: integer
+            - type: 'null'
+        poster_path:
+          oneOf:
+            - type: string
+            - type: 'null'
+        backdrop_path:
+          oneOf:
+            - type: string
+            - type: 'null'
+        first_air_date:
+          oneOf:
+            - type: string
+              format: date
+            - type: 'null'
+        vote_average:
+          oneOf:
+            - type: number
+              format: double
+              minimum: 0.00
+              maximum: 100.00
+              example: 84.39
+            - type: 'null'
+          example: 85
+        tagline:
+          oneOf:
+            - type: string
+            - type: 'null'
+        genres:
+          type: array
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/Genre'
+        season_summaries:
+          type: array
+          maxItems: 100
+          items:
+           $ref: '#/components/schemas/TvSeasonSummary'
+    
+    TvSeasonSummary:
+      type: object
+      required:
+        - id
+        - season_number
+        - episode_count
+        - title
+        - overview
+        - poster_path
+        - air_date
+        - vote_average
+      properties:
+        id:
+          type: integer
+        season_number:
+          type: integer
+        episode_count:
+          type: integer
+        title:
+          type: string
+        overview:
+          oneOf:
+            - type: string
+            - type: 'null'
+        poster_path:
+          oneOf:
+            - type: string
+            - type: 'null'
+        air_date:
+          oneOf:
+            - type: string
+              format: date
+            - type: 'null'
+        vote_average:
+          oneOf:
+            - type: number
+              format: double
+              minimum: 0.00
+              maximum: 100.00
+              example: 84.39
+            - type: 'null'
+          example: 85
 
   responses:
     ErrorBadRequest:

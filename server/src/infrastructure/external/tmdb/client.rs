@@ -5,6 +5,8 @@ use crate::{
         entities::{
             genre::Genre,
             movie::Movie,
+            tv_series::TvSeries,
+            tv_season_summary::TvSeasonSummary
         },
         errors::AppError,
     },
@@ -19,7 +21,7 @@ use crate::{
     }
 };
 
-use super::types::{TmdbSearchResponse, TmdbMedia, TmdbMovie, TmdbGenre};
+use super::types::{TmdbSearchResponse, TmdbMedia, TmdbMovie, TmdbTvSeries};
 
 pub struct TmdbClient {
     http_client: Client,
@@ -129,8 +131,62 @@ impl TmdbGateway for TmdbClient {
                 tmdb_res.vote_average.map(|v| v as f64 * 10.0),
                 tmdb_res.tagline,
                 tmdb_res.genres
+                .unwrap_or_default()
                 .into_iter()
                 .map(|genre| Genre::new(genre.id, genre.name))
+                .collect(),
+            )
+        )
+    }
+
+    async fn fetch_tv_series_by_id(&self, id: i32) -> Result<TvSeries, AppError> {
+        let response = self.http_client
+            .get(format!("{}/tv/{}", self.base_url, id))
+            .query(&[
+                ("api_key", self.api_key.as_str()),
+            ])
+            .send()
+            .await
+            .map_err(|e| AppError::Infrastructure(e.to_string()))?;
+
+        let response = response.error_for_status().map_err(|e| {
+            if e.status() == Some(reqwest::StatusCode::NOT_FOUND) {
+                AppError::EntityNotFound(format!("TV series with id {} not found", id))
+            } else {
+                AppError::Infrastructure(format!("TMDB API error: {}", e))
+            }
+        })?;
+
+        let tmdb_res = response
+            .json::<TmdbTvSeries>()
+            .await
+            .map_err(|e| AppError::Infrastructure(format!("Failed to parse TMDB response: {}", e)))?;
+
+        Ok(
+            TvSeries::new(
+                tmdb_res.id,
+                tmdb_res.name,
+                tmdb_res.original_name,
+                tmdb_res.overview,
+                tmdb_res.number_of_seasons,
+                tmdb_res.number_of_episodes,
+                tmdb_res.poster_path,
+                tmdb_res.backdrop_path,
+                tmdb_res.first_air_date,
+                tmdb_res.vote_average.map(|v| v as f64 * 10.0),
+                tmdb_res.tagline,
+                tmdb_res.genres
+                .unwrap_or_default()
+                .into_iter()
+                .map(|genre| Genre::new(genre.id, genre.name))
+                .collect(),
+                tmdb_res.seasons
+                .unwrap_or_default()
+                .into_iter()
+                .map(|season| TvSeasonSummary::new(
+                    season.id, season.season_number, season.episode_count, season.name,
+                    season.overview, season.poster_path, season.air_date, season.vote_average.map(|v| v as f64 * 10.0)
+                ))
                 .collect(),
             )
         )
