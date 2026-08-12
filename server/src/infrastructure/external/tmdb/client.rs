@@ -217,10 +217,16 @@ impl TmdbGateway for TmdbClient {
             .await
             .map_err(|e| AppError::Infrastructure(format!("Failed to parse TMDB response: {}", e)))?;
 
+        if tmdb_res.season_number != season_number {
+            return Err(AppError::Infrastructure(
+                "TMDB returned a different season number".to_string(),
+            ));
+        }
+
         Ok(
             TvSeason::new(
                 tmdb_res.id,
-                season_number,
+                tmdb_res.season_number,
                 tmdb_res
                 .episodes
                 .as_ref()
