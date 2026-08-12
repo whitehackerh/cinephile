@@ -209,6 +209,48 @@ paths:
           $ref: '#/components/responses/ErrorNotFound'
         '500':
           $ref: '#/components/responses/ErrorInternalServer'
+  
+  /tv/{series_id}/season/{season_number}:
+    get:
+      tags:
+        - TV
+      summary: Tv Season Detail
+      description: Get tv season detail data
+      operationId: getTvSeasonByNumber
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: season_number
+          in: path
+          required: true
+          description: Tv Season Number from TMDB
+          schema:
+            type: integer
+            minimum: 1
+            example: 12345
+      responses:
+        '200':
+          description: Tv Season details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/TvSeason'
+                      error:
+                        type: 'null'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '401':
+          $ref: '#/components/responses/ErrorUnauthorized'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '500':
+          $ref: '#/components/responses/ErrorInternalServer'
+  
 
 components:
   securitySchemes:
@@ -549,6 +591,100 @@ components:
         overview:
           oneOf:
             - type: string
+            - type: 'null'
+        poster_path:
+          oneOf:
+            - type: string
+            - type: 'null'
+        air_date:
+          oneOf:
+            - type: string
+              format: date
+            - type: 'null'
+        vote_average:
+          oneOf:
+            - type: number
+              format: double
+              minimum: 0.00
+              maximum: 100.00
+              example: 84.39
+            - type: 'null'
+          example: 85
+
+    TvSeason:
+      type: object
+      required:
+        - id
+        - season_number
+        - episode_count
+        - title
+        - overview
+        - poster_path
+        - air_date
+        - vote_average
+        - episodes
+      properties:
+        id:
+          type: integer
+        season_number:
+          type: integer
+        episode_count:
+          type: integer
+        title:
+          type: string
+        overview:
+          oneOf:
+            - type: string
+            - type: 'null'
+        poster_path:
+          oneOf:
+            - type: string
+            - type: 'null'
+        air_date:
+          oneOf:
+            - type: string
+              format: date
+            - type: 'null'
+        vote_average:
+          oneOf:
+            - type: number
+              format: double
+              minimum: 0.00
+              maximum: 100.00
+              example: 84.39
+            - type: 'null'
+          example: 85
+        episodes:
+          type: array
+          maxItems: 10000
+          items:
+           $ref: '#/components/schemas/TvEpisodeSummary'
+    
+    TvEpisodeSummary:
+      type: object
+      required:
+        - id
+        - episode_number
+        - title
+        - overview
+        - runtime
+        - poster_path
+        - air_date
+        - vote_average
+      properties:
+        id:
+          type: integer
+        episode_number:
+          type: integer
+        title:
+          type: string
+        overview:
+          oneOf:
+            - type: string
+            - type: 'null'
+        runtime:
+          oneOf:
+            - type: integer
             - type: 'null'
         poster_path:
           oneOf:
