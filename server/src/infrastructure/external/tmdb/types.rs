@@ -119,3 +119,37 @@ pub(crate) struct TmdbTvSeasonSummary {
     #[serde(default)]
     pub vote_average: Option<f64>
 }
+
+#[derive(Debug, Deserialize)]
+pub(crate) struct TmdbTvSeason {
+    pub id: i32,
+    pub season_number: i32,
+    pub name: String,
+    #[serde(default)]
+    pub overview: Option<String>,
+    #[serde(default)]
+    pub poster_path: Option<String>,
+    #[serde(default)]
+    pub air_date: Option<String>,
+    #[serde(default)]
+    pub vote_average: Option<f64>,
+    #[serde(default)]
+    pub episodes: Option<Vec<TmdbTvEpisodeSummary>>,
+}
+
+#[derive(Debug, Deserialize)]
+pub(crate) struct TmdbTvEpisodeSummary {
+    pub id: i32,
+    pub episode_number: i32,
+    pub name: String,
+    #[serde(default)]
+    pub overview: Option<String>,
+    #[serde(default)]
+    pub runtime: Option<i32>,
+    #[serde(default)]
+    pub still_path: Option<String>,
+    #[serde(default)]
+    pub air_date: Option<String>,
+    #[serde(default)]
+    pub vote_average: Option<f64>,
+}
