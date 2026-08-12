@@ -1,6 +1,7 @@
 'use client';
 
 import { use } from 'react';
+import Link from 'next/link';
 import { useTvSeries } from '@/hooks/useTvSeries';
 import { getImageUrl } from '@/utils/tmdb';
 import Image from 'next/image';
@@ -125,9 +126,10 @@ export default function TvSeriesPage({
               <h2 className="text-2xl font-bold tracking-wide">Seasons</h2>
               <div className="grid grid-cols-1 gap-4">
                 {tvSeries.season_summaries.map((season) => (
-                  <div 
+                  <Link 
                     key={season.id} 
-                    className="flex flex-col sm:flex-row gap-4 bg-slate-900/60 border border-white/5 rounded-xl p-4 overflow-hidden"
+                    href={`/tv/${resolvedParams.seriesId}/season/${season.season_number}`}
+                    className="flex flex-col sm:flex-row gap-4 bg-slate-900/60 hover:bg-slate-900/90 border border-white/5 hover:border-indigo-500/50 rounded-xl p-4 overflow-hidden transition-all group"
                   >
                     <div className="w-24 flex-shrink-0 mx-auto sm:mx-0">
                       <Image
@@ -135,12 +137,12 @@ export default function TvSeriesPage({
                         alt={season.title}
                         width={96}
                         height={144}
-                        className="rounded-lg object-cover w-full h-auto bg-slate-800"
+                        className="rounded-lg object-cover w-full h-auto bg-slate-800 group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
                     <div className="flex-1 space-y-2">
                       <div className="flex items-center justify-between flex-wrap gap-2">
-                        <h3 className="text-lg font-bold text-white">
+                        <h3 className="text-lg font-bold text-white group-hover:text-indigo-400 transition-colors">
                           {season.title}
                         </h3>
                         {season.vote_average !== null && season.vote_average > 0 && (
@@ -159,7 +161,7 @@ export default function TvSeriesPage({
                         {season.overview || "No season overview available."}
                       </p>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
