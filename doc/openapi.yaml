@@ -220,13 +220,21 @@ paths:
       security:
         - bearerAuth: []
       parameters:
+        - name: series_id
+          in: path
+          required: true
+          description: Tv Series ID from TMDB
+          schema:
+            type: integer
+            minimum: 1
+            example: 12345
         - name: season_number
           in: path
           required: true
           description: Tv Season Number from TMDB
           schema:
             type: integer
-            minimum: 1
+            minimum: 0
             example: 12345
       responses:
         '200':
