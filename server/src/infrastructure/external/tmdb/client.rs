@@ -6,6 +6,7 @@ use crate::{
             genre::Genre,
             movie::Movie,
             tv_episode_summary::TvEpisodeSummary,
+            tv_episode::TvEpisode,
             tv_season_summary::TvSeasonSummary,
             tv_season::TvSeason,
             tv_series::TvSeries,
@@ -23,7 +24,7 @@ use crate::{
     }
 };
 
-use super::types::{TmdbSearchResponse, TmdbMedia, TmdbMovie, TmdbTvSeason, TmdbTvSeries};
+use super::types::{TmdbSearchResponse, TmdbMedia, TmdbMovie, TmdbTvEpisode, TmdbTvSeason, TmdbTvSeries};
 
 pub struct TmdbClient {
     http_client: Client,
@@ -244,6 +245,52 @@ impl TmdbGateway for TmdbClient {
                     episode.runtime, episode.still_path, episode.air_date, episode.vote_average.map(|v| v as f64 * 10.0)
                 ))
                 .collect(),
+            )
+        )
+    }
+
+    async fn fetch_tv_episode(&self, series_id: i32, season_number: i32, episode_number: i32) -> Result<TvEpisode, AppError> {
+        let response = self.http_client
+            .get(format!("{}/tv/{}/season/{}/episode/{}", self.base_url, series_id, season_number, episode_number))
+            .query(&[
+                ("api_key", self.api_key.as_str()),
+            ])
+            .send()
+            .await
+            .map_err(|e| AppError::Infrastructure(e.to_string()))?;
+
+        let response = response.error_for_status().map_err(|e| {
+            if e.status() == Some(reqwest::StatusCode::NOT_FOUND) {
+                AppError::EntityNotFound(format!("TV episode with series_id {} season_number {} episode_number {} not found", series_id, season_number, episode_number))
+            } else {
+                AppError::Infrastructure(format!("TMDB API error: {}", e))
+            }
+        })?;
+
+        let tmdb_res = response
+            .json::<TmdbTvEpisode>()
+            .await
+            .map_err(|e| AppError::Infrastructure(format!("Failed to parse TMDB response: {}", e)))?;
+
+        if tmdb_res.season_number != season_number || tmdb_res.episode_number != episode_number {
+            return Err(AppError::Infrastructure(
+                "TMDB returned a different season number or episode number".to_string(),
+            ));
+        }
+
+        Ok(
+            TvEpisode::new(
+                tmdb_res.id,
+                tmdb_res.episode_number,
+                tmdb_res.season_number,
+                tmdb_res.name,
+                tmdb_res.overview,
+                tmdb_res.runtime,
+                tmdb_res.still_path,
+                tmdb_res.air_date,
+                tmdb_res.vote_average.map(|v| v as f64 * 10.0),
+                tmdb_res.production_code,
+                tmdb_res.episode_type
             )
         )
     }

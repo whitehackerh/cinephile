@@ -26,7 +26,7 @@ pub(crate) struct EpisodeSummary {
     pub title: String,
     pub overview: Option<String>,
     pub runtime: Option<i32>,
-    pub poster_path: Option<String>,
+    pub still_path: Option<String>,
     pub air_date: Option<String>,
     pub vote_average: Option<f64>,
 }

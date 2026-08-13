@@ -732,7 +732,7 @@ components:
         - title
         - overview
         - runtime
-        - poster_path
+        - still_path
         - air_date
         - vote_average
       properties:
@@ -750,7 +750,7 @@ components:
           oneOf:
             - type: integer
             - type: 'null'
-        poster_path:
+        still_path:
           oneOf:
             - type: string
             - type: 'null'
@@ -778,7 +778,7 @@ components:
         - title
         - overview
         - runtime
-        - poster_path
+        - still_path
         - air_date
         - vote_average
         - production_code
@@ -800,7 +800,7 @@ components:
           oneOf:
             - type: integer
             - type: 'null'
-        poster_path:
+        still_path:
           oneOf:
             - type: string
             - type: 'null'

@@ -22,6 +22,7 @@ use crate::{
             sign_in::SignInInteractor,
             search::SearchInteractor,
             movie::MovieInteractor,
+            tv_episode::TvEpisodeInteractor,
             tv_season::TvSeasonInteractor,
             tv_series::TvSeriesInteractor,
         },
@@ -30,6 +31,7 @@ use crate::{
             sign_in::SignInUseCase,
             search::SearchUseCase,
             movie::MovieUseCase,
+            tv_episode::TvEpisodeUseCase,
             tv_season::TvSeasonUseCase,
             tv_series::TvSeriesUseCase,
         },
@@ -48,6 +50,7 @@ pub struct AppRegistry {
     pub(crate) signin_usecase: Arc<dyn SignInUseCase + Send + Sync>,
     pub(crate) search_usecase: Arc<dyn SearchUseCase + Send + Sync>,
     pub(crate) movie_usecase: Arc<dyn MovieUseCase + Send + Sync>,
+    pub(crate) tv_episode_usecase: Arc<dyn TvEpisodeUseCase + Send + Sync>,
     pub(crate) tv_season_usecase: Arc<dyn TvSeasonUseCase + Send + Sync>,
     pub(crate) tv_series_usecase: Arc<dyn TvSeriesUseCase + Send + Sync>,
     pub(crate) token_manager: Arc<JwtTokenManager>,
@@ -82,6 +85,9 @@ impl AppRegistry {
         let movie_usecase = Arc::new(MovieInteractor::new(
             tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>
         ));
+        let tv_episode_usecase = Arc::new(TvEpisodeInteractor::new(
+            tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>
+        ));
         let tv_season_usecase = Arc::new(TvSeasonInteractor::new(
             tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>
         ));
@@ -94,6 +100,7 @@ impl AppRegistry {
             signin_usecase,
             search_usecase,
             movie_usecase,
+            tv_episode_usecase,
             tv_season_usecase,
             tv_series_usecase,
             token_manager,
@@ -114,6 +121,7 @@ impl_from_ref!(SignUpUseCase, signup_usecase);
 impl_from_ref!(SignInUseCase, signin_usecase);
 impl_from_ref!(SearchUseCase, search_usecase);
 impl_from_ref!(MovieUseCase, movie_usecase);
+impl_from_ref!(TvEpisodeUseCase, tv_episode_usecase);
 impl_from_ref!(TvSeasonUseCase, tv_season_usecase);
 impl_from_ref!(TvSeriesUseCase, tv_series_usecase);
 

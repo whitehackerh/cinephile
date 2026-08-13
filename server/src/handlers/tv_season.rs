@@ -46,7 +46,7 @@ pub(crate) struct EpisodeSummary {
     pub title: String,
     pub overview: Option<String>,
     pub runtime: Option<i32>,
-    pub poster_path: Option<String>,
+    pub still_path: Option<String>,
     pub air_date: Option<String>,
     pub vote_average: Option<f64>,
 }
@@ -75,7 +75,7 @@ impl From<EpisodeSummaryDto> for EpisodeSummary {
             title: output.title,
             overview: output.overview,
             runtime: output.runtime,
-            poster_path: output.poster_path,
+            still_path: output.still_path,
             air_date: output.air_date,
             vote_average: output.vote_average,
         }

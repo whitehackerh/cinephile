@@ -115,7 +115,7 @@ export default function TvSeasonPage({
                     {/* Episode Thumbnail */}
                     <div className="w-full sm:w-48 flex-shrink-0">
                       <Image
-                        src={getImageUrl(episode.poster_path, "w500")}
+                        src={getImageUrl(episode.still_path, "w500")}
                         alt={episode.title}
                         width={192}
                         height={108}
