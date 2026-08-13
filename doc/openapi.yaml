@@ -822,7 +822,7 @@ components:
           oneOf:
             - type: string
             - type: 'null'
-        epeisode_type:
+        episode_type:
           oneOf:
             - type: string
             - type: 'null'
