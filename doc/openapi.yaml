@@ -258,7 +258,63 @@ paths:
           $ref: '#/components/responses/ErrorNotFound'
         '500':
           $ref: '#/components/responses/ErrorInternalServer'
-  
+
+  /tv/{series_id}/season/{season_number}/episode/{episode_number}:
+    get:
+      tags:
+        - TV
+      summary: Tv Episode Detail
+      description: Get tv episode detail data
+      operationId: getTvEpisodeByNumber
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: series_id
+          in: path
+          required: true
+          description: Tv Series ID from TMDB
+          schema:
+            type: integer
+            minimum: 1
+            example: 12345
+        - name: season_number
+          in: path
+          required: true
+          description: Tv Season Number from TMDB
+          schema:
+            type: integer
+            minimum: 0
+            example: 12345
+        - name: episode_number
+          in: path
+          required: true
+          description: Tv episode Number from TMDB
+          schema:
+            type: integer
+            minimum: 0
+            example: 12345
+      responses:
+        '200':
+          description: Tv Episode details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/TvEpisode'
+                      error:
+                        type: 'null'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '401':
+          $ref: '#/components/responses/ErrorUnauthorized'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '500':
+          $ref: '#/components/responses/ErrorInternalServer'
 
 components:
   securitySchemes:
@@ -712,6 +768,64 @@ components:
               example: 84.39
             - type: 'null'
           example: 85
+
+    TvEpisode:
+      type: object
+      required:
+        - id
+        - episode_number
+        - season_number
+        - title
+        - overview
+        - runtime
+        - poster_path
+        - air_date
+        - vote_average
+        - production_code
+        - episode_type
+      properties:
+        id:
+          type: integer
+        episode_number:
+          type: integer
+        season_number:
+          type: integer
+        title:
+          type: string
+        overview:
+          oneOf:
+            - type: string
+            - type: 'null'
+        runtime:
+          oneOf:
+            - type: integer
+            - type: 'null'
+        poster_path:
+          oneOf:
+            - type: string
+            - type: 'null'
+        air_date:
+          oneOf:
+            - type: string
+              format: date
+            - type: 'null'
+        vote_average:
+          oneOf:
+            - type: number
+              format: double
+              minimum: 0.00
+              maximum: 100.00
+              example: 84.39
+            - type: 'null'
+          example: 85
+        production_code:
+          oneOf:
+            - type: string
+            - type: 'null'
+        epeisode_type:
+          oneOf:
+            - type: string
+            - type: 'null'
 
   responses:
     ErrorBadRequest:
