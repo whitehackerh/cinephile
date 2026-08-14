@@ -3,6 +3,7 @@ import { ApiResponse } from '@/types/api';
 import { SignInRequest, SignUpRequest } from '@/lib/validations/auth';
 import { SearchResponse } from '@/types/search';
 import { Movie } from '@/types/movie';
+import { TvEpisode } from '@/types/tvEpisode';
 import { TvSeason } from '@/types/tvSeason';
 import { TvSeries } from '@/types/tvSeries';
 
@@ -62,6 +63,17 @@ export const apiService = {
 
   async getTvSeason(series_id: string, season_number: string): Promise<TvSeason> {
     const response = await authClient.get<ApiResponse<TvSeason>>(`/tv/${series_id}/season/${season_number}`, {});
+    if (response.data.error) {
+      throw new Error(response.data.error.message);
+    }
+    if (!response.data.data) {
+      throw new Error('Response data is missing');
+    }
+    return response.data.data
+  },
+
+  async getTvEpisode(series_id: string, season_number: string, episode_number: string): Promise<TvEpisode> {
+    const response = await authClient.get<ApiResponse<TvEpisode>>(`/tv/${series_id}/season/${season_number}/episode/${episode_number}`, {});
     if (response.data.error) {
       throw new Error(response.data.error.message);
     }
