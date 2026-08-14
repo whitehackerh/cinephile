@@ -108,9 +108,10 @@ export default function TvSeasonPage({
               <h2 className="text-2xl font-bold tracking-wide">Episodes</h2>
               <div className="grid grid-cols-1 gap-4">
                 {tvSeason.episode_summaries.map((episode) => (
-                  <div 
+                  <Link 
                     key={episode.id} 
-                    className="flex flex-col sm:flex-row gap-4 bg-slate-900/60 border border-white/5 rounded-xl p-4 overflow-hidden hover:border-white/10 transition-colors"
+                    href={`/tv/${resolvedParams.seriesId}/season/${resolvedParams.seasonNumber}/episode/${episode.episode_number}`}
+                    className="flex flex-col sm:flex-row gap-4 bg-slate-900/60 hover:bg-slate-900/90 border border-white/5 hover:border-indigo-500/50 rounded-xl p-4 overflow-hidden transition-all group"
                   >
                     {/* Episode Thumbnail */}
                     <div className="w-full sm:w-48 flex-shrink-0">
@@ -119,14 +120,14 @@ export default function TvSeasonPage({
                         alt={episode.title}
                         width={192}
                         height={108}
-                        className="rounded-lg object-cover w-full h-auto aspect-video bg-slate-800"
+                        className="rounded-lg object-cover w-full h-auto aspect-video bg-slate-800 group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
 
                     {/* Episode Detail Info */}
                     <div className="flex-1 space-y-2">
                       <div className="flex items-center justify-between flex-wrap gap-2">
-                        <h3 className="text-lg font-bold text-white">
+                        <h3 className="text-lg font-bold text-white group-hover:text-indigo-400 transition-colors">
                           <span className="text-indigo-400 mr-2">
                             {episode.episode_number}.
                           </span>
@@ -150,7 +151,7 @@ export default function TvSeasonPage({
                         {episode.overview || "No episode description available."}
                       </p>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
