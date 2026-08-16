@@ -315,6 +315,40 @@ paths:
           $ref: '#/components/responses/ErrorNotFound'
         '500':
           $ref: '#/components/responses/ErrorInternalServer'
+  
+  /review:
+    post:
+      tags:
+        - Review
+      summary: Register a new review
+      description: Register a new review
+      operationId: postReview
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewRequest'
+      responses:
+        '201':
+          description: Review created successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Review'
+                      error:
+                        type: 'null'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '409':
+          $ref: '#/components/responses/ErrorConflict'
+        '500':
+          $ref: '#/components/responses/ErrorInternalServer'
 
 components:
   securitySchemes:
@@ -823,6 +857,74 @@ components:
             - type: string
             - type: 'null'
         episode_type:
+          oneOf:
+            - type: string
+            - type: 'null'
+
+    ReviewRequest:
+      type: object
+      required:
+        - rating
+        - content
+        - work_type
+        - targe_path
+      properties:
+        rating:
+          type: integer
+          minimum: 0
+          maximum: 100
+        content:
+          oneOf:
+            - type: string
+            - type: 'null'
+        work_type:
+          type: string
+          enum: [movie, series, season, episode]
+        target_path:
+          type: string
+
+    Review:
+      type: object
+      required:
+        - id
+        - rating
+        - content
+        - work_type
+        - target_path
+        - work
+        - created_at
+        - updated_at
+        - deleted_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        rating:
+          type: integer
+          minimum: 0
+          maximum: 100
+        content:
+          oneOf:
+            - type: string
+            - type: 'null'
+        work_type:
+          type: string
+          enum: [movie, series, season, episode]
+        target_path:
+          type: string
+        work:
+          oneOf:
+            - $ref: '#/components/schemas/Movie'
+            - $ref: '#/components/schemas/TvSeries'
+            - $ref: '#/components/schemas/TvSeason'
+            - $ref: '#/components/schemas/TvEpisode'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date_time
+        deleted_at:
           oneOf:
             - type: string
             - type: 'null'
