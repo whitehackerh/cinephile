@@ -1,7 +1,7 @@
 CREATE TABLE reviews (
-  id VARCHAR PRIMARY KEY,
-  user_id VARCHAR NOT NULL,
-  rating NUMERIC(3, 1) NOT NULL,
+  id UUID PRIMARY KEY,
+  user_id UUID NOT NULL,
+  rating SMALLINT NOT NULL,
   content TEXT,
   work_type VARCHAR NOT NULL,
   target_path VARCHAR NOT NULL,
