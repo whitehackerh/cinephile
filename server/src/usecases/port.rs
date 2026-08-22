@@ -6,3 +6,4 @@ pub(crate) mod sign_up;
 pub(crate) mod tv_episode;
 pub(crate) mod tv_season;
 pub(crate) mod tv_series;
+pub(crate) mod unit_of_work;

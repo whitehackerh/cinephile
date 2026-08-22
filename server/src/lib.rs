@@ -13,6 +13,7 @@ use crate::{
         persistence::postgres::{
             user::PostgresUserRepository,
             review::PostgresReviewRepository,
+            unit_of_work::PostgresUnitOfWork,
         },
         security::{
             password::PasswordManager,
@@ -40,6 +41,7 @@ use crate::{
             tv_season::TvSeasonUseCase,
             tv_series::TvSeriesUseCase,
             post_reviews::PostReviewsUseCase,
+            unit_of_work::UnitOfWork,
         },
         repository::{
             user::UserRepository,
@@ -73,14 +75,15 @@ impl AppRegistry {
         let tmdb_api_key = std::env::var("TMDB_API_KEY").expect("TMDB_API_KEY must be set");
         let tmdb_base_url = std::env::var("TMDB_BASE_URL").expect("TMDB_BASE_URL must be set");
 
-        let user_repository = Arc::new(PostgresUserRepository::new(pool));
+        let user_repository = Arc::new(PostgresUserRepository::new(pool.clone()));
         // let review_repository = Arc::new(PostgresReviewRepository::new(pool));
         let password_manager = Arc::new(PasswordManager::new());
         let token_manager = Arc::new(JwtTokenManager::new(jwt_secret));
         let tmdb_gateway = Arc::new(TmdbClient::new(tmdb_api_key, tmdb_base_url));
+        let uow: Arc<dyn UnitOfWork> = Arc::new(PostgresUnitOfWork::new(pool.clone()));
 
         let signup_usecase = Arc::new(SignUpInteractor::new(
-            user_repository.clone() as Arc<dyn UserRepository + Send + Sync>,
+            uow.clone(),
             password_manager.clone() as Arc<dyn PasswordManagerTrait>,
         ));
         let signin_usecase = Arc::new(SignInInteractor::new(
@@ -139,10 +142,3 @@ impl_from_ref!(TvEpisodeUseCase, tv_episode_usecase);
 impl_from_ref!(TvSeasonUseCase, tv_season_usecase);
 impl_from_ref!(TvSeriesUseCase, tv_series_usecase);
 // impl_from_ref!(PostReviewsUseCase, post_reviews_usecase);
-
-
-impl axum::extract::FromRef<AppState> for Arc<JwtTokenManager> {
-    fn from_ref(state: &AppState) -> Self {
-        state.0.token_manager.clone()
-    }
-}
