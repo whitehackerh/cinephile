@@ -1,0 +1,17 @@
+use serde::{Deserialize, Serialize};
+
+use crate::usecases::dto::{
+    movie::MovieOutput as Movie,
+    tv_series::TvSeriesOutput as TvSeries,
+    tv_season::TvSeasonOutput as TvSeason,
+    tv_episode::TvEpisodeOutput as TvEpisode,
+};
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(untagged)]
+pub enum Work {
+    Movie(Movie),
+    TvSeries(TvSeries),
+    TvSeason(TvSeason),
+    TvEpisode(TvEpisode),
+}

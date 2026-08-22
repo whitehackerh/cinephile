@@ -1,7 +1,8 @@
 pub(crate) mod domain;
-pub(crate) mod usecases;
-pub(crate) mod handlers;
+pub(crate) mod generated;
 pub(crate) mod middleware;
+pub(crate) mod presentation;
+pub(crate) mod usecases;
 pub mod infrastructure;
 
 use std::sync::Arc;
@@ -9,7 +10,10 @@ use sqlx::PgPool;
 use crate::{
     infrastructure::{
         external::tmdb::client::TmdbClient,
-        persistence::postgres::user::PostgresUserRepository,
+        persistence::postgres::{
+            user::PostgresUserRepository,
+            review::PostgresReviewRepository,
+        },
         security::{
             password::PasswordManager,
             token::JwtTokenManager
@@ -25,6 +29,7 @@ use crate::{
             tv_episode::TvEpisodeInteractor,
             tv_season::TvSeasonInteractor,
             tv_series::TvSeriesInteractor,
+            post_reviews::PostReviewsInteractor,
         },
         port::{
             sign_up::SignUpUseCase,
@@ -34,9 +39,11 @@ use crate::{
             tv_episode::TvEpisodeUseCase,
             tv_season::TvSeasonUseCase,
             tv_series::TvSeriesUseCase,
+            post_reviews::PostReviewsUseCase,
         },
         repository::{
-            user::UserRepository
+            user::UserRepository,
+            review::ReviewRepository,
         },
         security::{
             password::PasswordManager as PasswordManagerTrait,
@@ -53,6 +60,7 @@ pub struct AppRegistry {
     pub(crate) tv_episode_usecase: Arc<dyn TvEpisodeUseCase + Send + Sync>,
     pub(crate) tv_season_usecase: Arc<dyn TvSeasonUseCase + Send + Sync>,
     pub(crate) tv_series_usecase: Arc<dyn TvSeriesUseCase + Send + Sync>,
+    // pub(crate) post_reviews_usecase: Arc<dyn PostReviewsUseCase + Send + Sync>,
     pub(crate) token_manager: Arc<JwtTokenManager>,
 }
 
@@ -66,6 +74,7 @@ impl AppRegistry {
         let tmdb_base_url = std::env::var("TMDB_BASE_URL").expect("TMDB_BASE_URL must be set");
 
         let user_repository = Arc::new(PostgresUserRepository::new(pool));
+        // let review_repository = Arc::new(PostgresReviewRepository::new(pool));
         let password_manager = Arc::new(PasswordManager::new());
         let token_manager = Arc::new(JwtTokenManager::new(jwt_secret));
         let tmdb_gateway = Arc::new(TmdbClient::new(tmdb_api_key, tmdb_base_url));
@@ -94,6 +103,10 @@ impl AppRegistry {
         let tv_series_usecase = Arc::new(TvSeriesInteractor::new(
             tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>
         ));
+        // let post_reviews_usecase = Arc::new(PostReviewsInteractor::new(
+        //     tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>,
+        //     review_repository.clone() as Arc<dyn ReviewRepository + Send + Sync>,
+        // ));
 
         Arc::new(Self {
             signup_usecase,
@@ -103,6 +116,7 @@ impl AppRegistry {
             tv_episode_usecase,
             tv_season_usecase,
             tv_series_usecase,
+            // post_reviews_usecase,
             token_manager,
         })
     }
@@ -124,6 +138,7 @@ impl_from_ref!(MovieUseCase, movie_usecase);
 impl_from_ref!(TvEpisodeUseCase, tv_episode_usecase);
 impl_from_ref!(TvSeasonUseCase, tv_season_usecase);
 impl_from_ref!(TvSeriesUseCase, tv_series_usecase);
+// impl_from_ref!(PostReviewsUseCase, post_reviews_usecase);
 
 
 impl axum::extract::FromRef<AppState> for Arc<JwtTokenManager> {

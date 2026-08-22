@@ -35,7 +35,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let app = create_router(shared_state)
         .merge(SwaggerUi::new("/swagger-ui")
         .config(Config::from("/doc/openapi.yaml")))
-        .nest_service("/doc", ServeDir::new("../doc"))
+        .nest_service("/doc", ServeDir::new(std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../doc")))
         .layer(cors);
 
     println!("🚀 Server started at http://{}", addr);

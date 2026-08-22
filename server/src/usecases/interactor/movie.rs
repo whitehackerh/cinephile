@@ -6,10 +6,12 @@ use crate::{
         errors::AppError,
     },
     usecases::{
-        dto::movie::{
-            MovieInput,
-            MovieOutput,
-            Genre as GenreDto,
+        dto::{
+            genre::Genre,
+            movie::{
+                MovieInput,
+                MovieOutput
+            },
         },
         gateway::tmdb::TmdbGateway,
         port::movie::MovieUseCase,
@@ -58,7 +60,7 @@ impl MovieUseCase for MovieInteractor {
                 .into_iter()
                 .map(|g| {
                     let (g_id, g_name) = g.into_parts();
-                    GenreDto { id: g_id, name: g_name }
+                    Genre { id: g_id, name: g_name }
                 })
                 .collect(),
         })

@@ -7,7 +7,7 @@ pub(crate) struct TvEpisodeInput {
     pub episode_number: i32
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub(crate) struct TvEpisodeOutput {
     pub id: i32,
     pub episode_number: i32,

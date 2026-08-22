@@ -4,18 +4,17 @@ use axum::{
     response::IntoResponse,
     Json,
 };
-use serde::Deserialize;
 use std::sync::Arc;
-use serde_json::{json, Value};
-use crate::usecases::dto::sign_in::SignInInput;
-use crate::usecases::port::sign_in::SignInUseCase;
-use crate::handlers::base_response::ApiResponse;
+use serde_json::json;
 
-#[derive(Deserialize)]
-pub(crate) struct SignInRequest {
-    pub email: String,
-    pub password: String,
-}
+use crate::{
+    generated::api_schema::SignInRequest,
+    presentation::presenters::base_response::ApiResponse,
+    usecases::{
+        dto::sign_in::SignInInput,
+        port::sign_in::SignInUseCase
+    }
+};
 
 pub async fn signin_handler(
     uri: Uri,
@@ -40,10 +39,10 @@ pub async fn signin_handler(
             (
                 StatusCode::OK,
                 headers,
-                Json(ApiResponse::<Value>::success(uri.to_string(), json!({})))
+                Json(ApiResponse::success(uri.to_string(), json!({})))
             )
             .into_response()
         }
-        Err(e) => ApiResponse::<Value>::from_error(&uri, e).into_response(),
+        Err(e) => ApiResponse::from_error(&uri, e).into_response(),
     }
 }

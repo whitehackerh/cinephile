@@ -1,30 +1,30 @@
-use axum::http::{StatusCode, Uri};
-use axum::Json;
+use axum::{
+    Json,
+    http::{
+        StatusCode, 
+        Uri
+    }
+};
+use chrono::Utc;
 use serde::Serialize;
 use serde_json::Value;
-use chrono::{DateTime, Utc};
+
 use crate::domain::errors::AppError;
+pub use crate::generated::api_schema::{ApiErrorDetail, ApiResponse};
 
-#[derive(Serialize)]
-pub(crate) struct ApiResponse<T> {
-    pub uri: String,
-    pub timestamp: DateTime<Utc>,
-    pub data: Option<T>,
-    pub error: Option<ApiErrorDetail>,
-}
+impl ApiResponse {
+    pub fn success<T: Serialize>(uri: String, data: T) -> Self {
+        let map_data = serde_json::to_value(data)
+            .ok()
+            .and_then(|v| match v {
+                Value::Object(map) => Some(map),
+                _ => None,
+            });
 
-#[derive(Serialize)]
-pub(crate) struct ApiErrorDetail {
-    pub code: String,
-    pub message: String,
-}
-
-impl<T> ApiResponse<T> {
-    pub fn success(uri: String, data: T) -> Self {
         Self {
             uri,
             timestamp: Utc::now(),
-            data: Some(data),
+            data: map_data,
             error: None,
         }
     }
@@ -41,7 +41,7 @@ impl<T> ApiResponse<T> {
         }
     }
 
-    pub fn from_error(uri: &Uri, err: AppError) -> (StatusCode, Json<ApiResponse<Value>>) {
+    pub fn from_error(uri: &Uri, err: AppError) -> (StatusCode, Json<ApiResponse>) {
         let (status, code) = match &err {
             AppError::EntityNotFound(_) => (StatusCode::NOT_FOUND, "NOT_FOUND"),
             AppError::AlreadyExists(_) => (StatusCode::CONFLICT, "ALREADY_EXISTS"),
@@ -55,10 +55,9 @@ impl<T> ApiResponse<T> {
             _ => err.to_string(),
         };
 
-        (status, Json(ApiResponse::<Value>::error(
-            uri.to_string(),
-            code,
-            &message
-        )))
+        (
+            status,
+            Json(ApiResponse::error(uri.to_string(), code, &message)),
+        )
     }
 }
