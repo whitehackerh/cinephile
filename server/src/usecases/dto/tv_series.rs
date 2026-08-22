@@ -1,11 +1,13 @@
 use serde::{Deserialize, Serialize};
 
+use crate::usecases::dto::genre::Genre;
+
 #[derive(Debug)]
 pub(crate) struct TvSeriesInput {
     pub id: i32,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub(crate) struct TvSeriesOutput {
     pub id: i32,
     pub title: String,
@@ -22,13 +24,7 @@ pub(crate) struct TvSeriesOutput {
     pub season_summaries: Vec<SeasonSummary>
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-pub(crate) struct Genre {
-    pub id: i32,
-    pub name: String,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub(crate) struct SeasonSummary {
     pub id: i32,
     pub season_number: i32,

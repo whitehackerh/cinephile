@@ -47,6 +47,30 @@ impl Review {
         })
     }
 
+    pub fn reconstruct(
+        id: Uuid,
+        user_id: Uuid,
+        rating: i32,
+        content: Option<String>,
+        target_path: String,
+        work: Work,
+        created_at: DateTime<Utc>,
+        updated_at: DateTime<Utc>,
+        deleted_at: Option<DateTime<Utc>>
+    ) -> Self {
+        Self {
+            id,
+            user_id,
+            rating,
+            content,
+            target_path,
+            work,
+            created_at,
+            updated_at,
+            deleted_at
+        }
+    }
+
     pub fn work_type(&self) -> &'static str {
         match self.work {
             Work::Movie(_) => "movie",

@@ -4,7 +4,7 @@ use std::sync::Arc;
 use crate::{
     AppRegistry,
     AppState,
-    handlers::{
+    presentation::handlers::{
         sign_up::signup_handler,
         sign_in::signin_handler,
         search::search_handler,
@@ -12,6 +12,7 @@ use crate::{
         tv_episode::tv_episode_handler,
         tv_season::tv_season_handler,
         tv_series::tv_series_handler,
+        // post_reviews::post_reviews_handler,
     },
     middleware::auth::AuthMiddleware
 };
@@ -23,6 +24,7 @@ pub fn create_router(registry: Arc<AppRegistry>) -> Router {
         .route("/tv/{series_id}/season/{season_number}/episode/{episode_number}", get(tv_episode_handler))
         .route("/tv/{series_id}/season/{season_number}", get(tv_season_handler))
         .route("/tv/{series_id}", get(tv_series_handler))
+        // .route("/reviews", post(post_reviews_handler))
         .layer(from_fn_with_state(AppState(registry.clone()), AuthMiddleware::auth_middleware));
     
     let public_routes = Router::<AppState>::new()

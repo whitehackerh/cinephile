@@ -6,7 +6,7 @@ pub(crate) struct TvSeasonInput {
     pub season_number: i32
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub(crate) struct TvSeasonOutput {
     pub id: i32,
     pub season_number: i32,
@@ -19,7 +19,7 @@ pub(crate) struct TvSeasonOutput {
     pub episode_summaries: Vec<EpisodeSummary>
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub(crate) struct EpisodeSummary {
     pub id: i32,
     pub episode_number: i32,

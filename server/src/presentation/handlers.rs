@@ -1,5 +1,5 @@
-pub(crate) mod base_response;
 pub(crate) mod movie;
+pub(crate) mod post_reviews;
 pub(crate) mod search;
 pub(crate) mod sign_up;
 pub(crate) mod sign_in;

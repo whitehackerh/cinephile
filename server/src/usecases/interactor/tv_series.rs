@@ -6,11 +6,13 @@ use crate::{
         errors::AppError,
     },
     usecases::{
-        dto::tv_series::{
-            TvSeriesInput,
-            TvSeriesOutput,
-            Genre as GenreDto,
-            SeasonSummary as SeasonSummaryDto
+        dto::{
+            genre::Genre,
+            tv_series::{
+                TvSeriesInput,
+                TvSeriesOutput,
+                SeasonSummary as SeasonSummaryDto
+            },
         },
         gateway::tmdb::TmdbGateway,
         port::tv_series::TvSeriesUseCase,
@@ -60,7 +62,7 @@ impl TvSeriesUseCase for TvSeriesInteractor {
                 .into_iter()
                 .map(|g| {
                     let (g_id, g_name) = g.into_parts();
-                    GenreDto { id: g_id, name: g_name }
+                    Genre { id: g_id, name: g_name }
                 })
                 .collect(),
             season_summaries: season_summaries
