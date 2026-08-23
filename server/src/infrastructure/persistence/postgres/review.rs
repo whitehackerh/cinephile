@@ -57,7 +57,10 @@ impl ReviewRepository for PostgresReviewRepository {
     async fn create(&self, review: &Review) -> anyhow::Result<()> {
         let query = sqlx::query!(
             r#"
-            INSERT INTO reviews
+            INSERT INTO reviews (
+                id, user_id, rating, content, work_type,
+                target_path, created_at, updated_at, deleted_at
+            )
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
             "#,
             review.id(),
@@ -68,7 +71,7 @@ impl ReviewRepository for PostgresReviewRepository {
             review.target_path(),
             review.created_at(),
             review.updated_at(),
-            review.deleted_at().clone()
+            review.deleted_at()
         );
 
         match &self.conn {

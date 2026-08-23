@@ -1,10 +1,9 @@
-use serde::Deserialize;
 use uuid::Uuid;
 
 use crate::usecases::dto::review::Review;
 
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug)]
 pub(crate) struct PostReviewsInput {
     pub user_id: Uuid,
     pub rating: i32,

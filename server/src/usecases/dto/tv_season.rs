@@ -1,6 +1,9 @@
 use serde::{Deserialize, Serialize};
 
-use crate::domain::entities::tv_season::TvSeason;
+use crate::domain::entities::{
+    tv_episode_summary::TvEpisodeSummary,
+    tv_season::TvSeason
+};
 
 #[derive(Debug)]
 pub(crate) struct TvSeasonInput {
@@ -33,29 +36,56 @@ pub(crate) struct EpisodeSummary {
     pub vote_average: Option<f64>,
 }
 
+impl From<TvEpisodeSummary> for EpisodeSummary {
+    fn from(entity: TvEpisodeSummary) -> Self {
+        let (
+            id,
+            episode_number,
+            title,
+            overview,
+            runtime,
+            still_path,
+            air_date,
+            vote_average,
+        ) = entity.into_parts();
+
+        Self {
+            id,
+            episode_number,
+            title,
+            overview,
+            runtime,
+            still_path,
+            air_date,
+            vote_average,
+        }
+    }
+}
+
 impl From<TvSeason> for TvSeasonOutput {
     fn from(entity: TvSeason) -> Self {
+        let (
+            id,
+            season_number,
+            episode_count,
+            title,
+            overview,
+            poster_path,
+            air_date,
+            vote_average,
+            episode_summaries,
+        ) = entity.into_parts();
+
         Self {
-            id: entity.id(),
-            season_number: entity.season_number(),
-            episode_count: entity.episode_count(),
-            title: entity.title().to_string(),
-            overview: entity.overview().clone(),
-            poster_path: entity.poster_path().clone(),
-            air_date: entity.air_date().clone(),
-            vote_average: entity.vote_average(),
-            episode_summaries: entity.episode_summaries().into_iter().map(|e| {
-                EpisodeSummary {
-                    id: e.id(),
-                    episode_number: e.episode_number(),
-                    title: e.title().to_string(),
-                    overview: e.overview().clone(),
-                    runtime: e.runtime(),
-                    still_path: e.still_path().clone(),
-                    air_date: e.air_date().clone(),
-                    vote_average: e.vote_average()
-                }
-            }).collect()
+            id,
+            season_number,
+            episode_count,
+            title,
+            overview,
+            poster_path,
+            air_date,
+            vote_average,
+            episode_summaries: episode_summaries.into_iter().map(Into::into).collect(),
         }
     }
 }

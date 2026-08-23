@@ -46,32 +46,32 @@ impl PostReviewsUseCase for PostReviewsInteractor {
         let work = match input.work_type.as_str() {
             "movie" => {
                 let id = TargetPathParser::extract_movie_id(&input.target_path)?;
-                Work::Movie(self.tmdb_gateway.fetch_movie_by_id(id as i32).await?)
+                Work::Movie(self.tmdb_gateway.fetch_movie_by_id(id).await?)
             }
             "series" => {
                 let id = TargetPathParser::extract_series_id(&input.target_path)?;
-                Work::TvSeries(self.tmdb_gateway.fetch_tv_series_by_id(id as i32).await?)
+                Work::TvSeries(self.tmdb_gateway.fetch_tv_series_by_id(id).await?)
             }
             "season" => {
                 let (series_id, season_no) = TargetPathParser::extract_season_params(&input.target_path)?;
-                Work::TvSeason(self.tmdb_gateway.fetch_tv_season(series_id as i32, season_no as i32).await?)
+                Work::TvSeason(self.tmdb_gateway.fetch_tv_season(series_id, season_no).await?)
             }
             "episode" => {
                 let (series_id, season_no, episode_no) = TargetPathParser::extract_episode_params(&input.target_path)?;
-                Work::TvEpisode(self.tmdb_gateway.fetch_tv_episode(series_id as i32, season_no as i32, episode_no as i32).await?)
+                Work::TvEpisode(self.tmdb_gateway.fetch_tv_episode(series_id, season_no, episode_no).await?)
             }
             _ => return Err(AppError::Validation("Invalid work_type".into())),
         };
 
-        let review = Review::new(
+        let review = Arc::new(Review::new(
             input.user_id,
             input.rating,
             input.content,
             input.target_path,
             work
-        )?;
+        )?);
 
-        let cloned_review = review.clone();
+        let review_for_tx = Arc::clone(&review);
         let user_id = review.user_id();
         let target_path = review.target_path().to_string();
 
@@ -86,7 +86,7 @@ impl PostReviewsUseCase for PostReviewsInteractor {
                     return Err(anyhow::anyhow!("REVIEW_ALREADY_EXISTS"));
                 }
 
-                repos.review_repo.create(&cloned_review).await?;
+                repos.review_repo.create(&review_for_tx).await?;
                 Ok(())
             })
         })
@@ -108,7 +108,7 @@ impl PostReviewsUseCase for PostReviewsInteractor {
             work: review.work().clone().into(),
             created_at: review.created_at(),
             updated_at: review.updated_at(),
-            deleted_at: review.deleted_at().clone()
+            deleted_at: review.deleted_at()
        })
     }
 }

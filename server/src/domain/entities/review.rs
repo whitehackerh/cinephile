@@ -112,8 +112,8 @@ impl Review {
         self.updated_at
     }
 
-    pub fn deleted_at(&self) -> &Option<DateTime<Utc>> {
-        &self.deleted_at
+    pub fn deleted_at(&self) -> Option<DateTime<Utc>> {
+        self.deleted_at
     }
 
     pub fn into_parts(self) -> (

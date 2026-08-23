@@ -26,18 +26,32 @@ pub(crate) struct TvEpisodeOutput {
 
 impl From<TvEpisode> for TvEpisodeOutput {
     fn from(entity: TvEpisode) -> Self {
+        let (
+            id,
+            episode_number,
+            season_number,
+            title,
+            overview,
+            runtime,
+            still_path,
+            air_date,
+            vote_average,
+            production_code,
+            episode_type,
+        ) = entity.into_parts();
+
         Self {
-            id: entity.id(),
-            episode_number: entity.episode_number(),
-            season_number: entity.season_number(),
-            title: entity.title().to_string(),
-            overview: entity.overview().clone(),
-            runtime: entity.runtime(),
-            still_path: entity.still_path().clone(),
-            air_date: entity.air_date().clone(),
-            vote_average: entity.vote_average(),
-            production_code: entity.production_code().clone(),
-            episode_type: entity.episode_type().clone()
+            id,
+            episode_number,
+            season_number,
+            title,
+            overview,
+            runtime,
+            still_path,
+            air_date,
+            vote_average,
+            production_code,
+            episode_type,
         }
     }
 }
