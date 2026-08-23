@@ -62,7 +62,7 @@ pub struct AppRegistry {
     pub(crate) tv_episode_usecase: Arc<dyn TvEpisodeUseCase + Send + Sync>,
     pub(crate) tv_season_usecase: Arc<dyn TvSeasonUseCase + Send + Sync>,
     pub(crate) tv_series_usecase: Arc<dyn TvSeriesUseCase + Send + Sync>,
-    // pub(crate) post_reviews_usecase: Arc<dyn PostReviewsUseCase + Send + Sync>,
+    pub(crate) post_reviews_usecase: Arc<dyn PostReviewsUseCase + Send + Sync>,
     pub(crate) token_manager: Arc<JwtTokenManager>,
 }
 
@@ -106,10 +106,10 @@ impl AppRegistry {
         let tv_series_usecase = Arc::new(TvSeriesInteractor::new(
             tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>
         ));
-        // let post_reviews_usecase = Arc::new(PostReviewsInteractor::new(
-        //     tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>,
-        //     review_repository.clone() as Arc<dyn ReviewRepository + Send + Sync>,
-        // ));
+        let post_reviews_usecase = Arc::new(PostReviewsInteractor::new(
+            tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>,
+            uow.clone()
+        ));
 
         Arc::new(Self {
             signup_usecase,
@@ -119,7 +119,7 @@ impl AppRegistry {
             tv_episode_usecase,
             tv_season_usecase,
             tv_series_usecase,
-            // post_reviews_usecase,
+            post_reviews_usecase,
             token_manager,
         })
     }
@@ -141,4 +141,4 @@ impl_from_ref!(MovieUseCase, movie_usecase);
 impl_from_ref!(TvEpisodeUseCase, tv_episode_usecase);
 impl_from_ref!(TvSeasonUseCase, tv_season_usecase);
 impl_from_ref!(TvSeriesUseCase, tv_series_usecase);
-// impl_from_ref!(PostReviewsUseCase, post_reviews_usecase);
+impl_from_ref!(PostReviewsUseCase, post_reviews_usecase);

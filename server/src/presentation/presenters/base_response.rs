@@ -44,7 +44,7 @@ impl ApiResponse {
     pub fn from_error(uri: &Uri, err: AppError) -> (StatusCode, Json<ApiResponse>) {
         let (status, code) = match &err {
             AppError::EntityNotFound(_) => (StatusCode::NOT_FOUND, "NOT_FOUND"),
-            AppError::AlreadyExists(_) => (StatusCode::CONFLICT, "ALREADY_EXISTS"),
+            AppError::Conflict(_) => (StatusCode::CONFLICT, "CONFLICT"),
             AppError::Validation(_) => (StatusCode::BAD_REQUEST, "VALIDATION_ERROR"),
             AppError::Infrastructure(_) => (StatusCode::INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR"),
             AppError::Unauthorized(_) => (StatusCode::UNAUTHORIZED, "UNAUTHORIZED"),

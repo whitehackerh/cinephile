@@ -7,7 +7,6 @@ use crate::{
     },
     usecases::{
         dto::{
-            genre::Genre,
             movie::{
                 MovieInput,
                 MovieOutput
@@ -39,30 +38,6 @@ impl MovieUseCase for MovieInteractor {
             .fetch_movie_by_id(input.id)
             .await?;
 
-        let (
-            id, title, original_title, overview, poster_path, 
-            backdrop_path, release_date, runtime, vote_average, 
-            tagline, genres
-        ) = movie.into_parts();
-
-        Ok(MovieOutput {
-            id,
-            title,
-            original_title,
-            overview,
-            poster_path,
-            backdrop_path,
-            release_date,
-            runtime,
-            vote_average,
-            tagline,
-            genres: genres
-                .into_iter()
-                .map(|g| {
-                    let (g_id, g_name) = g.into_parts();
-                    Genre { id: g_id, name: g_name }
-                })
-                .collect(),
-        })
+        Ok(MovieOutput::from(movie))
     }
 }

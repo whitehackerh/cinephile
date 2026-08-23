@@ -1,12 +1,8 @@
 pub(crate) mod base_response;
-pub(crate) mod genre;
 pub(crate) mod movie;
 pub(crate) mod post_reviews;
 pub(crate) mod review;
 pub(crate) mod search;
-pub(crate) mod sign_in;
-pub(crate) mod sign_up;
 pub(crate) mod tv_episode;
 pub(crate) mod tv_season;
 pub(crate) mod tv_series;
-pub(crate) mod work;

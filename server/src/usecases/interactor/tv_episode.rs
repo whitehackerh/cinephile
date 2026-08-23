@@ -46,24 +46,6 @@ impl TvEpisodeUseCase for TvEpisodeInteractor {
             .fetch_tv_episode(input.series_id, input.season_number, input.episode_number)
             .await?;
 
-        let (
-            id, episode_number, season_number, title, overview,
-            runtime, still_path, air_date, vote_average,
-            production_code, episode_type
-        ) = tv_episode.into_parts();
-
-        Ok(TvEpisodeOutput {
-            id,
-            episode_number,
-            season_number,
-            title,
-            overview,
-            runtime,
-            still_path,
-            air_date,
-            vote_average,
-            production_code,
-            episode_type
-        })
+        Ok(TvEpisodeOutput::from(tv_episode))
     }
 }

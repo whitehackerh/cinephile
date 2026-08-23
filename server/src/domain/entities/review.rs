@@ -85,7 +85,7 @@ impl Review {
     }
 
     pub fn user_id(&self) -> Uuid {
-        self.id
+        self.user_id
     }
 
     pub fn rating(&self) -> i32 {
