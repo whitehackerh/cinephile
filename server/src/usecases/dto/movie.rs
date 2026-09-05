@@ -1,6 +1,9 @@
 use serde::{Deserialize, Serialize};
 
-use crate::usecases::dto::genre::Genre;
+use crate::{
+    domain::entities::movie::Movie,
+    usecases::dto::genre::Genre,
+};
 
 #[derive(Debug)]
 pub(crate) struct MovieInput {
@@ -20,4 +23,36 @@ pub(crate) struct MovieOutput {
     pub vote_average: Option<f64>,
     pub tagline: Option<String>,
     pub genres: Vec<Genre>,
+}
+
+impl From<Movie> for MovieOutput {
+    fn from(entity: Movie) -> Self {
+        let (
+            id,
+            title,
+            original_title,
+            overview,
+            poster_path,
+            backdrop_path,
+            release_date,
+            runtime,
+            vote_average,
+            tagline,
+            genres,
+        ) = entity.into_parts();
+
+        Self {
+            id,
+            title,
+            original_title,
+            overview,
+            poster_path,
+            backdrop_path,
+            release_date,
+            runtime,
+            vote_average,
+            tagline,
+            genres: genres.into_iter().map(Into::into).collect(),
+        }
+    }
 }

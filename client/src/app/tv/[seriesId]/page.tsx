@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useTvSeries } from '@/hooks/useTvSeries';
 import { getImageUrl } from '@/utils/tmdb';
 import Image from 'next/image';
+import { DetailReviewSection } from '@/components/review/DetailReviewSection';
 
 export default function TvSeriesPage({ 
   params 
@@ -166,6 +167,11 @@ export default function TvSeriesPage({
               </div>
             </div>
           )}
+
+          <DetailReviewSection 
+            workType="series" 
+            targetPath={`/tv/${resolvedParams.seriesId}`}
+          />
         </div>
       </div>
     </main>

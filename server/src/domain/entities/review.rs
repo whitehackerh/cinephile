@@ -85,7 +85,7 @@ impl Review {
     }
 
     pub fn user_id(&self) -> Uuid {
-        self.id
+        self.user_id
     }
 
     pub fn rating(&self) -> i32 {
@@ -112,8 +112,8 @@ impl Review {
         self.updated_at
     }
 
-    pub fn deleted_at(&self) -> &Option<DateTime<Utc>> {
-        &self.deleted_at
+    pub fn deleted_at(&self) -> Option<DateTime<Utc>> {
+        self.deleted_at
     }
 
     pub fn into_parts(self) -> (

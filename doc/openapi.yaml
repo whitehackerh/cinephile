@@ -313,7 +313,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PostReviewRequest'
+              $ref: '#/components/schemas/PostReviewsRequest'
       responses:
         '201':
           description: Review created successfully.
@@ -920,7 +920,7 @@ components:
             - type: string
             - type: 'null'
 
-    PostReviewRequest:
+    PostReviewsRequest:
       type: object
       required:
         - rating

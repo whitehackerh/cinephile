@@ -6,7 +6,7 @@ pub(crate) enum AppError {
     EntityNotFound(String),
 
     #[error("Already exists: {0}")]
-    AlreadyExists(String),
+    Conflict(String),
 
     #[error("Validation error: {0}")]
     Validation(String),

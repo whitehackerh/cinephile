@@ -1,13 +1,13 @@
-// use serde::Deserialize;
+use crate::{
+    generated::api_schema::Review,
+    presentation::presenters::review::ReviewPresenter,
+    usecases::dto::review::Review as ReviewOutput,
+};
 
-// use crate::presentation::presenters::review::Review;
+pub struct PostReviewsPresenter;
 
-// #[derive(Deserialize)]
-// pub(crate) struct PostReviewsRequest {
-//     pub rating: i32,
-//     pub content: Option<String>,
-//     pub work_type: String,
-//     pub target_path: String
-// }
-
-// pub(crate) type PostReviewsResponse = Review;
+impl PostReviewsPresenter {
+    pub fn to_response(output: ReviewOutput) -> Review {
+        ReviewPresenter::to_response(output)
+    }
+}

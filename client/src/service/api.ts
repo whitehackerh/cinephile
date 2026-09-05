@@ -1,5 +1,6 @@
 import { publicClient, authClient } from '@/lib/apiClient';
 import { ApiResponse } from '@/types/api';
+import { Review, PostReviewsRequest } from '@/types/review';
 import { SignInRequest, SignUpRequest } from '@/lib/validations/auth';
 import { SearchResponse } from '@/types/search';
 import { Movie } from '@/types/movie';
@@ -74,6 +75,17 @@ export const apiService = {
 
   async getTvEpisode(series_id: string, season_number: string, episode_number: string): Promise<TvEpisode> {
     const response = await authClient.get<ApiResponse<TvEpisode>>(`/tv/${series_id}/season/${season_number}/episode/${episode_number}`, {});
+    if (response.data.error) {
+      throw new Error(response.data.error.message);
+    }
+    if (!response.data.data) {
+      throw new Error('Response data is missing');
+    }
+    return response.data.data
+  },
+
+  async postReviews(input: PostReviewsRequest): Promise<Review> {
+    const response = await authClient.post<ApiResponse<Review>>(`/reviews`, input);
     if (response.data.error) {
       throw new Error(response.data.error.message);
     }

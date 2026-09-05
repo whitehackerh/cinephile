@@ -61,7 +61,7 @@ impl SignUpUseCase for SignUpInteractor {
         .await
         .map_err(|e| {
             if e.to_string() == "User already exists" {
-                AppError::AlreadyExists("Email already taken".into())
+                AppError::Conflict("Email already taken".into())
             } else {
                 AppError::Infrastructure(e.to_string())
             }

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useTvEpisode } from '@/hooks/useTvEpisode';
 import { getImageUrl } from '@/utils/tmdb';
+import { DetailReviewSection } from '@/components/review/DetailReviewSection';
 
 export default function TvEpisodePage({ 
   params 
@@ -120,6 +121,11 @@ export default function TvEpisodePage({
               {tvEpisode.overview || "No episode overview available for this title."}
             </p>
           </div>
+
+          <DetailReviewSection 
+            workType="episode" 
+            targetPath={`/tv/${resolvedParams.seriesId}/season/${resolvedParams.seasonNumber}/episode/${resolvedParams.episodeNumber}`}
+          />
         </div>
       </div>
     </main>

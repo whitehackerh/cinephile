@@ -8,8 +8,7 @@ use crate::{
     usecases::{
         dto::tv_season::{
             TvSeasonInput,
-            TvSeasonOutput,
-            EpisodeSummary as EpisodeSummaryDto
+            TvSeasonOutput
         },
         gateway::tmdb::TmdbGateway,
         port::tv_season::TvSeasonUseCase,
@@ -42,34 +41,6 @@ impl TvSeasonUseCase for TvSeasonInteractor {
             .fetch_tv_season(input.series_id, input.season_number)
             .await?;
 
-        let (
-            id, season_number, episode_count, title, overview,
-            poster_path, air_date, vote_average, episode_summaries
-        ) = tv_season.into_parts();
-
-        Ok(TvSeasonOutput {
-            id,
-            season_number,
-            episode_count,
-            title,
-            overview,
-            poster_path,
-            air_date,
-            vote_average,
-            episode_summaries: episode_summaries
-                .into_iter()
-                .map(|e| {
-                    let (
-                        e_id, e_episode_number, e_title, e_overview,
-                        e_runtime, e_still_path, e_air_date, e_vote_average
-                    ) = e.into_parts();
-                    EpisodeSummaryDto {
-                        id: e_id, episode_number: e_episode_number, title: e_title,
-                        overview: e_overview, runtime: e_runtime, still_path: e_still_path,
-                        air_date: e_air_date, vote_average: e_vote_average 
-                    }
-                })
-                .collect(),
-        })
+        Ok(TvSeasonOutput::from(tv_season))
     }
 }
