@@ -4,6 +4,7 @@ import { use } from 'react';
 import { useMovieDetail } from '@/hooks/useMovieDetail';
 import { getImageUrl } from '@/utils/tmdb';
 import Image from 'next/image';
+import { DetailReviewSection } from '@/components/review/DetailReviewSection';
 
 export default function MovieDetailPage({ 
   params 
@@ -116,6 +117,11 @@ export default function MovieDetailPage({
               </span>
             ))}
           </div>
+
+          <DetailReviewSection 
+            workType="movie" 
+            targetPath={`/movie/${resolvedParams.id}`}
+          />
         </div>
       </div>
     </main>
