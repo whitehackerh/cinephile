@@ -352,13 +352,13 @@ paths:
           required: true
           description: work type
           schema:
-            $ref: '#/components/schemas/ReviewsQueryParams/properties/work_type'
+            $ref: '#/components/schemas/GetReviewQueryParams/properties/work_type'
         - name: target_path
           in: query
           required: true
           description: target path
           schema:
-            $ref: '#/components/schemas/ReviewsQueryParams/properties/target_path'
+            $ref: '#/components/schemas/GetReviewQueryParams/properties/target_path'
       responses:
         '200':
           description: Get review successfully.
@@ -461,7 +461,7 @@ components:
           minimum: 0
           example: 1
     
-    ReviewsQueryParams:
+    GetReviewQueryParams:
       type: object
       required:
         - work_type
