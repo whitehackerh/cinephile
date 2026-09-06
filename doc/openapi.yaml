@@ -335,6 +335,43 @@ paths:
         '500':
           $ref: '#/components/responses/ErrorInternalServer'
 
+  /reviews/{id}:
+    get:
+      tags:
+        - Review
+      summary: Get a review by id
+      description: Get a review by id
+      operationId: getReviewById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: review id
+          schema:
+            $ref: '#/components/schemas/ReviewsPathParam/properties/id'
+      responses:
+        '200':
+          description: Get review successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Review'
+                      error:
+                        type: 'null'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '500':
+          $ref: '#/components/responses/ErrorInternalServer'
+
 components:
   securitySchemes:
     bearerAuth:
@@ -413,6 +450,15 @@ components:
           type: integer
           minimum: 0
           example: 1
+    
+    ReviewsPathParam:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: uuid
 
     # ----------------------------------------------------
     # Model Schemas
