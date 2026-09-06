@@ -99,7 +99,7 @@ impl PostReviewsUseCase for PostReviewsInteractor {
             }
         })?;
 
-       Ok(PostReviewsOutput {
+        Ok(PostReviewsOutput {
             id: review.id(),
             rating: review.rating(),
             content: review.content().clone(),
@@ -109,6 +109,6 @@ impl PostReviewsUseCase for PostReviewsInteractor {
             created_at: review.created_at(),
             updated_at: review.updated_at(),
             deleted_at: review.deleted_at()
-       })
+        })
     }
 }

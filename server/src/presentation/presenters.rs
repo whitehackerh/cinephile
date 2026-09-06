@@ -1,4 +1,5 @@
 pub(crate) mod base_response;
+pub(crate) mod get_review;
 pub(crate) mod movie;
 pub(crate) mod post_reviews;
 pub(crate) mod review;

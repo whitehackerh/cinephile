@@ -31,6 +31,7 @@ use crate::{
             tv_season::TvSeasonInteractor,
             tv_series::TvSeriesInteractor,
             post_reviews::PostReviewsInteractor,
+            get_review::GetReviewInteractor,
         },
         port::{
             sign_up::SignUpUseCase,
@@ -42,6 +43,7 @@ use crate::{
             tv_series::TvSeriesUseCase,
             post_reviews::PostReviewsUseCase,
             unit_of_work::UnitOfWork,
+            get_review::GetReviewUseCase,
         },
         repository::{
             user::UserRepository,
@@ -63,6 +65,7 @@ pub struct AppRegistry {
     pub(crate) tv_season_usecase: Arc<dyn TvSeasonUseCase + Send + Sync>,
     pub(crate) tv_series_usecase: Arc<dyn TvSeriesUseCase + Send + Sync>,
     pub(crate) post_reviews_usecase: Arc<dyn PostReviewsUseCase + Send + Sync>,
+    pub(crate) get_review_usecase: Arc<dyn GetReviewUseCase + Send + Sync>,
     pub(crate) token_manager: Arc<JwtTokenManager>,
 }
 
@@ -76,7 +79,7 @@ impl AppRegistry {
         let tmdb_base_url = std::env::var("TMDB_BASE_URL").expect("TMDB_BASE_URL must be set");
 
         let user_repository = Arc::new(PostgresUserRepository::new(pool.clone()));
-        // let review_repository = Arc::new(PostgresReviewRepository::new(pool));
+        let review_repository = Arc::new(PostgresReviewRepository::new(pool.clone()));
         let password_manager = Arc::new(PasswordManager::new());
         let token_manager = Arc::new(JwtTokenManager::new(jwt_secret));
         let tmdb_gateway = Arc::new(TmdbClient::new(tmdb_api_key, tmdb_base_url));
@@ -110,6 +113,10 @@ impl AppRegistry {
             tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>,
             uow.clone()
         ));
+        let get_review_usecase = Arc::new(GetReviewInteractor::new(
+            review_repository.clone() as Arc<dyn ReviewRepository + Send + Sync>,
+            tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>
+        ));
 
         Arc::new(Self {
             signup_usecase,
@@ -120,6 +127,7 @@ impl AppRegistry {
             tv_season_usecase,
             tv_series_usecase,
             post_reviews_usecase,
+            get_review_usecase,
             token_manager,
         })
     }
@@ -142,3 +150,4 @@ impl_from_ref!(TvEpisodeUseCase, tv_episode_usecase);
 impl_from_ref!(TvSeasonUseCase, tv_season_usecase);
 impl_from_ref!(TvSeriesUseCase, tv_series_usecase);
 impl_from_ref!(PostReviewsUseCase, post_reviews_usecase);
+impl_from_ref!(GetReviewUseCase, get_review_usecase);
