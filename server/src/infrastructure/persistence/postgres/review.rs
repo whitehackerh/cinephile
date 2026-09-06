@@ -90,7 +90,7 @@ impl ReviewRepository for PostgresReviewRepository {
         Ok(())
     }
 
-    async fn find_by_id(&self, id: &Uuid) -> anyhow::Result<Option<ReviewWithoutWork>> {
+    async fn find_by_id(&self, id: &Uuid, user_id: &Uuid) -> anyhow::Result<Option<ReviewWithoutWork>> {
         let query = sqlx::query_as!(
             ReviewWithoutWork,
             r#"
@@ -103,9 +103,9 @@ impl ReviewRepository for PostgresReviewRepository {
                 updated_at,
                 deleted_at
             FROM reviews
-            WHERE id = $1 AND deleted_at IS NULL
+            WHERE id = $1 AND user_id = $2 AND deleted_at IS NULL
             "#,
-            id
+            id, user_id
         );
 
         let review_without_work = match &self.conn {

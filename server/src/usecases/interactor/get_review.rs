@@ -38,7 +38,7 @@ impl GetReviewInteractor {
 #[async_trait]
 impl GetReviewUseCase for GetReviewInteractor {
     async fn execute(&self, input: GetReviewInput) -> Result<GetReviewOutput, AppError> {
-        let review_without_work = self.review_repository.find_by_id(&input.id)
+        let review_without_work = self.review_repository.find_by_id(&input.id, &input.user_id)
             .await
             .map_err(|e| AppError::Infrastructure(e.to_string()))?
             .ok_or_else(|| AppError::EntityNotFound("Review not found".to_string()))?;
