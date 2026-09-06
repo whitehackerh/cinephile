@@ -330,6 +330,8 @@ paths:
                         type: 'null'
         '400':
           $ref: '#/components/responses/ErrorBadRequest'
+        '401':
+          $ref: '#/components/responses/ErrorUnauthorized'
         '409':
           $ref: '#/components/responses/ErrorConflict'
         '500':
@@ -367,6 +369,8 @@ paths:
                         type: 'null'
         '400':
           $ref: '#/components/responses/ErrorBadRequest'
+        '401':
+          $ref: '#/components/responses/ErrorUnauthorized'
         '404':
           $ref: '#/components/responses/ErrorNotFound'
         '500':
