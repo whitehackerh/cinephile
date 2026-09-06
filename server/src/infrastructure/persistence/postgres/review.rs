@@ -6,7 +6,10 @@ use uuid::Uuid;
 use crate::{
     domain::entities::review::Review,
     infrastructure::persistence::postgres::executor::PgConn,
-    usecases::repository::review::ReviewRepository
+    usecases::{
+        dto::review::ReviewWithoutWork,
+        repository::review::ReviewRepository
+    }
 };
 
 pub(crate) struct PostgresReviewRepository {
@@ -85,5 +88,33 @@ impl ReviewRepository for PostgresReviewRepository {
         };
 
         Ok(())
+    }
+
+    async fn find_by_work_type_target_path(&self, user_id: &Uuid, work_type: &str, target_path: &str) -> anyhow::Result<Option<ReviewWithoutWork>> {
+        let query = sqlx::query_as!(
+            ReviewWithoutWork,
+            r#"
+            SELECT
+                id,
+                rating AS "rating: i32",
+                content,
+                created_at,
+                updated_at,
+                deleted_at
+            FROM reviews
+            WHERE user_id = $1 AND work_type = $2 AND target_path = $3 AND deleted_at IS NULL
+            "#,
+            user_id, work_type, target_path
+        );
+
+        let review_without_work = match &self.conn {
+            PgConn::Pool(pool) => query.fetch_optional(pool).await?,
+            PgConn::Tx(tx) => {
+                let mut guard = tx.lock().await;
+                query.fetch_optional(&mut **guard).await?
+            }
+        };
+
+        Ok(review_without_work)
     }
 }

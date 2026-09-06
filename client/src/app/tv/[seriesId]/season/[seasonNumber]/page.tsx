@@ -90,7 +90,7 @@ export default function TvSeasonPage({
                 </span>
               </div>
               <div className="text-xs font-black uppercase tracking-widest text-slate-400 leading-tight">
-                User Score
+                TMDB User Score
               </div>
             </div>
           )}

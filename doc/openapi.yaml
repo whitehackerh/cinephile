@@ -330,8 +330,55 @@ paths:
                         type: 'null'
         '400':
           $ref: '#/components/responses/ErrorBadRequest'
+        '401':
+          $ref: '#/components/responses/ErrorUnauthorized'
         '409':
           $ref: '#/components/responses/ErrorConflict'
+        '500':
+          $ref: '#/components/responses/ErrorInternalServer'
+
+  /reviews/find:
+    get:
+      tags:
+        - Review
+      summary: Get a review by work type and target path
+      description: Get a review by work type and target path
+      operationId: getReviewByWorkTypeTargetPath
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: work_type
+          in: query
+          required: true
+          description: work type
+          schema:
+            $ref: '#/components/schemas/GetReviewQueryParams/properties/work_type'
+        - name: target_path
+          in: query
+          required: true
+          description: target path
+          schema:
+            $ref: '#/components/schemas/GetReviewQueryParams/properties/target_path'
+      responses:
+        '200':
+          description: Get review successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                      oneOf:
+                        - $ref: '#/components/schemas/Review'
+                        - type: 'null'
+                      error:
+                        type: 'null'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '401':
+          $ref: '#/components/responses/ErrorUnauthorized'
         '500':
           $ref: '#/components/responses/ErrorInternalServer'
 
@@ -413,6 +460,18 @@ components:
           type: integer
           minimum: 0
           example: 1
+    
+    GetReviewQueryParams:
+      type: object
+      required:
+        - work_type
+        - target_path
+      properties:
+        work_type:
+          type: string
+          enum: [movie, series, season, episode]
+        target_path:
+          type: string
 
     # ----------------------------------------------------
     # Model Schemas

@@ -1,17 +1,21 @@
 'use client';
 
 interface ReviewFormProps {
+  id: string | null;
   rating: number;
   content: string | null;
+  isLoading: boolean;
   isSubmitting: boolean;
   error: string | null;
   isSuccess: boolean;
   onRatingChange: (rating: number) => void;
   onContentChange: (content: string) => void;
   onSubmit: (e: React.FormEvent) => void;
+  refetch: () => void;
 }
 
 export function ReviewForm({
+  id,
   rating,
   content,
   isSubmitting,

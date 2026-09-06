@@ -13,6 +13,7 @@ use crate::{
         tv_season::tv_season_handler,
         tv_series::tv_series_handler,
         post_reviews::post_reviews_handler,
+        get_review::get_review_handler,
     },
     middleware::auth::AuthMiddleware
 };
@@ -25,6 +26,7 @@ pub fn create_router(registry: Arc<AppRegistry>) -> Router {
         .route("/tv/{series_id}/season/{season_number}", get(tv_season_handler))
         .route("/tv/{series_id}", get(tv_series_handler))
         .route("/reviews", post(post_reviews_handler))
+        .route("/reviews/find", get(get_review_handler))
         .layer(from_fn_with_state(registry.token_manager.clone(), AuthMiddleware::auth_middleware));
     
     let public_routes = Router::<AppState>::new()

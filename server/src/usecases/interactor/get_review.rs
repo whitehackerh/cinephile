@@ -10,39 +10,43 @@ use crate::{
         errors::AppError
     },
     usecases::{
-        dto::post_reviews::{
-            PostReviewsInput,
-            PostReviewsOutput,
+        dto::get_review::{
+            GetReviewInput,
+            GetReviewOutput,
         },
         gateway::tmdb::TmdbGateway,
-        port::{
-            post_reviews::PostReviewsUseCase,
-            unit_of_work::{
-                UnitOfWork,
-                UnitOfWorkExt
-            }
-        },
+        port::get_review::GetReviewUseCase,
+        repository::review::ReviewRepository,
         shared::target_path_parser::TargetPathParser
     }
 };
 
-pub(crate) struct PostReviewsInteractor {
+pub(crate) struct GetReviewInteractor {
+    review_repository: Arc<dyn ReviewRepository + Send + Sync>,
     tmdb_gateway: Arc<dyn TmdbGateway + Send + Sync>,
-    uow: Arc<dyn UnitOfWork>
 }
 
-impl PostReviewsInteractor {
+impl GetReviewInteractor {
     pub fn new(
+        review_repository: Arc<dyn ReviewRepository + Send + Sync>,
         tmdb_gateway: Arc<dyn TmdbGateway + Send + Sync>,
-        uow: Arc<dyn UnitOfWork>
     ) -> Self {
-        Self { tmdb_gateway, uow }
+        Self { review_repository, tmdb_gateway }
     }
 }
 
 #[async_trait]
-impl PostReviewsUseCase for PostReviewsInteractor {
-    async fn execute(&self, input: PostReviewsInput) -> Result<PostReviewsOutput, AppError> {
+impl GetReviewUseCase for GetReviewInteractor {
+    async fn execute(&self, input: GetReviewInput) -> Result<Option<GetReviewOutput>, AppError> {
+        let review_without_work = self.review_repository.find_by_work_type_target_path(&input.user_id, &input.work_type, &input.target_path)
+            .await
+            .map_err(|e| AppError::Infrastructure(e.to_string()))?;
+
+        let review_without_work = match review_without_work {
+            Some(rw) => rw,
+            None => return Ok(None),
+        };
+
         let work = match input.work_type.as_str() {
             "movie" => {
                 let id = TargetPathParser::extract_movie_id(&input.target_path)?;
@@ -63,43 +67,19 @@ impl PostReviewsUseCase for PostReviewsInteractor {
             _ => return Err(AppError::Validation("Invalid work_type".into())),
         };
 
-        let review = Arc::new(Review::new(
+        let review = Review::reconstruct(
+            review_without_work.id,
             input.user_id,
-            input.rating,
-            input.content,
+            review_without_work.rating,
+            review_without_work.content,
             input.target_path,
-            work
-        )?);
+            work,
+            review_without_work.created_at,
+            review_without_work.updated_at,
+            review_without_work.deleted_at
+        );
 
-        let review_for_tx = Arc::clone(&review);
-        let user_id = review.user_id();
-        let target_path = review.target_path().to_string();
-
-        self.uow.execute(move |repos| {
-            Box::pin(async move {
-                let exists = repos
-                    .review_repo
-                    .exists_by_user_and_target(&user_id, &target_path)
-                    .await?;
-
-                if exists {
-                    return Err(anyhow::anyhow!("REVIEW_ALREADY_EXISTS"));
-                }
-
-                repos.review_repo.create(&review_for_tx).await?;
-                Ok(())
-            })
-        })
-        .await
-        .map_err(|e| {
-            if e.to_string().contains("REVIEW_ALREADY_EXISTS") {
-                AppError::Conflict("Review already exists for this work".into())
-            } else {
-                AppError::Infrastructure(e.to_string())
-            }
-        })?;
-
-        Ok(PostReviewsOutput {
+        Ok(Some(GetReviewOutput {
             id: review.id(),
             rating: review.rating(),
             content: review.content().clone(),
@@ -109,6 +89,6 @@ impl PostReviewsUseCase for PostReviewsInteractor {
             created_at: review.created_at(),
             updated_at: review.updated_at(),
             deleted_at: review.deleted_at()
-        })
+        }))
     }
 }
