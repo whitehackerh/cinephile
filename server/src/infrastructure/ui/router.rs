@@ -26,7 +26,7 @@ pub fn create_router(registry: Arc<AppRegistry>) -> Router {
         .route("/tv/{series_id}/season/{season_number}", get(tv_season_handler))
         .route("/tv/{series_id}", get(tv_series_handler))
         .route("/reviews", post(post_reviews_handler))
-        .route("/reviews/{id}", get(get_review_handler))
+        .route("/reviews/find", get(get_review_handler))
         .layer(from_fn_with_state(registry.token_manager.clone(), AuthMiddleware::auth_middleware));
     
     let public_routes = Router::<AppState>::new()

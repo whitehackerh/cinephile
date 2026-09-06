@@ -38,37 +38,37 @@ impl GetReviewInteractor {
 #[async_trait]
 impl GetReviewUseCase for GetReviewInteractor {
     async fn execute(&self, input: GetReviewInput) -> Result<GetReviewOutput, AppError> {
-        let review_without_work = self.review_repository.find_by_id(&input.id, &input.user_id)
+        let review_without_work = self.review_repository.find_by_work_type_target_path(&input.user_id, &input.work_type, &input.target_path)
             .await
             .map_err(|e| AppError::Infrastructure(e.to_string()))?
             .ok_or_else(|| AppError::EntityNotFound("Review not found".to_string()))?;
 
-        let work = match review_without_work.work_type.as_str() {
+        let work = match input.work_type.as_str() {
             "movie" => {
-                let id = TargetPathParser::extract_movie_id(&review_without_work.target_path)?;
+                let id = TargetPathParser::extract_movie_id(&input.target_path)?;
                 Work::Movie(self.tmdb_gateway.fetch_movie_by_id(id).await?)
             }
             "series" => {
-                let id = TargetPathParser::extract_series_id(&review_without_work.target_path)?;
+                let id = TargetPathParser::extract_series_id(&input.target_path)?;
                 Work::TvSeries(self.tmdb_gateway.fetch_tv_series_by_id(id).await?)
             }
             "season" => {
-                let (series_id, season_no) = TargetPathParser::extract_season_params(&review_without_work.target_path)?;
+                let (series_id, season_no) = TargetPathParser::extract_season_params(&input.target_path)?;
                 Work::TvSeason(self.tmdb_gateway.fetch_tv_season(series_id, season_no).await?)
             }
             "episode" => {
-                let (series_id, season_no, episode_no) = TargetPathParser::extract_episode_params(&review_without_work.target_path)?;
+                let (series_id, season_no, episode_no) = TargetPathParser::extract_episode_params(&input.target_path)?;
                 Work::TvEpisode(self.tmdb_gateway.fetch_tv_episode(series_id, season_no, episode_no).await?)
             }
             _ => return Err(AppError::Validation("Invalid work_type".into())),
         };
 
         let review = Review::reconstruct(
-            input.id,
+            review_without_work.id,
             input.user_id,
             review_without_work.rating,
             review_without_work.content,
-            review_without_work.target_path,
+            input.target_path,
             work,
             review_without_work.created_at,
             review_without_work.updated_at,

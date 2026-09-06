@@ -854,7 +854,7 @@ impl ::std::convert::TryFrom<::std::string::String> for ReviewWorkType {
         value.parse()
     }
 }
-///`ReviewsPathParam`
+///`ReviewsQueryParams`
 ///
 /// <details><summary>JSON schema</summary>
 ///
@@ -862,24 +862,125 @@ impl ::std::convert::TryFrom<::std::string::String> for ReviewWorkType {
 ///{
 ///  "type": "object",
 ///  "required": [
-///    "id"
+///    "target_path",
+///    "work_type"
 ///  ],
 ///  "properties": {
-///    "id": {
+///    "target_path": {
+///      "type": "string"
+///    },
+///    "work_type": {
 ///      "type": "string",
-///      "format": "uuid"
+///      "enum": [
+///        "movie",
+///        "series",
+///        "season",
+///        "episode"
+///      ]
 ///    }
 ///  }
 ///}
 /// ```
 /// </details>
 #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
-pub struct ReviewsPathParam {
-    pub id: ::uuid::Uuid,
+pub struct ReviewsQueryParams {
+    pub target_path: ::std::string::String,
+    pub work_type: ReviewsQueryParamsWorkType,
 }
-impl ::std::convert::From<&ReviewsPathParam> for ReviewsPathParam {
-    fn from(value: &ReviewsPathParam) -> Self {
+impl ::std::convert::From<&ReviewsQueryParams> for ReviewsQueryParams {
+    fn from(value: &ReviewsQueryParams) -> Self {
         value.clone()
+    }
+}
+///`ReviewsQueryParamsWorkType`
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "type": "string",
+///  "enum": [
+///    "movie",
+///    "series",
+///    "season",
+///    "episode"
+///  ]
+///}
+/// ```
+/// </details>
+#[derive(
+    ::serde::Deserialize,
+    ::serde::Serialize,
+    Clone,
+    Copy,
+    Debug,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd
+)]
+pub enum ReviewsQueryParamsWorkType {
+    #[serde(rename = "movie")]
+    Movie,
+    #[serde(rename = "series")]
+    Series,
+    #[serde(rename = "season")]
+    Season,
+    #[serde(rename = "episode")]
+    Episode,
+}
+impl ::std::convert::From<&Self> for ReviewsQueryParamsWorkType {
+    fn from(value: &ReviewsQueryParamsWorkType) -> Self {
+        value.clone()
+    }
+}
+impl ::std::fmt::Display for ReviewsQueryParamsWorkType {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match *self {
+            Self::Movie => f.write_str("movie"),
+            Self::Series => f.write_str("series"),
+            Self::Season => f.write_str("season"),
+            Self::Episode => f.write_str("episode"),
+        }
+    }
+}
+impl ::std::str::FromStr for ReviewsQueryParamsWorkType {
+    type Err = self::error::ConversionError;
+    fn from_str(
+        value: &str,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        match value {
+            "movie" => Ok(Self::Movie),
+            "series" => Ok(Self::Series),
+            "season" => Ok(Self::Season),
+            "episode" => Ok(Self::Episode),
+            _ => Err("invalid value".into()),
+        }
+    }
+}
+impl ::std::convert::TryFrom<&str> for ReviewsQueryParamsWorkType {
+    type Error = self::error::ConversionError;
+    fn try_from(
+        value: &str,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
+    }
+}
+impl ::std::convert::TryFrom<&::std::string::String> for ReviewsQueryParamsWorkType {
+    type Error = self::error::ConversionError;
+    fn try_from(
+        value: &::std::string::String,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
+    }
+}
+impl ::std::convert::TryFrom<::std::string::String> for ReviewsQueryParamsWorkType {
+    type Error = self::error::ConversionError;
+    fn try_from(
+        value: ::std::string::String,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
     }
 }
 ///`SearchQueryParams`

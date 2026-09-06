@@ -337,22 +337,28 @@ paths:
         '500':
           $ref: '#/components/responses/ErrorInternalServer'
 
-  /reviews/{id}:
+  /reviews/find:
     get:
       tags:
         - Review
-      summary: Get a review by id
-      description: Get a review by id
-      operationId: getReviewById
+      summary: Get a review by work type and target path
+      description: Get a review by work type and target path
+      operationId: getReviewByWorkTypeTargetPath
       security:
         - bearerAuth: []
       parameters:
-        - name: id
-          in: path
+        - name: work_type
+          in: query
           required: true
-          description: review id
+          description: work type
           schema:
-            $ref: '#/components/schemas/ReviewsPathParam/properties/id'
+            $ref: '#/components/schemas/ReviewsQueryParams/properties/work_type'
+        - name: target_path
+          in: query
+          required: true
+          description: target path
+          schema:
+            $ref: '#/components/schemas/ReviewsQueryParams/properties/target_path'
       responses:
         '200':
           description: Get review successfully.
@@ -455,14 +461,17 @@ components:
           minimum: 0
           example: 1
     
-    ReviewsPathParam:
+    ReviewsQueryParams:
       type: object
       required:
-        - id
+        - work_type
+        - target_path
       properties:
-        id:
+        work_type:
           type: string
-          format: uuid
+          enum: [movie, series, season, episode]
+        target_path:
+          type: string
 
     # ----------------------------------------------------
     # Model Schemas

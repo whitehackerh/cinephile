@@ -1,5 +1,5 @@
 use axum::{
-    extract::{Extension, Path, State},
+    extract::{Extension, Query, State},
     http::{StatusCode, Uri},
     response::IntoResponse,
     Json,
@@ -8,7 +8,7 @@ use std::sync::Arc;
 
 use crate::{
     domain::entities::auth_user::AuthUser,
-    generated::api_schema::ReviewsPathParam,
+    generated::api_schema::ReviewsQueryParams,
     presentation::presenters::{
         base_response::ApiResponse,
         get_review::GetReviewPresenter
@@ -23,11 +23,12 @@ pub async fn get_review_handler(
     uri: Uri,
     Extension(auth_user): Extension<AuthUser>,
     State(usecase): State<Arc<dyn GetReviewUseCase + Send + Sync>>,
-    Path(path): Path<ReviewsPathParam>
+    Query(params): Query<ReviewsQueryParams>
 ) -> impl IntoResponse {
     match usecase.execute(GetReviewInput {
-        id: path.id,
         user_id: auth_user.id(),
+        work_type: params.work_type.to_string(),
+        target_path: params.target_path
     }).await {
         Ok(output) => {
             (

@@ -90,22 +90,21 @@ impl ReviewRepository for PostgresReviewRepository {
         Ok(())
     }
 
-    async fn find_by_id(&self, id: &Uuid, user_id: &Uuid) -> anyhow::Result<Option<ReviewWithoutWork>> {
+    async fn find_by_work_type_target_path(&self, user_id: &Uuid, work_type: &str, target_path: &str) -> anyhow::Result<Option<ReviewWithoutWork>> {
         let query = sqlx::query_as!(
             ReviewWithoutWork,
             r#"
-            SELECT 
+            SELECT
+                id,
                 rating AS "rating: i32",
                 content,
-                work_type,
-                target_path,
                 created_at,
                 updated_at,
                 deleted_at
             FROM reviews
-            WHERE id = $1 AND user_id = $2 AND deleted_at IS NULL
+            WHERE user_id = $1 AND work_type = $2 AND target_path = $3 AND deleted_at IS NULL
             "#,
-            id, user_id
+            user_id, work_type, target_path
         );
 
         let review_without_work = match &self.conn {
