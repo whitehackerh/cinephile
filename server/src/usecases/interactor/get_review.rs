@@ -37,11 +37,15 @@ impl GetReviewInteractor {
 
 #[async_trait]
 impl GetReviewUseCase for GetReviewInteractor {
-    async fn execute(&self, input: GetReviewInput) -> Result<GetReviewOutput, AppError> {
+    async fn execute(&self, input: GetReviewInput) -> Result<Option<GetReviewOutput>, AppError> {
         let review_without_work = self.review_repository.find_by_work_type_target_path(&input.user_id, &input.work_type, &input.target_path)
             .await
-            .map_err(|e| AppError::Infrastructure(e.to_string()))?
-            .ok_or_else(|| AppError::EntityNotFound("Review not found".to_string()))?;
+            .map_err(|e| AppError::Infrastructure(e.to_string()))?;
+
+        let review_without_work = match review_without_work {
+            Some(rw) => rw,
+            None => return Ok(None),
+        };
 
         let work = match input.work_type.as_str() {
             "movie" => {
@@ -75,7 +79,7 @@ impl GetReviewUseCase for GetReviewInteractor {
             review_without_work.deleted_at
         );
 
-        Ok(GetReviewOutput {
+        Ok(Some(GetReviewOutput {
             id: review.id(),
             rating: review.rating(),
             content: review.content().clone(),
@@ -85,6 +89,6 @@ impl GetReviewUseCase for GetReviewInteractor {
             created_at: review.created_at(),
             updated_at: review.updated_at(),
             deleted_at: review.deleted_at()
-        })
+        }))
     }
 }

@@ -370,15 +370,15 @@ paths:
                   - type: object
                     properties:
                       data:
-                        $ref: '#/components/schemas/Review'
+                      oneOf:
+                        - $ref: '#/components/schemas/Review'
+                        - type: 'null'
                       error:
                         type: 'null'
         '400':
           $ref: '#/components/responses/ErrorBadRequest'
         '401':
           $ref: '#/components/responses/ErrorUnauthorized'
-        '404':
-          $ref: '#/components/responses/ErrorNotFound'
         '500':
           $ref: '#/components/responses/ErrorInternalServer'
 

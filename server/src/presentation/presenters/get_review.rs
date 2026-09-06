@@ -7,7 +7,7 @@ use crate::{
 pub struct GetReviewPresenter;
 
 impl GetReviewPresenter {
-    pub fn to_response(output: ReviewOutput) -> Review {
-        ReviewPresenter::to_response(output)
+    pub fn to_response(output: Option<ReviewOutput>) -> Option<Review> {
+        output.map(ReviewPresenter::to_response)
     }
 }
