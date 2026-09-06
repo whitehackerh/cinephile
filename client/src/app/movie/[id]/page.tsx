@@ -85,7 +85,7 @@ export default function MovieDetailPage({
               </span>
             </div>
             <div className="text-xs font-black uppercase tracking-widest text-slate-400 leading-tight">
-              UserScore
+              TMDB User Score
             </div>
           </div>
 

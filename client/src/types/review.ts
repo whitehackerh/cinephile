@@ -12,6 +12,11 @@ export interface PostReviewsRequest {
   target_path: string;
 }
 
+export interface GetReviewQueryParams {
+  work_type: WorkType;
+  target_path: string;
+}
+
 export interface Review {
   id: string;
   rating: number;

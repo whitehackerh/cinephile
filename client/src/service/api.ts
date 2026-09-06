@@ -1,6 +1,6 @@
 import { publicClient, authClient } from '@/lib/apiClient';
 import { ApiResponse } from '@/types/api';
-import { Review, PostReviewsRequest } from '@/types/review';
+import { Review, PostReviewsRequest, GetReviewQueryParams } from '@/types/review';
 import { SignInRequest, SignUpRequest } from '@/lib/validations/auth';
 import { SearchResponse } from '@/types/search';
 import { Movie } from '@/types/movie';
@@ -91,6 +91,16 @@ export const apiService = {
     }
     if (!response.data.data) {
       throw new Error('Response data is missing');
+    }
+    return response.data.data
+  },
+
+  async getReview(queryParams: GetReviewQueryParams) {
+    const response = await authClient.get<ApiResponse<Review>>('/reviews/find', {
+      params: queryParams
+    });
+    if (response.data.error) {
+      throw new Error(response.data.error.message);
     }
     return response.data.data
   }
