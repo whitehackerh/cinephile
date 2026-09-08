@@ -337,6 +337,51 @@ paths:
         '500':
           $ref: '#/components/responses/ErrorInternalServer'
 
+  /reviews/{id}:
+    patch:
+      tags:
+        - Review
+      summary: Update a review
+      description: Update a review
+      operationId: patchReview
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Review ID
+          schema:
+            $ref: '#/components/schemas/ReviewsPathParam/properties/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchReviewsRequest'
+      responses:
+        '200':
+          description: Review updated successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Review'
+                      error:
+                        type: 'null'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '401':
+          $ref: '#/components/responses/ErrorUnauthorized'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '500':
+          $ref: '#/components/responses/ErrorInternalServer'
+
   /reviews/find:
     get:
       tags:
@@ -472,6 +517,15 @@ components:
           enum: [movie, series, season, episode]
         target_path:
           type: string
+    
+    ReviewsPathParam:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+          format: uuid
 
     # ----------------------------------------------------
     # Model Schemas
@@ -1046,6 +1100,21 @@ components:
           oneOf:
             - type: string
               format: date-time
+            - type: 'null'
+
+    PatchReviewsRequest:
+      type: object
+      required:
+        - rating
+        - content
+      properties:
+        rating:
+          type: integer
+          minimum: 0
+          maximum: 100
+        content:
+          oneOf:
+            - type: string
             - type: 'null'
 
   responses:
