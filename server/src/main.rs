@@ -26,7 +26,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             "http://127.0.0.1:8080".parse::<HeaderValue>().unwrap(),
             "http://localhost:8080".parse::<HeaderValue>().unwrap(),
         ])
-        .allow_methods([axum::http::Method::GET, axum::http::Method::POST, axum::http::Method::OPTIONS])
+        .allow_methods([axum::http::Method::GET, axum::http::Method::POST, axum::http::Method::PATCH, axum::http::Method::PUT, axum::http::Method::DELETE, axum::http::Method::OPTIONS])
         .allow_headers([axum::http::header::CONTENT_TYPE, axum::http::header::AUTHORIZATION])
         .expose_headers([axum::http::header::AUTHORIZATION]);
 
