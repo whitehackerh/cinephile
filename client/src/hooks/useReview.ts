@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { WorkType } from '@/types/review';
 import { apiService } from '@/service/api';
 
@@ -17,6 +17,13 @@ export function useReview({ workType, targetPath }: UseReviewParams) {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
+
+  const submitButtonText = useMemo(() => {
+    if (isSubmitting) {
+      return id ? 'Updating...' : 'Posting...';
+    }
+    return id ? 'Update Review' : 'Post Review';
+  }, [id, isSubmitting]);
 
   const fetchReview = useCallback(async () => {
     setIsLoading(true);
@@ -50,13 +57,20 @@ export function useReview({ workType, targetPath }: UseReviewParams) {
     setIsSuccess(false);
 
     try {
-      const res = await apiService.postReviews({
-        rating,
-        content,
-        work_type: workType,
-        target_path: targetPath
-      });
-      setId(res.id);
+      if (id) {
+        await apiService.patchReviews(
+          id, 
+          { rating, content }
+        );
+      } else {
+        const res = await apiService.postReviews({
+          rating,
+          content,
+          work_type: workType,
+          target_path: targetPath
+        });
+        setId(res.id);
+      }
       setIsSuccess(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'error occurred.');
@@ -73,6 +87,7 @@ export function useReview({ workType, targetPath }: UseReviewParams) {
     isSubmitting,
     error,
     isSuccess,
+    submitButtonText,
     handleRatingChange: setRating,
     handleContentChange: setContent,
     handleSubmit,

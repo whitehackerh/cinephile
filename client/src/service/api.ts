@@ -1,6 +1,6 @@
 import { publicClient, authClient } from '@/lib/apiClient';
 import { ApiResponse } from '@/types/api';
-import { Review, PostReviewsRequest, GetReviewQueryParams } from '@/types/review';
+import { Review, PostReviewsRequest, PatchReviewsRequest, GetReviewQueryParams } from '@/types/review';
 import { SignInRequest, SignUpRequest } from '@/lib/validations/auth';
 import { SearchResponse } from '@/types/search';
 import { Movie } from '@/types/movie';
@@ -95,7 +95,18 @@ export const apiService = {
     return response.data.data
   },
 
-  async getReview(queryParams: GetReviewQueryParams) {
+  async patchReviews(id: string, input: PatchReviewsRequest): Promise<Review> {
+    const response = await authClient.patch<ApiResponse<Review>>(`/reviews/${id}`, input);
+    if (response.data.error) {
+      throw new Error(response.data.error.message);
+    }
+    if (!response.data.data) {
+      throw new Error('Response data is missing');
+    }
+    return response.data.data
+  },
+
+  async getReview(queryParams: GetReviewQueryParams): Promise<Review | null> {
     const response = await authClient.get<ApiResponse<Review>>('/reviews/find', {
       params: queryParams
     });

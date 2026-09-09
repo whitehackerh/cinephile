@@ -18,6 +18,7 @@ export function DetailReviewSection({ workType, targetPath }: DetailReviewSectio
     isSubmitting,
     error,
     isSuccess,
+    submitButtonText,
     handleRatingChange,
     handleContentChange,
     handleSubmit,
@@ -35,6 +36,7 @@ export function DetailReviewSection({ workType, targetPath }: DetailReviewSectio
         isSubmitting={isSubmitting}
         error={error}
         isSuccess={isSuccess}
+        submitButtonText={submitButtonText}
         onRatingChange={handleRatingChange}
         onContentChange={handleContentChange}
         onSubmit={handleSubmit}

@@ -98,6 +98,8 @@ impl ReviewRepository for PostgresReviewRepository {
                 id,
                 rating AS "rating: i32",
                 content,
+                work_type,
+                target_path,
                 created_at,
                 updated_at,
                 deleted_at
@@ -116,5 +118,94 @@ impl ReviewRepository for PostgresReviewRepository {
         };
 
         Ok(review_without_work)
+    }
+
+    async fn find_by_id(&self, id: &Uuid, user_id: &Uuid) -> anyhow::Result<Option<ReviewWithoutWork>> {
+        let query = sqlx::query_as!(
+            ReviewWithoutWork,
+            r#"
+            SELECT
+                id,
+                rating AS "rating: i32",
+                content,
+                work_type,
+                target_path,
+                created_at,
+                updated_at,
+                deleted_at
+            FROM reviews
+            WHERE id = $1 AND user_id = $2 AND deleted_at IS NULL
+            "#,
+            id, user_id
+        );
+
+        let review_without_work = match &self.conn {
+            PgConn::Pool(pool) => query.fetch_optional(pool).await?,
+            PgConn::Tx(tx) => {
+                let mut guard = tx.lock().await;
+                query.fetch_optional(&mut **guard).await?
+            }
+        };
+
+        Ok(review_without_work)
+    }
+
+    async fn find_by_id_for_update(&self, id: &Uuid, user_id: &Uuid) -> anyhow::Result<Option<ReviewWithoutWork>> {
+        let query = sqlx::query_as!(
+            ReviewWithoutWork,
+            r#"
+            SELECT
+                id,
+                rating AS "rating: i32",
+                content,
+                work_type,
+                target_path,
+                created_at,
+                updated_at,
+                deleted_at
+            FROM reviews
+            WHERE id = $1 AND user_id = $2 AND deleted_at IS NULL
+            FOR UPDATE
+            "#,
+            id, user_id
+        );
+
+        let review_without_work = match &self.conn {
+            PgConn::Pool(pool) => query.fetch_optional(pool).await?,
+            PgConn::Tx(tx) => {
+                let mut guard = tx.lock().await;
+                query.fetch_optional(&mut **guard).await?
+            }
+        };
+
+        Ok(review_without_work)
+    }
+
+    async fn update(&self, review: &Review) -> anyhow::Result<()> {
+        let query = sqlx::query!(
+            r#"
+            UPDATE reviews
+            SET
+                rating = $1,
+                content = $2,
+                updated_at = $3
+            WHERE id = $4 AND user_id = $5 AND deleted_at IS NULL
+            "#,
+            review.rating() as i16,
+            review.content().as_deref(),
+            review.updated_at(),
+            review.id(),
+            review.user_id()
+        );
+
+        match &self.conn {
+            PgConn::Pool(pool) => { query.execute(pool).await?; },
+            PgConn::Tx(tx) => {
+                let mut guard = tx.lock().await;
+                query.execute(&mut **guard).await?;
+            }
+        };
+
+        Ok(())
     }
 }

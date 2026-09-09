@@ -31,6 +31,7 @@ use crate::{
             tv_season::TvSeasonInteractor,
             tv_series::TvSeriesInteractor,
             post_reviews::PostReviewsInteractor,
+            patch_reviews::PatchReviewsInteractor,
             get_review::GetReviewInteractor,
         },
         port::{
@@ -42,8 +43,9 @@ use crate::{
             tv_season::TvSeasonUseCase,
             tv_series::TvSeriesUseCase,
             post_reviews::PostReviewsUseCase,
-            unit_of_work::UnitOfWork,
+            patch_reviews::PatchReviewsUseCase,
             get_review::GetReviewUseCase,
+            unit_of_work::UnitOfWork,
         },
         repository::{
             user::UserRepository,
@@ -65,6 +67,7 @@ pub struct AppRegistry {
     pub(crate) tv_season_usecase: Arc<dyn TvSeasonUseCase + Send + Sync>,
     pub(crate) tv_series_usecase: Arc<dyn TvSeriesUseCase + Send + Sync>,
     pub(crate) post_reviews_usecase: Arc<dyn PostReviewsUseCase + Send + Sync>,
+    pub(crate) patch_reviews_usecase: Arc<dyn PatchReviewsUseCase + Send + Sync>,
     pub(crate) get_review_usecase: Arc<dyn GetReviewUseCase + Send + Sync>,
     pub(crate) token_manager: Arc<JwtTokenManager>,
 }
@@ -113,6 +116,11 @@ impl AppRegistry {
             tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>,
             uow.clone()
         ));
+        let patch_reviews_usecase = Arc::new(PatchReviewsInteractor::new(
+            review_repository.clone() as Arc<dyn ReviewRepository + Send + Sync>,
+            tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>,
+            uow.clone()
+        ));
         let get_review_usecase = Arc::new(GetReviewInteractor::new(
             review_repository.clone() as Arc<dyn ReviewRepository + Send + Sync>,
             tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>
@@ -127,6 +135,7 @@ impl AppRegistry {
             tv_season_usecase,
             tv_series_usecase,
             post_reviews_usecase,
+            patch_reviews_usecase,
             get_review_usecase,
             token_manager,
         })
@@ -150,4 +159,5 @@ impl_from_ref!(TvEpisodeUseCase, tv_episode_usecase);
 impl_from_ref!(TvSeasonUseCase, tv_season_usecase);
 impl_from_ref!(TvSeriesUseCase, tv_series_usecase);
 impl_from_ref!(PostReviewsUseCase, post_reviews_usecase);
+impl_from_ref!(PatchReviewsUseCase, patch_reviews_usecase);
 impl_from_ref!(GetReviewUseCase, get_review_usecase);

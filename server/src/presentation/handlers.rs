@@ -1,5 +1,6 @@
 pub(crate) mod get_review;
 pub(crate) mod movie;
+pub(crate) mod patch_reviews;
 pub(crate) mod post_reviews;
 pub(crate) mod search;
 pub(crate) mod sign_up;

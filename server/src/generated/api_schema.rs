@@ -582,6 +582,47 @@ impl ::std::convert::TryFrom<::std::string::String> for MovieSummaryMediaType {
         value.parse()
     }
 }
+///`PatchReviewsRequest`
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "type": "object",
+///  "required": [
+///    "content",
+///    "rating"
+///  ],
+///  "properties": {
+///    "content": {
+///      "oneOf": [
+///        {
+///          "type": "string"
+///        },
+///        {
+///          "type": "null"
+///        }
+///      ]
+///    },
+///    "rating": {
+///      "type": "integer",
+///      "maximum": 100.0,
+///      "minimum": 0.0
+///    }
+///  }
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+pub struct PatchReviewsRequest {
+    pub content: ::std::option::Option<::std::string::String>,
+    pub rating: i64,
+}
+impl ::std::convert::From<&PatchReviewsRequest> for PatchReviewsRequest {
+    fn from(value: &PatchReviewsRequest) -> Self {
+        value.clone()
+    }
+}
 ///`PostReviewsRequest`
 ///
 /// <details><summary>JSON schema</summary>
@@ -981,6 +1022,34 @@ impl ::std::convert::TryFrom<::std::string::String> for ReviewWorkType {
         value: ::std::string::String,
     ) -> ::std::result::Result<Self, self::error::ConversionError> {
         value.parse()
+    }
+}
+///`ReviewsPathParam`
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "type": "object",
+///  "required": [
+///    "id"
+///  ],
+///  "properties": {
+///    "id": {
+///      "type": "string",
+///      "format": "uuid"
+///    }
+///  }
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+pub struct ReviewsPathParam {
+    pub id: ::uuid::Uuid,
+}
+impl ::std::convert::From<&ReviewsPathParam> for ReviewsPathParam {
+    fn from(value: &ReviewsPathParam) -> Self {
+        value.clone()
     }
 }
 ///`SearchQueryParams`
