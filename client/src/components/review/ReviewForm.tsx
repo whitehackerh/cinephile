@@ -8,6 +8,7 @@ interface ReviewFormProps {
   isSubmitting: boolean;
   error: string | null;
   isSuccess: boolean;
+  submitButtonText: string;
   onRatingChange: (rating: number) => void;
   onContentChange: (content: string) => void;
   onSubmit: (e: React.FormEvent) => void;
@@ -21,6 +22,7 @@ export function ReviewForm({
   isSubmitting,
   error,
   isSuccess,
+  submitButtonText,
   onRatingChange,
   onContentChange,
   onSubmit,
@@ -65,7 +67,7 @@ export function ReviewForm({
           disabled={isSubmitting}
           className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:bg-slate-800 disabled:text-slate-500 text-xs font-bold text-white rounded-lg transition shadow"
         >
-          {isSubmitting ? 'Posting...' : 'Post Review'}
+          {submitButtonText}
         </button>
       </div>
     </form>
