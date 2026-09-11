@@ -338,6 +338,13 @@ paths:
           $ref: '#/components/responses/ErrorInternalServer'
 
   /reviews/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Review ID
+        schema:
+          $ref: '#/components/schemas/ReviewsPathParam/properties/id'
     patch:
       tags:
         - Review
@@ -346,13 +353,6 @@ paths:
       operationId: patchReview
       security:
         - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Review ID
-          schema:
-            $ref: '#/components/schemas/ReviewsPathParam/properties/id'
       requestBody:
         required: true
         content:
@@ -382,7 +382,6 @@ paths:
         '500':
           $ref: '#/components/responses/ErrorInternalServer'
 
-  /reviews/{id}:
     delete:
       tags:
         - Review
@@ -391,16 +390,9 @@ paths:
       operationId: deleteReview
       security:
         - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Review ID
-          schema:
-            $ref: '#/components/schemas/ReviewsPathParam/properties/id'
       responses:
         '200':
-          description: Review updated successfully.
+          description: Review deleted successfully.
           content:
             application/json:
               schema:
@@ -409,7 +401,7 @@ paths:
                   - type: object
                     properties:
                       data:
-                        $ref: object
+                        type: object
                       error:
                         type: 'null'
         '400':
