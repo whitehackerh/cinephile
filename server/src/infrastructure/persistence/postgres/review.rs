@@ -208,4 +208,30 @@ impl ReviewRepository for PostgresReviewRepository {
 
         Ok(())
     }
+
+    async fn delete(&self, review: &Review) -> anyhow::Result<()> {
+        let query = sqlx::query!(
+            r#"
+            UPDATE reviews
+            SET
+                updated_at = $1,
+                deleted_at = $2
+            WHERE id = $3 AND user_id = $4 AND deleted_at IS NULL
+            "#,
+            review.updated_at(),
+            review.deleted_at(),
+            review.id(),
+            review.user_id()
+        );
+
+        match &self.conn {
+            PgConn::Pool(pool) => { query.execute(pool).await?; },
+            PgConn::Tx(tx) => {
+                let mut guard = tx.lock().await;
+                query.execute(&mut **guard).await?;
+            }
+        };
+
+        Ok(())
+    }
 }

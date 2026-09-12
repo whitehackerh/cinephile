@@ -338,6 +338,13 @@ paths:
           $ref: '#/components/responses/ErrorInternalServer'
 
   /reviews/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Review ID
+        schema:
+          $ref: '#/components/schemas/ReviewsPathParam/properties/id'
     patch:
       tags:
         - Review
@@ -346,13 +353,6 @@ paths:
       operationId: patchReview
       security:
         - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Review ID
-          schema:
-            $ref: '#/components/schemas/ReviewsPathParam/properties/id'
       requestBody:
         required: true
         content:
@@ -371,6 +371,37 @@ paths:
                     properties:
                       data:
                         $ref: '#/components/schemas/Review'
+                      error:
+                        type: 'null'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '401':
+          $ref: '#/components/responses/ErrorUnauthorized'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '500':
+          $ref: '#/components/responses/ErrorInternalServer'
+
+    delete:
+      tags:
+        - Review
+      summary: Delete a review
+      description: Delete a review
+      operationId: deleteReview
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Review deleted successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
                       error:
                         type: 'null'
         '400':

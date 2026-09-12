@@ -1,5 +1,7 @@
 'use client';
 
+import React from "react";
+
 interface ReviewFormProps {
   id: string | null;
   rating: number;
@@ -12,7 +14,7 @@ interface ReviewFormProps {
   onRatingChange: (rating: number) => void;
   onContentChange: (content: string) => void;
   onSubmit: (e: React.FormEvent) => void;
-  refetch: () => void;
+  onDelete: (e: React.FormEvent) => void;
 }
 
 export function ReviewForm({
@@ -26,6 +28,7 @@ export function ReviewForm({
   onRatingChange,
   onContentChange,
   onSubmit,
+  onDelete
 }: ReviewFormProps) {
   return (
     <form onSubmit={onSubmit} className="bg-slate-900/60 border border-white/10 rounded-xl p-5 space-y-4">
@@ -61,7 +64,18 @@ export function ReviewForm({
       {error && <p className="text-xs text-rose-400">⚠️ {error}</p>}
       {isSuccess && <p className="text-xs text-emerald-400">✓ Review submitted successfully</p>}
 
-      <div className="flex justify-end">
+      <div className={`flex items-center ${id ? 'justify-between' : 'justify-end'}`}>
+        {id && (
+          <button
+            type="button"
+            onClick={onDelete}
+            disabled={isSubmitting}
+            className="px-4 py-2 bg-rose-600/20 hover:bg-rose-600/30 text-rose-400 border border-rose-500/30 disabled:opacity-50 text-xs font-bold rounded-lg transition"
+          >
+            Delete
+          </button>
+        )}
+
         <button
           type="submit"
           disabled={isSubmitting}

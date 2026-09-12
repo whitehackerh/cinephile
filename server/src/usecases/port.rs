@@ -1,3 +1,4 @@
+pub(crate) mod delete_reviews;
 pub(crate) mod get_review;
 pub(crate) mod movie;
 pub(crate) mod patch_reviews;

@@ -106,6 +106,17 @@ export const apiService = {
     return response.data.data
   },
 
+  async deleteReviews(id: string): Promise<void> {
+    const response = await authClient.delete<ApiResponse<void>>(`/reviews/${id}`);
+    if (response.data.error) {
+      throw new Error(response.data.error.message);
+    }
+    if (!response.data.data) {
+      throw new Error('Response data is missing');
+    }
+    return response.data.data
+  },
+
   async getReview(queryParams: GetReviewQueryParams): Promise<Review | null> {
     const response = await authClient.get<ApiResponse<Review>>('/reviews/find', {
       params: queryParams

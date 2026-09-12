@@ -67,21 +67,6 @@ impl SignUpUseCase for SignUpInteractor {
             }
         })?;
 
-        /*
-        
-        // 例: 作成した User をトランザクションからそのまま受け取る場合
-        let created_user: User = self.uow.execute(|repos| {
-            Box::pin(async move {
-                let user = User::new(Uuid::new_v4(), name, email, hashed_password)?;
-                repos.user_repo.create(&user).await?;
-                
-                // 戻り値として User を返す
-                Ok(user)
-            })
-        }).await.map_err(...)?;
-        
-         */
-
         Ok(())
     }
 }

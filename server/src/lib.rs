@@ -32,6 +32,7 @@ use crate::{
             tv_series::TvSeriesInteractor,
             post_reviews::PostReviewsInteractor,
             patch_reviews::PatchReviewsInteractor,
+            delete_reviews::DeleteReviewsInteractor,
             get_review::GetReviewInteractor,
         },
         port::{
@@ -44,6 +45,7 @@ use crate::{
             tv_series::TvSeriesUseCase,
             post_reviews::PostReviewsUseCase,
             patch_reviews::PatchReviewsUseCase,
+            delete_reviews::DeleteReviewsUseCase,
             get_review::GetReviewUseCase,
             unit_of_work::UnitOfWork,
         },
@@ -68,6 +70,7 @@ pub struct AppRegistry {
     pub(crate) tv_series_usecase: Arc<dyn TvSeriesUseCase + Send + Sync>,
     pub(crate) post_reviews_usecase: Arc<dyn PostReviewsUseCase + Send + Sync>,
     pub(crate) patch_reviews_usecase: Arc<dyn PatchReviewsUseCase + Send + Sync>,
+    pub(crate) delete_reviews_usecase: Arc<dyn DeleteReviewsUseCase + Send + Sync>,
     pub(crate) get_review_usecase: Arc<dyn GetReviewUseCase + Send + Sync>,
     pub(crate) token_manager: Arc<JwtTokenManager>,
 }
@@ -121,6 +124,11 @@ impl AppRegistry {
             tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>,
             uow.clone()
         ));
+        let delete_reviews_usecase = Arc::new(DeleteReviewsInteractor::new(
+            review_repository.clone() as Arc<dyn ReviewRepository + Send + Sync>,
+            tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>,
+            uow.clone()
+        ));
         let get_review_usecase = Arc::new(GetReviewInteractor::new(
             review_repository.clone() as Arc<dyn ReviewRepository + Send + Sync>,
             tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>
@@ -136,6 +144,7 @@ impl AppRegistry {
             tv_series_usecase,
             post_reviews_usecase,
             patch_reviews_usecase,
+            delete_reviews_usecase,
             get_review_usecase,
             token_manager,
         })
@@ -160,4 +169,5 @@ impl_from_ref!(TvSeasonUseCase, tv_season_usecase);
 impl_from_ref!(TvSeriesUseCase, tv_series_usecase);
 impl_from_ref!(PostReviewsUseCase, post_reviews_usecase);
 impl_from_ref!(PatchReviewsUseCase, patch_reviews_usecase);
+impl_from_ref!(DeleteReviewsUseCase, delete_reviews_usecase);
 impl_from_ref!(GetReviewUseCase, get_review_usecase);
