@@ -22,7 +22,7 @@ export function DetailReviewSection({ workType, targetPath }: DetailReviewSectio
     handleRatingChange,
     handleContentChange,
     handleSubmit,
-    refetch
+    handleDelete,
   } = useReview({ workType, targetPath });
 
   return (
@@ -40,7 +40,7 @@ export function DetailReviewSection({ workType, targetPath }: DetailReviewSectio
         onRatingChange={handleRatingChange}
         onContentChange={handleContentChange}
         onSubmit={handleSubmit}
-        refetch={refetch}
+        onDelete={handleDelete}
       />
     </section>
   );

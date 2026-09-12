@@ -18,6 +18,12 @@ export function useReview({ workType, targetPath }: UseReviewParams) {
   const [error, setError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
+  const resetForm = useCallback(() => {
+      setId(null);
+      setRating(80);
+      setContent(null);
+  }, []);
+
   const submitButtonText = useMemo(() => {
     if (isSubmitting) {
       return id ? 'Updating...' : 'Posting...';
@@ -77,7 +83,28 @@ export function useReview({ workType, targetPath }: UseReviewParams) {
     } finally {
       setIsSubmitting(false);
     }
-  }, [rating, content, workType, targetPath]);
+  }, [id, rating, content, workType, targetPath]);
+
+  const handleDelete = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!id) return;
+
+    setIsSubmitting(true);
+    setError(null);
+    setIsSuccess(false);
+
+    try {
+      await apiService.deleteReviews(id);
+      setIsSuccess(true);
+      resetForm();
+      await fetchReview();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'error occurred.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [id]);
 
   return {
     id,
@@ -91,6 +118,6 @@ export function useReview({ workType, targetPath }: UseReviewParams) {
     handleRatingChange: setRating,
     handleContentChange: setContent,
     handleSubmit,
-    refetch: fetchReview
+    handleDelete
   };
 }
