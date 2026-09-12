@@ -234,4 +234,35 @@ impl ReviewRepository for PostgresReviewRepository {
 
         Ok(())
     }
+
+    async fn fetch_all(&self, user_id: &Uuid) -> anyhow::Result<Vec<ReviewWithoutWork>> {
+        let query = sqlx::query_as!(
+            ReviewWithoutWork,
+            r#"
+            SELECT
+                id,
+                rating AS "rating: i32",
+                content,
+                work_type,
+                target_path,
+                created_at,
+                updated_at,
+                deleted_at
+            FROM reviews
+            WHERE user_id = $1 AND deleted_at IS NULL
+            ORDER BY updated_at DESC
+            "#,
+            user_id
+        );
+
+        let review_without_work_list = match &self.conn {
+            PgConn::Pool(pool) => query.fetch_all(pool).await?,
+            PgConn::Tx(tx) => {
+                let mut guard = tx.lock().await;
+                query.fetch_all(&mut **guard).await?
+            }
+        };
+
+        Ok(review_without_work_list)
+    }
 }

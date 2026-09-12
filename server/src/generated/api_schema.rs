@@ -82,6 +82,9 @@ impl ::std::convert::From<&ApiErrorDetail> for ApiErrorDetail {
 ///    "data": {
 ///      "oneOf": [
 ///        {
+///          "type": "array"
+///        },
+///        {
 ///          "type": "object"
 ///        },
 ///        {
@@ -113,9 +116,7 @@ impl ::std::convert::From<&ApiErrorDetail> for ApiErrorDetail {
 /// </details>
 #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
 pub struct ApiResponse {
-    pub data: ::std::option::Option<
-        ::serde_json::Map<::std::string::String, ::serde_json::Value>,
-    >,
+    pub data: ApiResponseData,
     pub error: ::std::option::Option<ApiErrorDetail>,
     pub timestamp: ::chrono::DateTime<::chrono::offset::Utc>,
     pub uri: ::std::string::String,
@@ -123,6 +124,51 @@ pub struct ApiResponse {
 impl ::std::convert::From<&ApiResponse> for ApiResponse {
     fn from(value: &ApiResponse) -> Self {
         value.clone()
+    }
+}
+///`ApiResponseData`
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "oneOf": [
+///    {
+///      "type": "array"
+///    },
+///    {
+///      "type": "object"
+///    },
+///    {
+///      "type": "null"
+///    }
+///  ]
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+#[serde(untagged)]
+pub enum ApiResponseData {
+    Variant0(::std::vec::Vec<::serde_json::Value>),
+    Variant1(::serde_json::Map<::std::string::String, ::serde_json::Value>),
+    Variant2,
+}
+impl ::std::convert::From<&Self> for ApiResponseData {
+    fn from(value: &ApiResponseData) -> Self {
+        value.clone()
+    }
+}
+impl ::std::convert::From<::std::vec::Vec<::serde_json::Value>> for ApiResponseData {
+    fn from(value: ::std::vec::Vec<::serde_json::Value>) -> Self {
+        Self::Variant0(value)
+    }
+}
+impl ::std::convert::From<::serde_json::Map<::std::string::String, ::serde_json::Value>>
+for ApiResponseData {
+    fn from(
+        value: ::serde_json::Map<::std::string::String, ::serde_json::Value>,
+    ) -> Self {
+        Self::Variant1(value)
     }
 }
 ///`Genre`

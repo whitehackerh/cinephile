@@ -1,4 +1,4 @@
-use axum::{routing::{get, patch, post, delete}, Router, middleware::from_fn_with_state};
+use axum::{routing::{get, patch, post }, Router, middleware::from_fn_with_state};
 use std::sync::Arc;
 
 use crate::{
@@ -15,6 +15,7 @@ use crate::{
         post_reviews::post_reviews_handler,
         patch_reviews::patch_reviews_handler,
         delete_reviews::delete_reviews_handler,
+        get_reviews::get_reviews_handler,
         get_review::get_review_handler,
     },
     middleware::auth::AuthMiddleware
@@ -27,7 +28,7 @@ pub fn create_router(registry: Arc<AppRegistry>) -> Router {
         .route("/tv/{series_id}/season/{season_number}/episode/{episode_number}", get(tv_episode_handler))
         .route("/tv/{series_id}/season/{season_number}", get(tv_season_handler))
         .route("/tv/{series_id}", get(tv_series_handler))
-        .route("/reviews", post(post_reviews_handler))
+        .route("/reviews", post(post_reviews_handler).get(get_reviews_handler))
         .route("/reviews/{id}", patch(patch_reviews_handler).delete(delete_reviews_handler))
         .route("/reviews/find", get(get_review_handler))
         .layer(from_fn_with_state(registry.token_manager.clone(), AuthMiddleware::auth_middleware));
