@@ -61,17 +61,16 @@ impl ReviewRepository for PostgresReviewRepository {
         let query = sqlx::query!(
             r#"
             INSERT INTO reviews (
-                id, user_id, rating, content, work_type, work_title,
+                id, user_id, rating, content, work_type,
                 target_path, created_at, updated_at, deleted_at
             )
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
             "#,
             review.id(),
             review.user_id(),
             review.rating() as i16,
             review.content().as_deref(),
             review.work_type(),
-            review.work_title(),
             review.target_path(),
             review.created_at(),
             review.updated_at(),
@@ -100,7 +99,6 @@ impl ReviewRepository for PostgresReviewRepository {
                 rating AS "rating: i32",
                 content,
                 work_type,
-                work_title,
                 target_path,
                 created_at,
                 updated_at,
@@ -131,7 +129,6 @@ impl ReviewRepository for PostgresReviewRepository {
                 rating AS "rating: i32",
                 content,
                 work_type,
-                work_title,
                 target_path,
                 created_at,
                 updated_at,
@@ -162,7 +159,6 @@ impl ReviewRepository for PostgresReviewRepository {
                 rating AS "rating: i32",
                 content,
                 work_type,
-                work_title,
                 target_path,
                 created_at,
                 updated_at,
@@ -248,7 +244,6 @@ impl ReviewRepository for PostgresReviewRepository {
                 rating AS "rating: i32",
                 content,
                 work_type,
-                work_title,
                 target_path,
                 created_at,
                 updated_at,

@@ -1,5 +1,6 @@
 use async_trait::async_trait;
 use reqwest::Client;
+use tokio::try_join;
 use crate::{
     domain::{
         entities::{
@@ -196,27 +197,30 @@ impl TmdbGateway for TmdbClient {
     }
 
     async fn fetch_tv_season(&self, series_id: i32, season_number: i32) -> Result<TvSeason, AppError> {
-        let response = self.http_client
-            .get(format!("{}/tv/{}/season/{}", self.base_url, series_id, season_number))
-            .query(&[
-                ("api_key", self.api_key.as_str()),
-            ])
-            .send()
-            .await
-            .map_err(|e| AppError::Infrastructure(e.to_string()))?;
+        let series_fut = self.fetch_tv_series_by_id(series_id);
+        let season_fut = async {
+            let response = self.http_client
+                .get(format!("{}/tv/{}/season/{}", self.base_url, series_id, season_number))
+                .query(&[("api_key", self.api_key.as_str())])
+                .send()
+                .await
+                .map_err(|e| AppError::Infrastructure(e.to_string()))?;
 
-        let response = response.error_for_status().map_err(|e| {
-            if e.status() == Some(reqwest::StatusCode::NOT_FOUND) {
-                AppError::EntityNotFound(format!("TV season with series_id {} season_number {} not found", series_id, season_number))
-            } else {
-                AppError::Infrastructure(format!("TMDB API error: {}", e))
-            }
-        })?;
+            let response = response.error_for_status().map_err(|e| {
+                if e.status() == Some(reqwest::StatusCode::NOT_FOUND) {
+                    AppError::EntityNotFound(format!("TV season with series_id {} season_number {} not found", series_id, season_number))
+                } else {
+                    AppError::Infrastructure(format!("TMDB API error: {}", e))
+                }
+            })?;
 
-        let tmdb_res = response
-            .json::<TmdbTvSeason>()
-            .await
-            .map_err(|e| AppError::Infrastructure(format!("Failed to parse TMDB response: {}", e)))?;
+            response
+                .json::<TmdbTvSeason>()
+                .await
+                .map_err(|e| AppError::Infrastructure(format!("Failed to parse TMDB response: {}", e)))
+        };
+
+        let (series, tmdb_res) = try_join!(series_fut, season_fut)?;
 
         if tmdb_res.season_number != season_number {
             return Err(AppError::Infrastructure(
@@ -229,48 +233,53 @@ impl TmdbGateway for TmdbClient {
                 tmdb_res.id,
                 tmdb_res.season_number,
                 tmdb_res
-                .episodes
-                .as_ref()
-                .map_or(0, |episodes| episodes.len() as i32),
-                tmdb_res.name,
+                    .episodes
+                    .as_ref()
+                    .map_or(0, |episodes| episodes.len() as i32),
+                tmdb_res.name.clone(),
+                format!("{} {}", series.title(), &tmdb_res.name),
                 tmdb_res.overview,
                 tmdb_res.poster_path,
                 tmdb_res.air_date,
                 tmdb_res.vote_average.map(|v| v as f64 * 10.0),
-                tmdb_res.episodes
-                .unwrap_or_default()
-                .into_iter()
-                .map(|episode| TvEpisodeSummary::new(
-                    episode.id, episode.episode_number, episode.name, episode.overview,
-                    episode.runtime, episode.still_path, episode.air_date, episode.vote_average.map(|v| v as f64 * 10.0)
-                ))
-                .collect(),
+                tmdb_res
+                    .episodes
+                    .unwrap_or_default()
+                    .into_iter()
+                    .map(|episode| TvEpisodeSummary::new(
+                        episode.id, episode.episode_number, episode.name, episode.overview,
+                        episode.runtime, episode.still_path, episode.air_date, episode.vote_average.map(|v| v as f64 * 10.0)
+                    ))
+                    .collect(),
             )
         )
     }
 
     async fn fetch_tv_episode(&self, series_id: i32, season_number: i32, episode_number: i32) -> Result<TvEpisode, AppError> {
-        let response = self.http_client
-            .get(format!("{}/tv/{}/season/{}/episode/{}", self.base_url, series_id, season_number, episode_number))
-            .query(&[
-                ("api_key", self.api_key.as_str()),
-            ])
-            .send()
-            .await
-            .map_err(|e| AppError::Infrastructure(e.to_string()))?;
+        let series_fut = self.fetch_tv_series_by_id(series_id);
+        let episode_fut = async {
+            let response = self.http_client
+                .get(format!("{}/tv/{}/season/{}/episode/{}", self.base_url, series_id, season_number, episode_number))
+                .query(&[("api_key", self.api_key.as_str())])
+                .send()
+                .await
+                .map_err(|e| AppError::Infrastructure(e.to_string()))?;
 
-        let response = response.error_for_status().map_err(|e| {
-            if e.status() == Some(reqwest::StatusCode::NOT_FOUND) {
-                AppError::EntityNotFound(format!("TV episode with series_id {} season_number {} episode_number {} not found", series_id, season_number, episode_number))
-            } else {
-                AppError::Infrastructure(format!("TMDB API error: {}", e))
-            }
-        })?;
+            let response = response.error_for_status().map_err(|e| {
+                if e.status() == Some(reqwest::StatusCode::NOT_FOUND) {
+                    AppError::EntityNotFound(format!("TV episode with series_id {} season_number {} episode_number {} not found", series_id, season_number, episode_number))
+                } else {
+                    AppError::Infrastructure(format!("TMDB API error: {}", e))
+                }
+            })?;
 
-        let tmdb_res = response
-            .json::<TmdbTvEpisode>()
-            .await
-            .map_err(|e| AppError::Infrastructure(format!("Failed to parse TMDB response: {}", e)))?;
+            response
+                .json::<TmdbTvEpisode>()
+                .await
+                .map_err(|e| AppError::Infrastructure(format!("Failed to parse TMDB response: {}", e)))
+        };
+
+        let (series, tmdb_res) = try_join!(series_fut, episode_fut)?;
 
         if tmdb_res.season_number != season_number || tmdb_res.episode_number != episode_number {
             return Err(AppError::Infrastructure(
@@ -283,7 +292,14 @@ impl TmdbGateway for TmdbClient {
                 tmdb_res.id,
                 tmdb_res.episode_number,
                 tmdb_res.season_number,
-                tmdb_res.name,
+                tmdb_res.name.clone(),
+                format!(
+                    "{} Season {} Ep.{} {}",
+                    series.title(),
+                    tmdb_res.season_number,
+                    tmdb_res.episode_number,
+                    &tmdb_res.name
+                ),
                 tmdb_res.overview,
                 tmdb_res.runtime,
                 tmdb_res.still_path,

@@ -4,6 +4,7 @@ pub(crate) struct TvEpisode {
     episode_number: i32,
     season_number: i32,
     title: String,
+    composite_title: String,
     overview: Option<String>,
     runtime: Option<i32>,
     still_path: Option<String>,
@@ -19,6 +20,7 @@ impl TvEpisode{
         episode_number: i32,
         season_number: i32,
         title: String,
+        composite_title: String,
         overview: Option<String>,
         runtime: Option<i32>,
         still_path: Option<String>,
@@ -32,6 +34,7 @@ impl TvEpisode{
             episode_number,
             season_number,
             title,
+            composite_title,
             overview,
             runtime,
             still_path,
@@ -56,6 +59,10 @@ impl TvEpisode{
 
     pub fn title(&self) -> &str {
         &self.title
+    }
+
+    pub fn composite_title(&self) -> &str {
+        &self.composite_title
     }
 
     pub fn overview(&self) -> &Option<String> {
@@ -87,13 +94,13 @@ impl TvEpisode{
     }
 
     pub fn into_parts(self) -> (
-        i32, i32, i32, String, Option<String>, 
-        Option<i32>, Option<String>, Option<String>, Option<f64>,
+        i32, i32, i32, String, String,
+        Option<String>, Option<i32>, Option<String>, Option<String>, Option<f64>,
         Option<String>, Option<String> 
     ) {
         (
-            self.id, self.episode_number, self.season_number, self.title, self.overview,
-            self.runtime, self.still_path, self.air_date, self.vote_average,
+            self.id, self.episode_number, self.season_number, self.title, self.composite_title,
+            self.overview, self.runtime, self.still_path, self.air_date, self.vote_average,
             self.production_code, self.episode_type
         )
     }

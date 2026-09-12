@@ -11,7 +11,6 @@ pub(crate) struct Review {
     user_id: Uuid,
     rating: i32,
     content: Option<String>,
-    work_title: String,
     target_path: String,
     work: Work,
     created_at: DateTime<Utc>,
@@ -24,7 +23,6 @@ impl Review {
         user_id: Uuid,
         rating: i32,
         content: Option<String>,
-        work_title: String,
         target_path: String,
         work: Work,
     ) -> Result<Self, AppError> {
@@ -41,7 +39,6 @@ impl Review {
             user_id,
             rating,
             content,
-            work_title,
             target_path,
             work,
             created_at: now,
@@ -55,7 +52,6 @@ impl Review {
         user_id: Uuid,
         rating: i32,
         content: Option<String>,
-        work_title: String,
         target_path: String,
         work: Work,
         created_at: DateTime<Utc>,
@@ -67,7 +63,6 @@ impl Review {
             user_id,
             rating,
             content,
-            work_title,
             target_path,
             work,
             created_at,
@@ -101,10 +96,6 @@ impl Review {
         &self.content
     }
 
-    pub fn work_title(&self) -> &str {
-        &self.work_title
-    }
-
     pub fn target_path(&self) -> &str {
         &self.target_path
     }
@@ -126,11 +117,11 @@ impl Review {
     }
 
     pub fn into_parts(self) -> (
-        Uuid, Uuid, i32, Option<String>, String, String,
+        Uuid, Uuid, i32, Option<String>, String,
         Work, DateTime<Utc>, DateTime<Utc>, Option<DateTime<Utc>>
     ) {
         (
-            self.id, self.user_id, self.rating, self.content, self.work_title, self.target_path,
+            self.id, self.user_id, self.rating, self.content, self.target_path,
             self.work, self.created_at, self.updated_at, self.deleted_at
         )
     }

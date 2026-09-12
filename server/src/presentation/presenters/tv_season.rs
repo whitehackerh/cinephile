@@ -14,6 +14,7 @@ impl TvSeasonPresenter {
     pub fn to_response(output: TvSeasonOutput) -> TvSeason {
         TvSeason {
             air_date: output.air_date.and_then(|a| NaiveDate::parse_from_str(&a, "%Y-%m-%d").ok()),
+            composite_title: output.composite_title,
             episode_count: output.episode_count as i64,
             episode_summaries: output.episode_summaries.into_iter().map(
                 |e| TvEpisodeSummary {
