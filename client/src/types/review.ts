@@ -27,6 +27,7 @@ export interface Review {
   rating: number;
   content: string | null;
   work_type: WorkType;
+  work_title: string;
   target_path: string;
   work: Work;
   created_at: string;

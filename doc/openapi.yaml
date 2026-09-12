@@ -1125,6 +1125,7 @@ components:
         - rating
         - content
         - work_type
+        - work_title
         - target_path
         - work
         - created_at
@@ -1145,6 +1146,8 @@ components:
         work_type:
           type: string
           enum: [movie, series, season, episode]
+        work_title:
+          type: string
         target_path:
           type: string
         work:

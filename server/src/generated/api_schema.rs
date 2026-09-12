@@ -833,6 +833,7 @@ impl ::std::convert::TryFrom<::std::string::String> for PostReviewsRequestWorkTy
 ///    "target_path",
 ///    "updated_at",
 ///    "work",
+///    "work_title",
 ///    "work_type"
 ///  ],
 ///  "properties": {
@@ -893,6 +894,9 @@ impl ::std::convert::TryFrom<::std::string::String> for PostReviewsRequestWorkTy
 ///        }
 ///      ]
 ///    },
+///    "work_title": {
+///      "type": "string"
+///    },
 ///    "work_type": {
 ///      "type": "string",
 ///      "enum": [
@@ -916,6 +920,7 @@ pub struct Review {
     pub target_path: ::std::string::String,
     pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     pub work: ReviewWork,
+    pub work_title: ::std::string::String,
     pub work_type: ReviewWorkType,
 }
 impl ::std::convert::From<&Review> for Review {

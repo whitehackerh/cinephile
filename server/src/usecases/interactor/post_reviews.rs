@@ -1,5 +1,6 @@
 use async_trait::async_trait;
 use std::sync::Arc;
+use tokio::try_join;
 
 use crate::{
     domain::{
@@ -43,22 +44,47 @@ impl PostReviewsInteractor {
 #[async_trait]
 impl PostReviewsUseCase for PostReviewsInteractor {
     async fn execute(&self, input: PostReviewsInput) -> Result<PostReviewsOutput, AppError> {
-        let work = match input.work_type.as_str() {
+        let (work, work_title) = match input.work_type.as_str() {
             "movie" => {
                 let id = TargetPathParser::extract_movie_id(&input.target_path)?;
-                Work::Movie(self.tmdb_gateway.fetch_movie_by_id(id).await?)
+                let movie = self.tmdb_gateway.fetch_movie_by_id(id).await?;
+                let title = movie.title().to_string();
+                (Work::Movie(movie), title)
             }
             "series" => {
                 let id = TargetPathParser::extract_series_id(&input.target_path)?;
-                Work::TvSeries(self.tmdb_gateway.fetch_tv_series_by_id(id).await?)
+                let series = self.tmdb_gateway.fetch_tv_series_by_id(id).await?;
+                let title = series.title().to_string();
+                (Work::TvSeries(series), title)
             }
             "season" => {
                 let (series_id, season_no) = TargetPathParser::extract_season_params(&input.target_path)?;
-                Work::TvSeason(self.tmdb_gateway.fetch_tv_season(series_id, season_no).await?)
+                let (season, series) = try_join!(
+                    self.tmdb_gateway.fetch_tv_season(series_id, season_no),
+                    self.tmdb_gateway.fetch_tv_series_by_id(series_id)
+                )?;
+                let title = format!("{} {}", series.title(), season.title());
+                (Work::TvSeason(season), title)
             }
             "episode" => {
                 let (series_id, season_no, episode_no) = TargetPathParser::extract_episode_params(&input.target_path)?;
-                Work::TvEpisode(self.tmdb_gateway.fetch_tv_episode(series_id, season_no, episode_no).await?)
+                let (episode, series) = try_join!(
+                    self.tmdb_gateway.fetch_tv_episode(series_id, season_no, episode_no),
+                    self.tmdb_gateway.fetch_tv_series_by_id(series_id)
+                )?;
+                let season_summary = series
+                    .season_summaries()
+                    .iter()
+                    .find(|s| s.season_number() == season_no)
+                    .expect("Season summary must exist");
+                let title = format!(
+                    "{} {} Ep.{} {}",
+                    series.title(),
+                    season_summary.title(),
+                    episode_no,
+                    episode.title()
+                );
+                (Work::TvEpisode(episode), title)
             }
             _ => return Err(AppError::Validation("Invalid work_type".into())),
         };
@@ -67,6 +93,7 @@ impl PostReviewsUseCase for PostReviewsInteractor {
             input.user_id,
             input.rating,
             input.content,
+            work_title,
             input.target_path,
             work
         )?);
@@ -104,6 +131,7 @@ impl PostReviewsUseCase for PostReviewsInteractor {
             rating: review.rating(),
             content: review.content().clone(),
             work_type: review.work_type().to_string(),
+            work_title: review.work_title().to_string(),
             target_path: review.target_path().to_string(),
             work: review.work().clone().into(),
             created_at: review.created_at(),
