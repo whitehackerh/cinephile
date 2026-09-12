@@ -117,6 +117,17 @@ export const apiService = {
     return response.data.data
   },
 
+  async getReviews(): Promise<Review[]> {
+    const response = await authClient.get<ApiResponse<Review[]>>('/reviews');
+    if (response.data.error) {
+      throw new Error(response.data.error.message);
+    }
+    if (response.data.data == null) {
+      return [];
+    }
+    return response.data.data
+  },
+
   async getReview(queryParams: GetReviewQueryParams): Promise<Review | null> {
     const response = await authClient.get<ApiResponse<Review>>('/reviews/find', {
       params: queryParams
