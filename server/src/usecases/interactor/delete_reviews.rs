@@ -84,6 +84,7 @@ impl DeleteReviewsUseCase for DeleteReviewsInteractor {
                     input.user_id,
                     locked_review_without_work.rating,
                     locked_review_without_work.content,
+                    locked_review_without_work.work_title,
                     locked_review_without_work.target_path,
                     work,
                     locked_review_without_work.created_at,
