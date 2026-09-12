@@ -1,3 +1,4 @@
+pub(crate) mod delete_reviews;
 pub(crate) mod genre;
 pub(crate) mod get_review;
 pub(crate) mod movie;
@@ -11,4 +12,3 @@ pub(crate) mod tv_episode;
 pub(crate) mod tv_season;
 pub(crate) mod tv_series;
 pub(crate) mod work;
-
