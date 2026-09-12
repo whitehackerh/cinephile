@@ -608,6 +608,7 @@ components:
           format: date-time
         data:
           oneOf:
+            - type: array
             - type: object
             - type: 'null'
         error:

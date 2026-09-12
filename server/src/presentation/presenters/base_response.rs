@@ -7,33 +7,33 @@ use axum::{
 };
 use chrono::Utc;
 use serde::Serialize;
-use serde_json::Value;
 
 use crate::domain::errors::AppError;
 pub use crate::generated::api_schema::{ApiErrorDetail, ApiResponse};
 
 impl ApiResponse {
     pub fn success<T: Serialize>(uri: String, data: T) -> Self {
-        let map_data = serde_json::to_value(data)
-            .ok()
-            .and_then(|v| match v {
-                Value::Object(map) => Some(map),
-                _ => None,
-            });
+        let value = serde_json::to_value(data).unwrap_or(serde_json::Value::Null);
+
+        let data = serde_json::from_value(value)
+            .unwrap_or_else(|_| serde_json::from_value(serde_json::Value::Null).unwrap());
 
         Self {
             uri,
             timestamp: Utc::now(),
-            data: map_data,
+            data,
             error: None,
         }
     }
 
     pub fn error(uri: String, code: &str, message: &str) -> Self {
+        let data = serde_json::from_value(serde_json::Value::Null)
+            .expect("Failed to deserialize Value::Null into ApiResponseData");
+
         Self {
             uri,
             timestamp: Utc::now(),
-            data: None,
+            data: data,
             error: Some(ApiErrorDetail {
                 code: code.to_string(),
                 message: message.to_string(),

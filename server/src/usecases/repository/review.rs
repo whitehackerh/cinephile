@@ -14,4 +14,5 @@ pub(crate) trait ReviewRepository: Send + Sync {
     async fn find_by_id_for_update(&self, id: &Uuid, user_id: &Uuid) -> anyhow::Result<Option<ReviewWithoutWork>>;
     async fn update(&self, review: &Review) -> Result<(), anyhow::Error>;
     async fn delete(&self, review: &Review) -> Result<(), anyhow::Error>;
+    async fn fetch_all(&self, user_id: &Uuid) -> anyhow::Result<Vec<ReviewWithoutWork>>;
 }
