@@ -833,7 +833,6 @@ impl ::std::convert::TryFrom<::std::string::String> for PostReviewsRequestWorkTy
 ///    "target_path",
 ///    "updated_at",
 ///    "work",
-///    "work_title",
 ///    "work_type"
 ///  ],
 ///  "properties": {
@@ -894,9 +893,6 @@ impl ::std::convert::TryFrom<::std::string::String> for PostReviewsRequestWorkTy
 ///        }
 ///      ]
 ///    },
-///    "work_title": {
-///      "type": "string"
-///    },
 ///    "work_type": {
 ///      "type": "string",
 ///      "enum": [
@@ -920,7 +916,6 @@ pub struct Review {
     pub target_path: ::std::string::String,
     pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     pub work: ReviewWork,
-    pub work_title: ::std::string::String,
     pub work_type: ReviewWorkType,
 }
 impl ::std::convert::From<&Review> for Review {
@@ -1353,6 +1348,7 @@ impl ::std::convert::From<&SignUpRequest> for SignUpRequest {
 ///  "type": "object",
 ///  "required": [
 ///    "air_date",
+///    "composite_title",
 ///    "episode_number",
 ///    "episode_type",
 ///    "id",
@@ -1375,6 +1371,9 @@ impl ::std::convert::From<&SignUpRequest> for SignUpRequest {
 ///          "type": "null"
 ///        }
 ///      ]
+///    },
+///    "composite_title": {
+///      "type": "string"
 ///    },
 ///    "episode_number": {
 ///      "type": "integer"
@@ -1460,6 +1459,7 @@ impl ::std::convert::From<&SignUpRequest> for SignUpRequest {
 #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
 pub struct TvEpisode {
     pub air_date: ::std::option::Option<::chrono::naive::NaiveDate>,
+    pub composite_title: ::std::string::String,
     pub episode_number: i64,
     pub episode_type: ::std::option::Option<::std::string::String>,
     pub id: i64,
@@ -1631,6 +1631,7 @@ impl ::std::convert::From<&TvEpisodeSummary> for TvEpisodeSummary {
 ///  "type": "object",
 ///  "required": [
 ///    "air_date",
+///    "composite_title",
 ///    "episode_count",
 ///    "episode_summaries",
 ///    "id",
@@ -1651,6 +1652,9 @@ impl ::std::convert::From<&TvEpisodeSummary> for TvEpisodeSummary {
 ///          "type": "null"
 ///        }
 ///      ]
+///    },
+///    "composite_title": {
+///      "type": "string"
 ///    },
 ///    "episode_count": {
 ///      "type": "integer"
@@ -1713,6 +1717,7 @@ impl ::std::convert::From<&TvEpisodeSummary> for TvEpisodeSummary {
 #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
 pub struct TvSeason {
     pub air_date: ::std::option::Option<::chrono::naive::NaiveDate>,
+    pub composite_title: ::std::string::String,
     pub episode_count: i64,
     pub episode_summaries: ::std::vec::Vec<TvEpisodeSummary>,
     pub id: i64,

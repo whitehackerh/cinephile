@@ -5,6 +5,7 @@ export interface TvSeason {
   season_number: number;
   episode_count: number;
   title: string;
+  composite_title: string;
   overview: string | null;
   poster_path: string | null;
   air_date: string | null;

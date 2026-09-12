@@ -93,7 +93,6 @@ impl PostReviewsUseCase for PostReviewsInteractor {
             input.user_id,
             input.rating,
             input.content,
-            work_title,
             input.target_path,
             work
         )?);
@@ -131,7 +130,6 @@ impl PostReviewsUseCase for PostReviewsInteractor {
             rating: review.rating(),
             content: review.content().clone(),
             work_type: review.work_type().to_string(),
-            work_title: review.work_title().to_string(),
             target_path: review.target_path().to_string(),
             work: review.work().clone().into(),
             created_at: review.created_at(),

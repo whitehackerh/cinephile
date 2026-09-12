@@ -6,6 +6,7 @@ pub(crate) struct TvSeason {
     season_number: i32,
     episode_count: i32,
     title: String,
+    composite_title: String,
     overview: Option<String>,
     poster_path: Option<String>,
     air_date: Option<String>,
@@ -19,6 +20,7 @@ impl TvSeason{
         season_number: i32,
         episode_count: i32,
         title: String,
+        composite_title: String,
         overview: Option<String>,
         poster_path: Option<String>,
         air_date: Option<String>,
@@ -30,6 +32,7 @@ impl TvSeason{
             season_number,
             episode_count,
             title,
+            composite_title,
             overview,
             poster_path,
             air_date,
@@ -54,6 +57,10 @@ impl TvSeason{
         &self.title
     }
 
+    pub fn composite_title(&self) -> &str {
+        &self.composite_title
+    }
+
     pub fn overview(&self) -> &Option<String> {
         &self.overview
     }
@@ -75,13 +82,13 @@ impl TvSeason{
     }
 
     pub fn into_parts(self) -> (
-        i32, i32, i32, String, Option<String>,
-        Option<String>, Option<String>, Option<f64>, 
+        i32, i32, i32, String, String,
+        Option<String>, Option<String>, Option<String>, Option<f64>, 
         Vec<TvEpisodeSummary>
     ) {
         (
-            self.id, self.season_number, self.episode_count, self.title, self.overview,
-            self.poster_path, self.air_date, self.vote_average,
+            self.id, self.season_number, self.episode_count, self.title, self.composite_title,
+            self.overview, self.poster_path, self.air_date, self.vote_average,
             self.episode_summaries
         )
     }

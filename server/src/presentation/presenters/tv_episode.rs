@@ -11,6 +11,7 @@ impl TvEpisodePresenter {
     pub fn to_response(output: TvEpisodeOutput) -> TvEpisode {
         TvEpisode {
             air_date: output.air_date.and_then(|a| NaiveDate::parse_from_str(&a, "%Y-%m-%d").ok()),
+            composite_title: output.composite_title,
             episode_number: output.episode_number as i64,
             episode_type: output.episode_type,
             id: output.id as i64,

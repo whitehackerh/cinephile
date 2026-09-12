@@ -951,6 +951,7 @@ components:
         - season_number
         - episode_count
         - title
+        - composite_title
         - overview
         - poster_path
         - air_date
@@ -964,6 +965,8 @@ components:
         episode_count:
           type: integer
         title:
+          type: string
+        composite_title:
           type: string
         overview:
           oneOf:
@@ -1045,6 +1048,7 @@ components:
         - episode_number
         - season_number
         - title
+        - composite_title
         - overview
         - runtime
         - still_path
@@ -1060,6 +1064,8 @@ components:
         season_number:
           type: integer
         title:
+          type: string
+        composite_title:
           type: string
         overview:
           oneOf:
@@ -1125,7 +1131,6 @@ components:
         - rating
         - content
         - work_type
-        - work_title
         - target_path
         - work
         - created_at
@@ -1146,8 +1151,6 @@ components:
         work_type:
           type: string
           enum: [movie, series, season, episode]
-        work_title:
-          type: string
         target_path:
           type: string
         work:

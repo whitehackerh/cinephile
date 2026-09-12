@@ -3,6 +3,7 @@ export interface TvEpisode {
     episode_number: number;
     season_number: number;
     title: string,
+    composite_title: string;
     overview: string | null;
     runtime: number | null;
     still_path: string | null;
