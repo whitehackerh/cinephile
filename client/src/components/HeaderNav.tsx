@@ -26,6 +26,12 @@ export default function HeaderNav() {
           >
             Search
           </Link>
+          <Link 
+            href="/reviews" 
+            className="hover:text-white transition-colors"
+          >
+            Reviews
+          </Link>
           <button 
             onClick={handleSignout}
             className="hover:text-red-500 transition-colors uppercase"
