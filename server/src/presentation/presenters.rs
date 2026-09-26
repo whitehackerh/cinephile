@@ -1,8 +1,11 @@
 pub(crate) mod base_response;
+pub(crate) mod collection_work;
+pub(crate) mod collection;
 pub(crate) mod get_review;
 pub(crate) mod get_reviews;
 pub(crate) mod movie;
 pub(crate) mod patch_reviews;
+pub(crate) mod post_collections;
 pub(crate) mod post_reviews;
 pub(crate) mod review;
 pub(crate) mod search;

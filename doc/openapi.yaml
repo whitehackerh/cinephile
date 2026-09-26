@@ -1279,10 +1279,14 @@ components:
         - target_path
         - work
         - added_at
+        - work_type
       properties:
         id:
           type: string
           format: uuid
+        work_type:
+          type: string
+          enum: [movie, series, season, episode]
         target_path:
           type: string
         work:

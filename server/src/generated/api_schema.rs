@@ -171,6 +171,298 @@ for ApiResponseData {
         Self::Variant1(value)
     }
 }
+///`Collection`
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "type": "object",
+///  "required": [
+///    "cover_image_path",
+///    "created_at",
+///    "description",
+///    "id",
+///    "title",
+///    "updated_at",
+///    "works"
+///  ],
+///  "properties": {
+///    "cover_image_path": {
+///      "oneOf": [
+///        {
+///          "type": "string"
+///        },
+///        {
+///          "type": "null"
+///        }
+///      ]
+///    },
+///    "created_at": {
+///      "type": "string",
+///      "format": "date-time"
+///    },
+///    "description": {
+///      "oneOf": [
+///        {
+///          "type": "string"
+///        },
+///        {
+///          "type": "null"
+///        }
+///      ]
+///    },
+///    "id": {
+///      "type": "string",
+///      "format": "uuid"
+///    },
+///    "title": {
+///      "type": "string"
+///    },
+///    "updated_at": {
+///      "type": "string",
+///      "format": "date-time"
+///    },
+///    "works": {
+///      "type": "array",
+///      "items": {
+///        "$ref": "#/definitions/CollectionWork"
+///      }
+///    }
+///  }
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+pub struct Collection {
+    pub cover_image_path: ::std::option::Option<::std::string::String>,
+    pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
+    pub description: ::std::option::Option<::std::string::String>,
+    pub id: ::uuid::Uuid,
+    pub title: ::std::string::String,
+    pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
+    pub works: ::std::vec::Vec<CollectionWork>,
+}
+impl ::std::convert::From<&Collection> for Collection {
+    fn from(value: &Collection) -> Self {
+        value.clone()
+    }
+}
+///`CollectionWork`
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "type": "object",
+///  "required": [
+///    "added_at",
+///    "id",
+///    "target_path",
+///    "work",
+///    "work_type"
+///  ],
+///  "properties": {
+///    "added_at": {
+///      "type": "string",
+///      "format": "date-time"
+///    },
+///    "id": {
+///      "type": "string",
+///      "format": "uuid"
+///    },
+///    "target_path": {
+///      "type": "string"
+///    },
+///    "work": {
+///      "oneOf": [
+///        {
+///          "$ref": "#/definitions/Movie"
+///        },
+///        {
+///          "$ref": "#/definitions/TvSeries"
+///        },
+///        {
+///          "$ref": "#/definitions/TvSeason"
+///        },
+///        {
+///          "$ref": "#/definitions/TvEpisode"
+///        }
+///      ]
+///    },
+///    "work_type": {
+///      "type": "string",
+///      "enum": [
+///        "movie",
+///        "series",
+///        "season",
+///        "episode"
+///      ]
+///    }
+///  }
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+pub struct CollectionWork {
+    pub added_at: ::chrono::DateTime<::chrono::offset::Utc>,
+    pub id: ::uuid::Uuid,
+    pub target_path: ::std::string::String,
+    pub work: CollectionWorkWork,
+    pub work_type: CollectionWorkWorkType,
+}
+impl ::std::convert::From<&CollectionWork> for CollectionWork {
+    fn from(value: &CollectionWork) -> Self {
+        value.clone()
+    }
+}
+///`CollectionWorkWork`
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "oneOf": [
+///    {
+///      "$ref": "#/definitions/Movie"
+///    },
+///    {
+///      "$ref": "#/definitions/TvSeries"
+///    },
+///    {
+///      "$ref": "#/definitions/TvSeason"
+///    },
+///    {
+///      "$ref": "#/definitions/TvEpisode"
+///    }
+///  ]
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+#[serde(untagged)]
+pub enum CollectionWorkWork {
+    Movie(Movie),
+    TvSeries(TvSeries),
+    TvSeason(TvSeason),
+    TvEpisode(TvEpisode),
+}
+impl ::std::convert::From<&Self> for CollectionWorkWork {
+    fn from(value: &CollectionWorkWork) -> Self {
+        value.clone()
+    }
+}
+impl ::std::convert::From<Movie> for CollectionWorkWork {
+    fn from(value: Movie) -> Self {
+        Self::Movie(value)
+    }
+}
+impl ::std::convert::From<TvSeries> for CollectionWorkWork {
+    fn from(value: TvSeries) -> Self {
+        Self::TvSeries(value)
+    }
+}
+impl ::std::convert::From<TvSeason> for CollectionWorkWork {
+    fn from(value: TvSeason) -> Self {
+        Self::TvSeason(value)
+    }
+}
+impl ::std::convert::From<TvEpisode> for CollectionWorkWork {
+    fn from(value: TvEpisode) -> Self {
+        Self::TvEpisode(value)
+    }
+}
+///`CollectionWorkWorkType`
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "type": "string",
+///  "enum": [
+///    "movie",
+///    "series",
+///    "season",
+///    "episode"
+///  ]
+///}
+/// ```
+/// </details>
+#[derive(
+    ::serde::Deserialize,
+    ::serde::Serialize,
+    Clone,
+    Copy,
+    Debug,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd
+)]
+pub enum CollectionWorkWorkType {
+    #[serde(rename = "movie")]
+    Movie,
+    #[serde(rename = "series")]
+    Series,
+    #[serde(rename = "season")]
+    Season,
+    #[serde(rename = "episode")]
+    Episode,
+}
+impl ::std::convert::From<&Self> for CollectionWorkWorkType {
+    fn from(value: &CollectionWorkWorkType) -> Self {
+        value.clone()
+    }
+}
+impl ::std::fmt::Display for CollectionWorkWorkType {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match *self {
+            Self::Movie => f.write_str("movie"),
+            Self::Series => f.write_str("series"),
+            Self::Season => f.write_str("season"),
+            Self::Episode => f.write_str("episode"),
+        }
+    }
+}
+impl ::std::str::FromStr for CollectionWorkWorkType {
+    type Err = self::error::ConversionError;
+    fn from_str(
+        value: &str,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        match value {
+            "movie" => Ok(Self::Movie),
+            "series" => Ok(Self::Series),
+            "season" => Ok(Self::Season),
+            "episode" => Ok(Self::Episode),
+            _ => Err("invalid value".into()),
+        }
+    }
+}
+impl ::std::convert::TryFrom<&str> for CollectionWorkWorkType {
+    type Error = self::error::ConversionError;
+    fn try_from(
+        value: &str,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
+    }
+}
+impl ::std::convert::TryFrom<&::std::string::String> for CollectionWorkWorkType {
+    type Error = self::error::ConversionError;
+    fn try_from(
+        value: &::std::string::String,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
+    }
+}
+impl ::std::convert::TryFrom<::std::string::String> for CollectionWorkWorkType {
+    type Error = self::error::ConversionError;
+    fn try_from(
+        value: ::std::string::String,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
+    }
+}
 ///`Genre`
 ///
 /// <details><summary>JSON schema</summary>
@@ -666,6 +958,45 @@ pub struct PatchReviewsRequest {
 }
 impl ::std::convert::From<&PatchReviewsRequest> for PatchReviewsRequest {
     fn from(value: &PatchReviewsRequest) -> Self {
+        value.clone()
+    }
+}
+///`PostCollectionsRequest`
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "type": "object",
+///  "required": [
+///    "description",
+///    "title"
+///  ],
+///  "properties": {
+///    "description": {
+///      "oneOf": [
+///        {
+///          "type": "string"
+///        },
+///        {
+///          "type": "null"
+///        }
+///      ]
+///    },
+///    "title": {
+///      "type": "string"
+///    }
+///  }
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+pub struct PostCollectionsRequest {
+    pub description: ::std::option::Option<::std::string::String>,
+    pub title: ::std::string::String,
+}
+impl ::std::convert::From<&PostCollectionsRequest> for PostCollectionsRequest {
+    fn from(value: &PostCollectionsRequest) -> Self {
         value.clone()
     }
 }

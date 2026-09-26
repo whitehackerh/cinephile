@@ -3,6 +3,7 @@ pub(crate) mod get_review;
 pub(crate) mod get_reviews;
 pub(crate) mod movie;
 pub(crate) mod patch_reviews;
+pub(crate) mod post_collections;
 pub(crate) mod post_reviews;
 pub(crate) mod search;
 pub(crate) mod sign_up;
@@ -10,4 +11,3 @@ pub(crate) mod sign_in;
 pub(crate) mod tv_episode;
 pub(crate) mod tv_season;
 pub(crate) mod tv_series;
-

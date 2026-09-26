@@ -14,6 +14,7 @@ use crate::{
             user::PostgresUserRepository,
             review::PostgresReviewRepository,
             unit_of_work::PostgresUnitOfWork,
+            collection::PostgresCollectionRepository
         },
         security::{
             password::PasswordManager,
@@ -35,6 +36,7 @@ use crate::{
             delete_reviews::DeleteReviewsInteractor,
             get_reviews::GetReviewsInteractor,
             get_review::GetReviewInteractor,
+            post_collections::PostCollectionsInteractor
         },
         port::{
             sign_up::SignUpUseCase,
@@ -49,11 +51,13 @@ use crate::{
             delete_reviews::DeleteReviewsUseCase,
             get_reviews::GetReviewsUseCase,
             get_review::GetReviewUseCase,
-            unit_of_work::UnitOfWork,
+            post_collections::PostCollectionsUseCase,
+            unit_of_work::UnitOfWork
         },
         repository::{
             user::UserRepository,
             review::ReviewRepository,
+            collection::CollectionRepository
         },
         security::{
             password::PasswordManager as PasswordManagerTrait,
@@ -75,7 +79,8 @@ pub struct AppRegistry {
     pub(crate) delete_reviews_usecase: Arc<dyn DeleteReviewsUseCase + Send + Sync>,
     pub(crate) get_reviews_usecase: Arc<dyn GetReviewsUseCase + Send + Sync>,
     pub(crate) get_review_usecase: Arc<dyn GetReviewUseCase + Send + Sync>,
-    pub(crate) token_manager: Arc<JwtTokenManager>,
+    pub(crate) post_collections_usecase: Arc<dyn PostCollectionsUseCase + Send + Sync>,
+    pub(crate) token_manager: Arc<JwtTokenManager>
 }
 
 #[derive(Clone)]
@@ -89,8 +94,11 @@ impl AppRegistry {
 
         let user_repository = Arc::new(PostgresUserRepository::new(pool.clone()));
         let review_repository = Arc::new(PostgresReviewRepository::new(pool.clone()));
+        let collection_repository = Arc::new(PostgresCollectionRepository::new(pool.clone()));
+        
         let password_manager = Arc::new(PasswordManager::new());
         let token_manager = Arc::new(JwtTokenManager::new(jwt_secret));
+
         let tmdb_gateway = Arc::new(TmdbClient::new(tmdb_api_key, tmdb_base_url));
         let uow: Arc<dyn UnitOfWork> = Arc::new(PostgresUnitOfWork::new(pool.clone()));
 
@@ -140,6 +148,9 @@ impl AppRegistry {
             review_repository.clone() as Arc<dyn ReviewRepository + Send + Sync>,
             tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>
         ));
+        let post_collections_usecase = Arc::new(PostCollectionsInteractor::new(
+            uow.clone()
+        ));
 
         Arc::new(Self {
             signup_usecase,
@@ -154,7 +165,8 @@ impl AppRegistry {
             delete_reviews_usecase,
             get_reviews_usecase,
             get_review_usecase,
-            token_manager,
+            post_collections_usecase,
+            token_manager
         })
     }
 }
@@ -180,3 +192,4 @@ impl_from_ref!(PatchReviewsUseCase, patch_reviews_usecase);
 impl_from_ref!(DeleteReviewsUseCase, delete_reviews_usecase);
 impl_from_ref!(GetReviewsUseCase, get_reviews_usecase);
 impl_from_ref!(GetReviewUseCase, get_review_usecase);
+impl_from_ref!(PostCollectionsUseCase, post_collections_usecase);

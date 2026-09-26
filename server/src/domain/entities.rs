@@ -1,4 +1,6 @@
 pub(crate) mod auth_user;
+pub(crate) mod collection_work;
+pub(crate) mod collection;
 pub(crate) mod genre;
 pub(crate) mod movie;
 pub(crate) mod review;
