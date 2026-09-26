@@ -236,8 +236,8 @@ impl TmdbGateway for TmdbClient {
                     .episodes
                     .as_ref()
                     .map_or(0, |episodes| episodes.len() as i32),
-                tmdb_res.name.clone(),
-                format!("{} {}", series.title(), &tmdb_res.name),
+                tmdb_res.name,
+                series.title().to_string(),
                 tmdb_res.overview,
                 tmdb_res.poster_path,
                 tmdb_res.air_date,
@@ -292,14 +292,8 @@ impl TmdbGateway for TmdbClient {
                 tmdb_res.id,
                 tmdb_res.episode_number,
                 tmdb_res.season_number,
-                tmdb_res.name.clone(),
-                format!(
-                    "{} Season {} Ep.{} {}",
-                    series.title(),
-                    tmdb_res.season_number,
-                    tmdb_res.episode_number,
-                    &tmdb_res.name
-                ),
+                tmdb_res.name,
+                series.title().to_string(),
                 tmdb_res.overview,
                 tmdb_res.runtime,
                 tmdb_res.still_path,
