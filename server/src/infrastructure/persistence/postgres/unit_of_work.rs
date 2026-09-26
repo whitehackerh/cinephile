@@ -5,7 +5,11 @@ use std::sync::Arc;
 use tokio::sync::Mutex;
 
 use crate::usecases::port::unit_of_work::{DynTxFuture, TxRepositories, UnitOfWork};
-use super::{review::PostgresReviewRepository, user::PostgresUserRepository};
+use super::{
+    collection::PostgresCollectionRepository,
+    review::PostgresReviewRepository, 
+    user::PostgresUserRepository
+};
 
 pub struct PostgresUnitOfWork {
     pool: PgPool,
@@ -27,8 +31,9 @@ impl UnitOfWork for PostgresUnitOfWork {
         let tx_shared = Arc::new(Mutex::new(tx));
 
         let repos = Arc::new(TxRepositories {
-            user_repo: Arc::new(PostgresUserRepository::new_tx(tx_shared.clone())),
+            collection_repo: Arc::new(PostgresCollectionRepository::new_tx(tx_shared.clone())),
             review_repo: Arc::new(PostgresReviewRepository::new_tx(tx_shared.clone())),
+            user_repo: Arc::new(PostgresUserRepository::new_tx(tx_shared.clone()))
         });
 
         let result = f(repos).await;

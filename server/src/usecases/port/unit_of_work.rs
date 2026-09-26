@@ -3,11 +3,16 @@ use std::any::Any;
 use std::future::Future;
 use std::pin::Pin;
 use std::sync::Arc;
-use crate::usecases::repository::{review::ReviewRepository, user::UserRepository};
+use crate::usecases::repository::{
+    collection::CollectionRepository,
+    review::ReviewRepository,
+    user::UserRepository
+};
 
 pub struct TxRepositories {
     pub user_repo: Arc<dyn UserRepository + Send + Sync>,
     pub review_repo: Arc<dyn ReviewRepository + Send + Sync>,
+    pub collection_repo: Arc<dyn CollectionRepository + Send + Sync>
 }
 
 pub type DynTxFuture = Pin<Box<dyn Future<Output = Result<Box<dyn Any + Send>, anyhow::Error>> + Send>>;

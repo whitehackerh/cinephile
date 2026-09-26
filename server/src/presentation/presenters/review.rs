@@ -39,7 +39,7 @@ impl ReviewPresenter {
             target_path: output.target_path,
             updated_at: output.updated_at,
             work: work,
-            work_type: work_type,
+            work_type: work_type
         }
     }
 }

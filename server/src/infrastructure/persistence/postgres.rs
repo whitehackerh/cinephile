@@ -1,3 +1,4 @@
+pub(crate) mod collection;
 pub(crate) mod executor;
 pub(crate) mod review;
 pub(crate) mod user;

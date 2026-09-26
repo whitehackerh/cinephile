@@ -17,6 +17,7 @@ use crate::{
         delete_reviews::delete_reviews_handler,
         get_reviews::get_reviews_handler,
         get_review::get_review_handler,
+        post_collections::post_collections_handler,
     },
     middleware::auth::AuthMiddleware
 };
@@ -31,6 +32,7 @@ pub fn create_router(registry: Arc<AppRegistry>) -> Router {
         .route("/reviews", post(post_reviews_handler).get(get_reviews_handler))
         .route("/reviews/{id}", patch(patch_reviews_handler).delete(delete_reviews_handler))
         .route("/reviews/find", get(get_review_handler))
+        .route("/collections", post(post_collections_handler))
         .layer(from_fn_with_state(registry.token_manager.clone(), AuthMiddleware::auth_middleware));
     
     let public_routes = Router::<AppState>::new()
