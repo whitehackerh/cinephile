@@ -11,53 +11,56 @@ use crate::{
     infrastructure::{
         external::tmdb::client::TmdbClient,
         persistence::postgres::{
-            user::PostgresUserRepository,
+            collection::PostgresCollectionRepository,
+            collection_work::PostgresCollectionWorkRepository,
             review::PostgresReviewRepository,
             unit_of_work::PostgresUnitOfWork,
-            collection::PostgresCollectionRepository
+            user::PostgresUserRepository
         },
         security::{
             password::PasswordManager,
             token::JwtTokenManager
         }
-    },
-    usecases::{
+    }, usecases::{
         gateway::tmdb::TmdbGateway,
         interactor::{
-            sign_up::SignUpInteractor,
-            sign_in::SignInInteractor,
-            search::SearchInteractor,
+            add_collection_work::AddCollectionWorkInteractor,
+            delete_reviews::DeleteReviewsInteractor,
+            get_review::GetReviewInteractor,
+            get_reviews::GetReviewsInteractor,
             movie::MovieInteractor,
+            patch_reviews::PatchReviewsInteractor,
+            post_collections::PostCollectionsInteractor,
+            post_reviews::PostReviewsInteractor,
+            search::SearchInteractor,
+            sign_in::SignInInteractor,
+            sign_up::SignUpInteractor,
             tv_episode::TvEpisodeInteractor,
             tv_season::TvSeasonInteractor,
-            tv_series::TvSeriesInteractor,
-            post_reviews::PostReviewsInteractor,
-            patch_reviews::PatchReviewsInteractor,
-            delete_reviews::DeleteReviewsInteractor,
-            get_reviews::GetReviewsInteractor,
-            get_review::GetReviewInteractor,
-            post_collections::PostCollectionsInteractor
+            tv_series::TvSeriesInteractor
         },
         port::{
-            sign_up::SignUpUseCase,
-            sign_in::SignInUseCase,
-            search::SearchUseCase,
+            add_collection_work::AddCollectionWorkUseCase,
+            delete_reviews::DeleteReviewsUseCase,
+            get_review::GetReviewUseCase,
+            get_reviews::GetReviewsUseCase,
             movie::MovieUseCase,
+            patch_reviews::PatchReviewsUseCase,
+            post_collections::PostCollectionsUseCase,
+            post_reviews::PostReviewsUseCase,
+            search::SearchUseCase,
+            sign_in::SignInUseCase,
+            sign_up::SignUpUseCase,
             tv_episode::TvEpisodeUseCase,
             tv_season::TvSeasonUseCase,
             tv_series::TvSeriesUseCase,
-            post_reviews::PostReviewsUseCase,
-            patch_reviews::PatchReviewsUseCase,
-            delete_reviews::DeleteReviewsUseCase,
-            get_reviews::GetReviewsUseCase,
-            get_review::GetReviewUseCase,
-            post_collections::PostCollectionsUseCase,
             unit_of_work::UnitOfWork
         },
         repository::{
-            user::UserRepository,
+            collection::CollectionRepository,
+            collection_work::CollectionWorkRepository,
             review::ReviewRepository,
-            collection::CollectionRepository
+            user::UserRepository
         },
         security::{
             password::PasswordManager as PasswordManagerTrait,
@@ -80,6 +83,7 @@ pub struct AppRegistry {
     pub(crate) get_reviews_usecase: Arc<dyn GetReviewsUseCase + Send + Sync>,
     pub(crate) get_review_usecase: Arc<dyn GetReviewUseCase + Send + Sync>,
     pub(crate) post_collections_usecase: Arc<dyn PostCollectionsUseCase + Send + Sync>,
+    pub(crate) add_collection_work_usecase: Arc<dyn AddCollectionWorkUseCase + Send + Sync>,
     pub(crate) token_manager: Arc<JwtTokenManager>
 }
 
@@ -95,6 +99,7 @@ impl AppRegistry {
         let user_repository = Arc::new(PostgresUserRepository::new(pool.clone()));
         let review_repository = Arc::new(PostgresReviewRepository::new(pool.clone()));
         let collection_repository = Arc::new(PostgresCollectionRepository::new(pool.clone()));
+        let collection_work_repository = Arc::new(PostgresCollectionWorkRepository::new(pool.clone()));
         
         let password_manager = Arc::new(PasswordManager::new());
         let token_manager = Arc::new(JwtTokenManager::new(jwt_secret));
@@ -151,6 +156,10 @@ impl AppRegistry {
         let post_collections_usecase = Arc::new(PostCollectionsInteractor::new(
             uow.clone()
         ));
+        let add_collection_work_usecase = Arc::new(AddCollectionWorkInteractor::new(
+            tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>,
+            uow.clone()
+        ));
 
         Arc::new(Self {
             signup_usecase,
@@ -166,6 +175,7 @@ impl AppRegistry {
             get_reviews_usecase,
             get_review_usecase,
             post_collections_usecase,
+            add_collection_work_usecase,
             token_manager
         })
     }
@@ -193,3 +203,4 @@ impl_from_ref!(DeleteReviewsUseCase, delete_reviews_usecase);
 impl_from_ref!(GetReviewsUseCase, get_reviews_usecase);
 impl_from_ref!(GetReviewUseCase, get_review_usecase);
 impl_from_ref!(PostCollectionsUseCase, post_collections_usecase);
+impl_from_ref!(AddCollectionWorkUseCase, add_collection_work_usecase);

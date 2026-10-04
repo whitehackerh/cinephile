@@ -1,6 +1,5 @@
 use async_trait::async_trait;
 use std::sync::Arc;
-use chrono::Utc;
 
 use crate::{
     domain::{
@@ -80,17 +79,18 @@ impl PatchReviewsUseCase for PatchReviewsInteractor {
                     .await?
                     .ok_or_else(|| AppError::EntityNotFound("Review not found".into()))?;
 
-                let review = Review::reconstruct(
+                let mut review = Review::reconstruct(
                     input.id,
                     input.user_id,
-                    input.rating,
-                    input.content,
+                    locked_review_without_work.rating,
+                    locked_review_without_work.content,
                     locked_review_without_work.target_path,
                     work,
                     locked_review_without_work.created_at,
-                    Utc::now(),
+                    locked_review_without_work.updated_at,
                     locked_review_without_work.deleted_at
                 );
+                review.update(input.rating, input.content);
 
                 repos.review_repo.update(&review).await?;
 
