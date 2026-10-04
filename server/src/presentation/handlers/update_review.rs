@@ -14,22 +14,22 @@ use crate::{
     },
     presentation::presenters::{
         base_response::ApiResponse,
-        patch_reviews::PatchReviewsPresenter
+        update_review::UpdateReviewPresenter
     },
     usecases::{
-        dto::patch_reviews::PatchReviewsInput,
-        port::patch_reviews::PatchReviewsUseCase
+        dto::update_review::UpdateReviewInput,
+        port::update_review::UpdateReviewUseCase
     }
 };
 
-pub async fn patch_reviews_handler(
+pub async fn update_review_handler(
     uri: Uri,
     Extension(auth_user): Extension<AuthUser>,
-    State(usecase): State<Arc<dyn PatchReviewsUseCase + Send + Sync>>,
+    State(usecase): State<Arc<dyn UpdateReviewUseCase + Send + Sync>>,
     Path(path): Path<ReviewsPathParam>,
     Json(payload): Json<PatchReviewsRequest>
 ) -> impl IntoResponse {
-    match usecase.execute(PatchReviewsInput {
+    match usecase.execute(UpdateReviewInput {
         id: path.id,
         user_id: auth_user.id(),
         rating: payload.rating as i32,
@@ -38,7 +38,7 @@ pub async fn patch_reviews_handler(
         Ok(output) => {
             (
                 StatusCode::OK,
-                Json(ApiResponse::success(uri.to_string(), PatchReviewsPresenter::to_response(output)))
+                Json(ApiResponse::success(uri.to_string(), UpdateReviewPresenter::to_response(output)))
             ).into_response()
         },
         Err(e) => ApiResponse::from_error(&uri, e).into_response(),

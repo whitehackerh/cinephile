@@ -4,11 +4,11 @@ use crate::usecases::dto::review::Review;
 
 
 #[derive(Debug)]
-pub(crate) struct PatchReviewsInput {
+pub(crate) struct UpdateReviewInput {
     pub id: Uuid,
     pub user_id: Uuid,
     pub rating: i32,
     pub content: Option<String>,
 }
 
-pub(crate) type PatchReviewsOutput = Review;
+pub(crate) type UpdateReviewOutput = Review;

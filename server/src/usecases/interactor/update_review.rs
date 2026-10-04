@@ -10,13 +10,13 @@ use crate::{
         errors::AppError
     },
     usecases::{
-        dto::patch_reviews::{
-            PatchReviewsInput,
-            PatchReviewsOutput,
+        dto::update_review::{
+            UpdateReviewInput,
+            UpdateReviewOutput,
         },
         gateway::tmdb::TmdbGateway,
         port::{
-            patch_reviews::PatchReviewsUseCase,
+            update_review::UpdateReviewUseCase,
             unit_of_work::{
                 UnitOfWork,
                 UnitOfWorkExt
@@ -26,12 +26,12 @@ use crate::{
     }
 };
 
-pub(crate) struct PatchReviewsInteractor {
+pub(crate) struct UpdateReviewInteractor {
     tmdb_gateway: Arc<dyn TmdbGateway + Send + Sync>,
     uow: Arc<dyn UnitOfWork>
 }
 
-impl PatchReviewsInteractor {
+impl UpdateReviewInteractor {
     pub fn new(
         tmdb_gateway: Arc<dyn TmdbGateway + Send + Sync>,
         uow: Arc<dyn UnitOfWork>
@@ -41,8 +41,8 @@ impl PatchReviewsInteractor {
 }
 
 #[async_trait]
-impl PatchReviewsUseCase for PatchReviewsInteractor {
-    async fn execute(&self, input: PatchReviewsInput) -> Result<PatchReviewsOutput, AppError> {
+impl UpdateReviewUseCase for UpdateReviewInteractor {
+    async fn execute(&self, input: UpdateReviewInput) -> Result<UpdateReviewOutput, AppError> {
         let tmdb_gateway = Arc::clone(&self.tmdb_gateway);
         
         let review: Review = self.uow.execute(move |repos| {
@@ -98,7 +98,7 @@ impl PatchReviewsUseCase for PatchReviewsInteractor {
             }
         })?;
 
-        Ok(PatchReviewsOutput {
+        Ok(UpdateReviewOutput {
             id: review.id(),
             rating: review.rating(),
             content: review.content().clone(),

@@ -29,7 +29,7 @@ use crate::{
             get_review::GetReviewInteractor,
             get_reviews::GetReviewsInteractor,
             movie::MovieInteractor,
-            patch_reviews::PatchReviewsInteractor,
+            update_review::UpdateReviewInteractor,
             create_collection::CreateCollectionInteractor,
             create_review::CreateReviewInteractor,
             search::SearchInteractor,
@@ -45,7 +45,7 @@ use crate::{
             get_review::GetReviewUseCase,
             get_reviews::GetReviewsUseCase,
             movie::MovieUseCase,
-            patch_reviews::PatchReviewsUseCase,
+            update_review::UpdateReviewUseCase,
             create_collection::CreateCollectionUseCase,
             create_review::CreateReviewUseCase,
             search::SearchUseCase,
@@ -78,7 +78,7 @@ pub struct AppRegistry {
     pub(crate) tv_season_usecase: Arc<dyn TvSeasonUseCase + Send + Sync>,
     pub(crate) tv_series_usecase: Arc<dyn TvSeriesUseCase + Send + Sync>,
     pub(crate) create_review_usecase: Arc<dyn CreateReviewUseCase + Send + Sync>,
-    pub(crate) patch_reviews_usecase: Arc<dyn PatchReviewsUseCase + Send + Sync>,
+    pub(crate) update_review_usecase: Arc<dyn UpdateReviewUseCase + Send + Sync>,
     pub(crate) delete_reviews_usecase: Arc<dyn DeleteReviewsUseCase + Send + Sync>,
     pub(crate) get_reviews_usecase: Arc<dyn GetReviewsUseCase + Send + Sync>,
     pub(crate) get_review_usecase: Arc<dyn GetReviewUseCase + Send + Sync>,
@@ -135,7 +135,7 @@ impl AppRegistry {
             tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>,
             uow.clone()
         ));
-        let patch_reviews_usecase = Arc::new(PatchReviewsInteractor::new(
+        let update_review_usecase = Arc::new(UpdateReviewInteractor::new(
             tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>,
             uow.clone()
         ));
@@ -169,7 +169,7 @@ impl AppRegistry {
             tv_season_usecase,
             tv_series_usecase,
             create_review_usecase,
-            patch_reviews_usecase,
+            update_review_usecase,
             delete_reviews_usecase,
             get_reviews_usecase,
             get_review_usecase,
@@ -197,7 +197,7 @@ impl_from_ref!(TvEpisodeUseCase, tv_episode_usecase);
 impl_from_ref!(TvSeasonUseCase, tv_season_usecase);
 impl_from_ref!(TvSeriesUseCase, tv_series_usecase);
 impl_from_ref!(CreateReviewUseCase, create_review_usecase);
-impl_from_ref!(PatchReviewsUseCase, patch_reviews_usecase);
+impl_from_ref!(UpdateReviewUseCase, update_review_usecase);
 impl_from_ref!(DeleteReviewsUseCase, delete_reviews_usecase);
 impl_from_ref!(GetReviewsUseCase, get_reviews_usecase);
 impl_from_ref!(GetReviewUseCase, get_review_usecase);
