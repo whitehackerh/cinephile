@@ -1159,7 +1159,7 @@ impl ::std::convert::From<&PostCollectionsRequest> for PostCollectionsRequest {
         value.clone()
     }
 }
-///`PostReviewsRequest`
+///`PostReviewRequest`
 ///
 /// <details><summary>JSON schema</summary>
 ///
@@ -1205,18 +1205,18 @@ impl ::std::convert::From<&PostCollectionsRequest> for PostCollectionsRequest {
 /// ```
 /// </details>
 #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
-pub struct PostReviewsRequest {
+pub struct PostReviewRequest {
     pub content: ::std::option::Option<::std::string::String>,
     pub rating: i64,
     pub target_path: ::std::string::String,
-    pub work_type: PostReviewsRequestWorkType,
+    pub work_type: PostReviewRequestWorkType,
 }
-impl ::std::convert::From<&PostReviewsRequest> for PostReviewsRequest {
-    fn from(value: &PostReviewsRequest) -> Self {
+impl ::std::convert::From<&PostReviewRequest> for PostReviewRequest {
+    fn from(value: &PostReviewRequest) -> Self {
         value.clone()
     }
 }
-///`PostReviewsRequestWorkType`
+///`PostReviewRequestWorkType`
 ///
 /// <details><summary>JSON schema</summary>
 ///
@@ -1244,7 +1244,7 @@ impl ::std::convert::From<&PostReviewsRequest> for PostReviewsRequest {
     PartialEq,
     PartialOrd
 )]
-pub enum PostReviewsRequestWorkType {
+pub enum PostReviewRequestWorkType {
     #[serde(rename = "movie")]
     Movie,
     #[serde(rename = "series")]
@@ -1254,12 +1254,12 @@ pub enum PostReviewsRequestWorkType {
     #[serde(rename = "episode")]
     Episode,
 }
-impl ::std::convert::From<&Self> for PostReviewsRequestWorkType {
-    fn from(value: &PostReviewsRequestWorkType) -> Self {
+impl ::std::convert::From<&Self> for PostReviewRequestWorkType {
+    fn from(value: &PostReviewRequestWorkType) -> Self {
         value.clone()
     }
 }
-impl ::std::fmt::Display for PostReviewsRequestWorkType {
+impl ::std::fmt::Display for PostReviewRequestWorkType {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match *self {
             Self::Movie => f.write_str("movie"),
@@ -1269,7 +1269,7 @@ impl ::std::fmt::Display for PostReviewsRequestWorkType {
         }
     }
 }
-impl ::std::str::FromStr for PostReviewsRequestWorkType {
+impl ::std::str::FromStr for PostReviewRequestWorkType {
     type Err = self::error::ConversionError;
     fn from_str(
         value: &str,
@@ -1283,7 +1283,7 @@ impl ::std::str::FromStr for PostReviewsRequestWorkType {
         }
     }
 }
-impl ::std::convert::TryFrom<&str> for PostReviewsRequestWorkType {
+impl ::std::convert::TryFrom<&str> for PostReviewRequestWorkType {
     type Error = self::error::ConversionError;
     fn try_from(
         value: &str,
@@ -1291,7 +1291,7 @@ impl ::std::convert::TryFrom<&str> for PostReviewsRequestWorkType {
         value.parse()
     }
 }
-impl ::std::convert::TryFrom<&::std::string::String> for PostReviewsRequestWorkType {
+impl ::std::convert::TryFrom<&::std::string::String> for PostReviewRequestWorkType {
     type Error = self::error::ConversionError;
     fn try_from(
         value: &::std::string::String,
@@ -1299,7 +1299,7 @@ impl ::std::convert::TryFrom<&::std::string::String> for PostReviewsRequestWorkT
         value.parse()
     }
 }
-impl ::std::convert::TryFrom<::std::string::String> for PostReviewsRequestWorkType {
+impl ::std::convert::TryFrom<::std::string::String> for PostReviewRequestWorkType {
     type Error = self::error::ConversionError;
     fn try_from(
         value: ::std::string::String,
