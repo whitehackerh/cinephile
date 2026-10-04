@@ -136,7 +136,6 @@ impl AppRegistry {
             uow.clone()
         ));
         let patch_reviews_usecase = Arc::new(PatchReviewsInteractor::new(
-            review_repository.clone() as Arc<dyn ReviewRepository + Send + Sync>,
             tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>,
             uow.clone()
         ));
