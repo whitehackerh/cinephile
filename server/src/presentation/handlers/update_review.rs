@@ -9,8 +9,8 @@ use std::sync::Arc;
 use crate::{
     domain::entities::auth_user::AuthUser,
     generated::api_schema::{
-        PatchReviewsRequest,
-        ReviewsPathParam
+        PatchReviewRequest,
+        ReviewPathParam
     },
     presentation::presenters::{
         base_response::ApiResponse,
@@ -26,8 +26,8 @@ pub async fn update_review_handler(
     uri: Uri,
     Extension(auth_user): Extension<AuthUser>,
     State(usecase): State<Arc<dyn UpdateReviewUseCase + Send + Sync>>,
-    Path(path): Path<ReviewsPathParam>,
-    Json(payload): Json<PatchReviewsRequest>
+    Path(path): Path<ReviewPathParam>,
+    Json(payload): Json<PatchReviewRequest>
 ) -> impl IntoResponse {
     match usecase.execute(UpdateReviewInput {
         id: path.id,

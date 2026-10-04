@@ -375,7 +375,7 @@ paths:
         required: true
         description: Review ID
         schema:
-          $ref: '#/components/schemas/ReviewsPathParam/properties/id'
+          $ref: '#/components/schemas/ReviewPathParam/properties/id'
     patch:
       tags:
         - Review
@@ -389,7 +389,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchReviewsRequest'
+              $ref: '#/components/schemas/PatchReviewRequest'
       responses:
         '200':
           description: Review updated successfully.
@@ -665,7 +665,7 @@ components:
         target_path:
           type: string
     
-    ReviewsPathParam:
+    ReviewPathParam:
       type: object
       required:
         - id
@@ -1265,7 +1265,7 @@ components:
               format: date-time
             - type: 'null'
 
-    PatchReviewsRequest:
+    PatchReviewRequest:
       type: object
       required:
         - rating

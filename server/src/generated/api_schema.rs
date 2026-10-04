@@ -948,7 +948,7 @@ impl ::std::convert::TryFrom<::std::string::String> for MovieSummaryMediaType {
         value.parse()
     }
 }
-///`PatchReviewsRequest`
+///`PatchReviewRequest`
 ///
 /// <details><summary>JSON schema</summary>
 ///
@@ -980,12 +980,12 @@ impl ::std::convert::TryFrom<::std::string::String> for MovieSummaryMediaType {
 /// ```
 /// </details>
 #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
-pub struct PatchReviewsRequest {
+pub struct PatchReviewRequest {
     pub content: ::std::option::Option<::std::string::String>,
     pub rating: i64,
 }
-impl ::std::convert::From<&PatchReviewsRequest> for PatchReviewsRequest {
-    fn from(value: &PatchReviewsRequest) -> Self {
+impl ::std::convert::From<&PatchReviewRequest> for PatchReviewRequest {
+    fn from(value: &PatchReviewRequest) -> Self {
         value.clone()
     }
 }
@@ -1413,6 +1413,34 @@ impl ::std::convert::From<&Review> for Review {
         value.clone()
     }
 }
+///`ReviewPathParam`
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "type": "object",
+///  "required": [
+///    "id"
+///  ],
+///  "properties": {
+///    "id": {
+///      "type": "string",
+///      "format": "uuid"
+///    }
+///  }
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+pub struct ReviewPathParam {
+    pub id: ::uuid::Uuid,
+}
+impl ::std::convert::From<&ReviewPathParam> for ReviewPathParam {
+    fn from(value: &ReviewPathParam) -> Self {
+        value.clone()
+    }
+}
 ///`ReviewWork`
 ///
 /// <details><summary>JSON schema</summary>
@@ -1558,34 +1586,6 @@ impl ::std::convert::TryFrom<::std::string::String> for ReviewWorkType {
         value: ::std::string::String,
     ) -> ::std::result::Result<Self, self::error::ConversionError> {
         value.parse()
-    }
-}
-///`ReviewsPathParam`
-///
-/// <details><summary>JSON schema</summary>
-///
-/// ```json
-///{
-///  "type": "object",
-///  "required": [
-///    "id"
-///  ],
-///  "properties": {
-///    "id": {
-///      "type": "string",
-///      "format": "uuid"
-///    }
-///  }
-///}
-/// ```
-/// </details>
-#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
-pub struct ReviewsPathParam {
-    pub id: ::uuid::Uuid,
-}
-impl ::std::convert::From<&ReviewsPathParam> for ReviewsPathParam {
-    fn from(value: &ReviewsPathParam) -> Self {
-        value.clone()
     }
 }
 ///`SearchQueryParams`
