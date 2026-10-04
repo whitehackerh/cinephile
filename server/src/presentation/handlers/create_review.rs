@@ -11,21 +11,21 @@ use crate::{
     generated::api_schema::PostReviewsRequest,
     presentation::presenters::{
         base_response::ApiResponse,
-        post_reviews::PostReviewsPresenter
+        create_review::CreateReviewPresenter
     },
     usecases::{
-        dto::post_reviews::PostReviewsInput,
-        port::post_reviews::PostReviewsUseCase
+        dto::create_review::CreateReviewInput,
+        port::create_review::CreateReviewUseCase
     }
 };
 
-pub async fn post_reviews_handler(
+pub async fn create_review_handler(
     uri: Uri,
     Extension(auth_user): Extension<AuthUser>,
-    State(usecase): State<Arc<dyn PostReviewsUseCase + Send + Sync>>,
+    State(usecase): State<Arc<dyn CreateReviewUseCase + Send + Sync>>,
     Json(payload): Json<PostReviewsRequest>,
 ) -> impl IntoResponse {
-    match usecase.execute(PostReviewsInput {
+    match usecase.execute(CreateReviewInput {
         user_id: auth_user.id(),
         rating: payload.rating as i32,
         content: payload.content,
@@ -35,7 +35,7 @@ pub async fn post_reviews_handler(
         Ok(output) => {
             (
                 StatusCode::CREATED,
-                Json(ApiResponse::success(uri.to_string(), PostReviewsPresenter::to_response(output)))
+                Json(ApiResponse::success(uri.to_string(), CreateReviewPresenter::to_response(output)))
             ).into_response()
         },
         Err(e) => ApiResponse::from_error(&uri, e).into_response(),

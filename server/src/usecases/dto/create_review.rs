@@ -4,7 +4,7 @@ use crate::usecases::dto::review::Review;
 
 
 #[derive(Debug)]
-pub(crate) struct PostReviewsInput {
+pub(crate) struct CreateReviewInput {
     pub user_id: Uuid,
     pub rating: i32,
     pub content: Option<String>,
@@ -12,4 +12,4 @@ pub(crate) struct PostReviewsInput {
     pub target_path: String
 }
 
-pub(crate) type PostReviewsOutput = Review;
+pub(crate) type CreateReviewOutput = Review;

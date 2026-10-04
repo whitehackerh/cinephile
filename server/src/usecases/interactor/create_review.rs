@@ -10,13 +10,13 @@ use crate::{
         errors::AppError
     },
     usecases::{
-        dto::post_reviews::{
-            PostReviewsInput,
-            PostReviewsOutput,
+        dto::create_review::{
+            CreateReviewInput,
+            CreateReviewOutput,
         },
         gateway::tmdb::TmdbGateway,
         port::{
-            post_reviews::PostReviewsUseCase,
+            create_review::CreateReviewUseCase,
             unit_of_work::{
                 UnitOfWork,
                 UnitOfWorkExt
@@ -26,12 +26,12 @@ use crate::{
     }
 };
 
-pub(crate) struct PostReviewsInteractor {
+pub(crate) struct CreateReviewInteractor {
     tmdb_gateway: Arc<dyn TmdbGateway + Send + Sync>,
     uow: Arc<dyn UnitOfWork>
 }
 
-impl PostReviewsInteractor {
+impl CreateReviewInteractor {
     pub fn new(
         tmdb_gateway: Arc<dyn TmdbGateway + Send + Sync>,
         uow: Arc<dyn UnitOfWork>
@@ -41,8 +41,8 @@ impl PostReviewsInteractor {
 }
 
 #[async_trait]
-impl PostReviewsUseCase for PostReviewsInteractor {
-    async fn execute(&self, input: PostReviewsInput) -> Result<PostReviewsOutput, AppError> {
+impl CreateReviewUseCase for CreateReviewInteractor {
+    async fn execute(&self, input: CreateReviewInput) -> Result<CreateReviewOutput, AppError> {
         let work = match input.work_type.as_str() {
             "movie" => {
                 let id = TargetPathParser::extract_movie_id(&input.target_path)?;
@@ -99,7 +99,7 @@ impl PostReviewsUseCase for PostReviewsInteractor {
             }
         })?;
 
-        Ok(PostReviewsOutput {
+        Ok(CreateReviewOutput {
             id: review.id(),
             rating: review.rating(),
             content: review.content().clone(),

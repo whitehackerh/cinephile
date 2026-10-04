@@ -12,7 +12,7 @@ use crate::{
         tv_episode::tv_episode_handler,
         tv_season::tv_season_handler,
         tv_series::tv_series_handler,
-        post_reviews::post_reviews_handler,
+        create_review::create_review_handler,
         patch_reviews::patch_reviews_handler,
         delete_reviews::delete_reviews_handler,
         get_reviews::get_reviews_handler,
@@ -30,7 +30,7 @@ pub fn create_router(registry: Arc<AppRegistry>) -> Router {
         .route("/tv/{series_id}/season/{season_number}/episode/{episode_number}", get(tv_episode_handler))
         .route("/tv/{series_id}/season/{season_number}", get(tv_season_handler))
         .route("/tv/{series_id}", get(tv_series_handler))
-        .route("/reviews", post(post_reviews_handler).get(get_reviews_handler))
+        .route("/reviews", post(create_review_handler).get(get_reviews_handler))
         .route("/reviews/{id}", patch(patch_reviews_handler).delete(delete_reviews_handler))
         .route("/reviews/find", get(get_review_handler))
         .route("/collections", post(create_collection_handler))

@@ -4,9 +4,9 @@ use crate::{
     usecases::dto::review::Review as ReviewOutput,
 };
 
-pub struct PostReviewsPresenter;
+pub struct CreateReviewPresenter;
 
-impl PostReviewsPresenter {
+impl CreateReviewPresenter {
     pub fn to_response(output: ReviewOutput) -> Review {
         ReviewPresenter::to_response(output)
     }
