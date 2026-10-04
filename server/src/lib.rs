@@ -8,10 +8,14 @@ pub mod infrastructure;
 use std::sync::Arc;
 use sqlx::PgPool;
 use crate::{
-    domain::entities::collection, infrastructure::{
+    infrastructure::{
         external::tmdb::client::TmdbClient,
         persistence::postgres::{
-            collection::PostgresCollectionRepository, collection_work::PostgresCollectionWorkRepository, review::PostgresReviewRepository, unit_of_work::PostgresUnitOfWork, user::PostgresUserRepository
+            collection::PostgresCollectionRepository,
+            collection_work::PostgresCollectionWorkRepository,
+            review::PostgresReviewRepository,
+            unit_of_work::PostgresUnitOfWork,
+            user::PostgresUserRepository
         },
         security::{
             password::PasswordManager,
@@ -20,13 +24,43 @@ use crate::{
     }, usecases::{
         gateway::tmdb::TmdbGateway,
         interactor::{
-            add_collection_work::AddCollectionWorkInteractor, delete_reviews::DeleteReviewsInteractor, get_review::GetReviewInteractor, get_reviews::GetReviewsInteractor, movie::MovieInteractor, patch_reviews::PatchReviewsInteractor, post_collections::PostCollectionsInteractor, post_reviews::PostReviewsInteractor, search::SearchInteractor, sign_in::SignInInteractor, sign_up::SignUpInteractor, tv_episode::TvEpisodeInteractor, tv_season::TvSeasonInteractor, tv_series::TvSeriesInteractor
+            add_collection_work::AddCollectionWorkInteractor,
+            delete_reviews::DeleteReviewsInteractor,
+            get_review::GetReviewInteractor,
+            get_reviews::GetReviewsInteractor,
+            movie::MovieInteractor,
+            patch_reviews::PatchReviewsInteractor,
+            post_collections::PostCollectionsInteractor,
+            post_reviews::PostReviewsInteractor,
+            search::SearchInteractor,
+            sign_in::SignInInteractor,
+            sign_up::SignUpInteractor,
+            tv_episode::TvEpisodeInteractor,
+            tv_season::TvSeasonInteractor,
+            tv_series::TvSeriesInteractor
         },
         port::{
-            add_collection_work::AddCollectionWorkUseCase, delete_reviews::DeleteReviewsUseCase, get_review::GetReviewUseCase, get_reviews::GetReviewsUseCase, movie::MovieUseCase, patch_reviews::PatchReviewsUseCase, post_collections::PostCollectionsUseCase, post_reviews::PostReviewsUseCase, search::SearchUseCase, sign_in::SignInUseCase, sign_up::SignUpUseCase, tv_episode::TvEpisodeUseCase, tv_season::TvSeasonUseCase, tv_series::TvSeriesUseCase, unit_of_work::UnitOfWork
+            add_collection_work::AddCollectionWorkUseCase,
+            delete_reviews::DeleteReviewsUseCase,
+            get_review::GetReviewUseCase,
+            get_reviews::GetReviewsUseCase,
+            movie::MovieUseCase,
+            patch_reviews::PatchReviewsUseCase,
+            post_collections::PostCollectionsUseCase,
+            post_reviews::PostReviewsUseCase,
+            search::SearchUseCase,
+            sign_in::SignInUseCase,
+            sign_up::SignUpUseCase,
+            tv_episode::TvEpisodeUseCase,
+            tv_season::TvSeasonUseCase,
+            tv_series::TvSeriesUseCase,
+            unit_of_work::UnitOfWork
         },
         repository::{
-            collection::CollectionRepository, collection_work::CollectionWorkRepository, review::ReviewRepository, user::UserRepository
+            collection::CollectionRepository,
+            collection_work::CollectionWorkRepository,
+            review::ReviewRepository,
+            user::UserRepository
         },
         security::{
             password::PasswordManager as PasswordManagerTrait,
@@ -123,7 +157,6 @@ impl AppRegistry {
             uow.clone()
         ));
         let add_collection_work_usecase = Arc::new(AddCollectionWorkInteractor::new(
-            collection_repository.clone() as Arc<dyn CollectionRepository + Send + Sync>,
             tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>,
             uow.clone()
         ));
