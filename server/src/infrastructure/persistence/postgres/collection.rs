@@ -9,7 +9,8 @@ use crate::{
     usecases::{
         dto::{
             collection_work::CollectionWorkForReconstruct,
-            collection::CollectionForReconstruct
+            collection::CollectionForReconstruct,
+            collection::CollectionWithoutWork
         },
         repository::collection::CollectionRepository
     }
@@ -71,7 +72,6 @@ impl CollectionRepository for PostgresCollectionRepository {
             r#"
             SELECT
                 c.id AS collection_id,
-                c.user_id,
                 c.title,
                 c.description,
                 c.cover_image_path,
@@ -101,7 +101,6 @@ impl CollectionRepository for PostgresCollectionRepository {
         }
 
         let collection_id = rows[0].collection_id;
-        let user_id = rows[0].user_id;
         let title = rows[0].title.clone();
         let description = rows[0].description.clone();
         let cover_image_path = rows[0].cover_image_path.clone();
@@ -127,7 +126,6 @@ impl CollectionRepository for PostgresCollectionRepository {
 
         Ok(Some(CollectionForReconstruct {
             id: collection_id,
-            user_id,
             title,
             description,
             cover_image_path,
@@ -142,7 +140,6 @@ impl CollectionRepository for PostgresCollectionRepository {
             r#"
             SELECT
                 c.id AS collection_id,
-                c.user_id,
                 c.title,
                 c.description,
                 c.cover_image_path,
@@ -173,7 +170,6 @@ impl CollectionRepository for PostgresCollectionRepository {
         }
 
         let collection_id = rows[0].collection_id;
-        let user_id = rows[0].user_id;
         let title = rows[0].title.clone();
         let description = rows[0].description.clone();
         let cover_image_path = rows[0].cover_image_path.clone();
@@ -199,7 +195,6 @@ impl CollectionRepository for PostgresCollectionRepository {
 
         Ok(Some(CollectionForReconstruct {
             id: collection_id,
-            user_id,
             title,
             description,
             cover_image_path,
@@ -237,5 +232,34 @@ impl CollectionRepository for PostgresCollectionRepository {
         };
 
         Ok(())
+    }
+
+    async fn fetch_all(&self, user_id: &Uuid) -> anyhow::Result<Vec<CollectionWithoutWork>> {
+        let query = sqlx::query_as!(
+            CollectionWithoutWork,
+            r#"
+            SELECT
+                id,
+                title,
+                description,
+                cover_image_path,
+                created_at,
+                updated_at
+            FROM collections
+            WHERE user_id = $1
+            ORDER BY updated_at DESC
+            "#,
+            user_id
+        );
+
+        let collection_without_work_list = match &self.conn {
+            PgConn::Pool(pool) => query.fetch_all(pool).await?,
+            PgConn::Tx(tx) => {
+                let mut guard = tx.lock().await;
+                query.fetch_all(&mut **guard).await?
+            }
+        };
+
+        Ok(collection_without_work_list)
     }
 }

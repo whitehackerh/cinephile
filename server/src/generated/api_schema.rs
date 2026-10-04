@@ -276,6 +276,75 @@ impl ::std::convert::From<&CollectionPathParam> for CollectionPathParam {
         value.clone()
     }
 }
+///`CollectionSummary`
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "type": "object",
+///  "required": [
+///    "cover_image_path",
+///    "created_at",
+///    "description",
+///    "id",
+///    "title",
+///    "updated_at"
+///  ],
+///  "properties": {
+///    "cover_image_path": {
+///      "oneOf": [
+///        {
+///          "type": "string"
+///        },
+///        {
+///          "type": "null"
+///        }
+///      ]
+///    },
+///    "created_at": {
+///      "type": "string",
+///      "format": "date-time"
+///    },
+///    "description": {
+///      "oneOf": [
+///        {
+///          "type": "string"
+///        },
+///        {
+///          "type": "null"
+///        }
+///      ]
+///    },
+///    "id": {
+///      "type": "string",
+///      "format": "uuid"
+///    },
+///    "title": {
+///      "type": "string"
+///    },
+///    "updated_at": {
+///      "type": "string",
+///      "format": "date-time"
+///    }
+///  }
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+pub struct CollectionSummary {
+    pub cover_image_path: ::std::option::Option<::std::string::String>,
+    pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
+    pub description: ::std::option::Option<::std::string::String>,
+    pub id: ::uuid::Uuid,
+    pub title: ::std::string::String,
+    pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
+}
+impl ::std::convert::From<&CollectionSummary> for CollectionSummary {
+    fn from(value: &CollectionSummary) -> Self {
+        value.clone()
+    }
+}
 ///`CollectionWork`
 ///
 /// <details><summary>JSON schema</summary>

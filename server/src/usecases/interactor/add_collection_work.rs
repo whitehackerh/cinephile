@@ -136,7 +136,7 @@ impl AddCollectionWorkUseCase for AddCollectionWorkInteractor {
 
                 let mut collection = Collection::reconstruct(
                     collection_for_reconstruct.id,
-                    collection_for_reconstruct.user_id,
+                    input.user_id,
                     collection_for_reconstruct.title,
                     collection_for_reconstruct.description,
                     collection_for_reconstruct.cover_image_path,
