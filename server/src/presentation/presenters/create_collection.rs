@@ -4,9 +4,9 @@ use crate::{
     usecases::dto::collection::Collection as CollectionOutput,
 };
 
-pub struct PostCollectionsPresenter;
+pub struct CreateCollectionPresenter;
 
-impl PostCollectionsPresenter {
+impl CreateCollectionPresenter {
     pub fn to_response(output: CollectionOutput) -> Collection {
         CollectionPresenter::to_response(output)
     }

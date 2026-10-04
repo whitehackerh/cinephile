@@ -8,14 +8,14 @@ use crate::{
     },
     usecases::{
         dto::{
-            post_collections::{
-                PostCollectionsInput,
-                PostCollectionsOutput,
+            create_collection::{
+                CreateCollectionInput,
+                CreateCollectionOutput,
             },
             collection_work::CollectionWork
         },
         port::{
-            post_collections::PostCollectionsUseCase,
+            create_collection::CreateCollectionUseCase,
             unit_of_work::{
                 UnitOfWork,
                 UnitOfWorkExt
@@ -24,19 +24,19 @@ use crate::{
     }
 };
 
-pub(crate) struct PostCollectionsInteractor {
+pub(crate) struct CreateCollectionInteractor {
     uow: Arc<dyn UnitOfWork>
 }
 
-impl PostCollectionsInteractor {
+impl CreateCollectionInteractor {
     pub fn new(uow: Arc<dyn UnitOfWork>) -> Self {
         Self { uow }
     }
 }
 
 #[async_trait]
-impl PostCollectionsUseCase for PostCollectionsInteractor {
-    async fn execute(&self, input: PostCollectionsInput) -> Result<PostCollectionsOutput, AppError> {
+impl CreateCollectionUseCase for CreateCollectionInteractor {
+    async fn execute(&self, input: CreateCollectionInput) -> Result<CreateCollectionOutput, AppError> {
         let collection = Collection::new(
             input.user_id,
             input.title,
@@ -55,7 +55,7 @@ impl PostCollectionsUseCase for PostCollectionsInteractor {
         .await
         .map_err(|e| AppError::Infrastructure(e.to_string()))?;
 
-        Ok(PostCollectionsOutput {
+        Ok(CreateCollectionOutput {
             id: collection.id(),
             title: collection.title().to_string(),
             description: collection.description().clone(),
