@@ -989,6 +989,45 @@ impl ::std::convert::From<&PatchReviewRequest> for PatchReviewRequest {
         value.clone()
     }
 }
+///`PostCollectionRequest`
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "type": "object",
+///  "required": [
+///    "description",
+///    "title"
+///  ],
+///  "properties": {
+///    "description": {
+///      "oneOf": [
+///        {
+///          "type": "string"
+///        },
+///        {
+///          "type": "null"
+///        }
+///      ]
+///    },
+///    "title": {
+///      "type": "string"
+///    }
+///  }
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+pub struct PostCollectionRequest {
+    pub description: ::std::option::Option<::std::string::String>,
+    pub title: ::std::string::String,
+}
+impl ::std::convert::From<&PostCollectionRequest> for PostCollectionRequest {
+    fn from(value: &PostCollectionRequest) -> Self {
+        value.clone()
+    }
+}
 ///`PostCollectionWorkRequest`
 ///
 /// <details><summary>JSON schema</summary>
@@ -1118,45 +1157,6 @@ for PostCollectionWorkRequestWorkType {
         value: ::std::string::String,
     ) -> ::std::result::Result<Self, self::error::ConversionError> {
         value.parse()
-    }
-}
-///`PostCollectionsRequest`
-///
-/// <details><summary>JSON schema</summary>
-///
-/// ```json
-///{
-///  "type": "object",
-///  "required": [
-///    "description",
-///    "title"
-///  ],
-///  "properties": {
-///    "description": {
-///      "oneOf": [
-///        {
-///          "type": "string"
-///        },
-///        {
-///          "type": "null"
-///        }
-///      ]
-///    },
-///    "title": {
-///      "type": "string"
-///    }
-///  }
-///}
-/// ```
-/// </details>
-#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
-pub struct PostCollectionsRequest {
-    pub description: ::std::option::Option<::std::string::String>,
-    pub title: ::std::string::String,
-}
-impl ::std::convert::From<&PostCollectionsRequest> for PostCollectionsRequest {
-    fn from(value: &PostCollectionsRequest) -> Self {
-        value.clone()
     }
 }
 ///`PostReviewRequest`

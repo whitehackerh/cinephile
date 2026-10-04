@@ -8,7 +8,7 @@ use std::sync::Arc;
 
 use crate::{
     domain::entities::auth_user::AuthUser,
-    generated::api_schema::PostCollectionsRequest,
+    generated::api_schema::PostCollectionRequest,
     presentation::presenters::{
         base_response::ApiResponse,
         create_collection::CreateCollectionPresenter
@@ -23,7 +23,7 @@ pub async fn create_collection_handler(
     uri: Uri,
     Extension(auth_user): Extension<AuthUser>,
     State(usecase): State<Arc<dyn CreateCollectionUseCase + Send + Sync>>,
-    Json(payload): Json<PostCollectionsRequest>,
+    Json(payload): Json<PostCollectionRequest>,
 ) -> impl IntoResponse {
     match usecase.execute(CreateCollectionInput {
         user_id: auth_user.id(),

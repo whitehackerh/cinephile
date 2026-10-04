@@ -503,7 +503,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PostCollectionsRequest'
+              $ref: '#/components/schemas/PostCollectionRequest'
       responses:
         '201':
           description: Collection created successfully.
@@ -1280,7 +1280,7 @@ components:
             - type: string
             - type: 'null'
 
-    PostCollectionsRequest:
+    PostCollectionRequest:
       type: object
       required:
         - title
