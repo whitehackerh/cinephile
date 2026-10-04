@@ -1405,6 +1405,7 @@ components:
         - title
         - description
         - cover_image_path
+        - work_target_paths
         - created_at
         - updated_at
       properties:
@@ -1421,6 +1422,10 @@ components:
           oneOf:
             - type: string
             - type: 'null'
+        work_target_paths:
+          type: array
+          items:
+            type: string
         created_at:
           type: string
           format: date-time

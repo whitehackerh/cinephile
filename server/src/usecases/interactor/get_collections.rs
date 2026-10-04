@@ -28,10 +28,10 @@ impl GetCollectionsInteractor {
 #[async_trait]
 impl GetCollectionsUseCase for GetCollectionsInteractor {
     async fn execute(&self, input: GetCollectionsInput) -> Result<GetCollectionsOutput, AppError> {
-        let collection_without_work_list = self.collection_repository.fetch_all(&input.user_id)
+        let collection_summary_list = self.collection_repository.fetch_all_with_target_paths(&input.user_id)
             .await
             .map_err(|e| AppError::Infrastructure(e.to_string()))?;
 
-        Ok(collection_without_work_list)
+        Ok(collection_summary_list)
     }
 }

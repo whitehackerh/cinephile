@@ -28,6 +28,16 @@ pub(crate) struct CollectionForReconstruct {
     pub updated_at: DateTime<Utc>,
 }
 
+pub(crate) struct CollectionSummary {
+    pub id: Uuid,
+    pub title: String,
+    pub description: Option<String>,
+    pub cover_image_path: Option<String>,
+    pub work_target_paths: Vec<String>,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+}
+
 pub(crate) struct CollectionWithoutWork {
     pub id: Uuid,
     pub title: String,

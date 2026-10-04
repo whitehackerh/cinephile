@@ -289,7 +289,8 @@ impl ::std::convert::From<&CollectionPathParam> for CollectionPathParam {
 ///    "description",
 ///    "id",
 ///    "title",
-///    "updated_at"
+///    "updated_at",
+///    "work_target_paths"
 ///  ],
 ///  "properties": {
 ///    "cover_image_path": {
@@ -326,6 +327,12 @@ impl ::std::convert::From<&CollectionPathParam> for CollectionPathParam {
 ///    "updated_at": {
 ///      "type": "string",
 ///      "format": "date-time"
+///    },
+///    "work_target_paths": {
+///      "type": "array",
+///      "items": {
+///        "type": "string"
+///      }
 ///    }
 ///  }
 ///}
@@ -339,6 +346,7 @@ pub struct CollectionSummary {
     pub id: ::uuid::Uuid,
     pub title: ::std::string::String,
     pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
+    pub work_target_paths: ::std::vec::Vec<::std::string::String>,
 }
 impl ::std::convert::From<&CollectionSummary> for CollectionSummary {
     fn from(value: &CollectionSummary) -> Self {

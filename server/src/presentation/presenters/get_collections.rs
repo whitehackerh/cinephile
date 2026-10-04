@@ -14,7 +14,8 @@ impl GetCollectionsPresenter {
                 description: c.description,
                 id: c.id,
                 title: c.title,
-                updated_at: c.updated_at
+                updated_at: c.updated_at,
+                work_target_paths: c.work_target_paths
             })
             .collect()
     }

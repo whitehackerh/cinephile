@@ -9,8 +9,11 @@ use crate::{
     usecases::{
         dto::{
             collection_work::CollectionWorkForReconstruct,
-            collection::CollectionForReconstruct,
-            collection::CollectionWithoutWork
+            collection::{
+                CollectionForReconstruct,
+                CollectionSummary,
+                CollectionWithoutWork
+            }
         },
         repository::collection::CollectionRepository
     }
@@ -261,5 +264,66 @@ impl CollectionRepository for PostgresCollectionRepository {
         };
 
         Ok(collection_without_work_list)
+    }
+
+    async fn fetch_all_with_target_paths(
+        &self,
+        user_id: &Uuid,
+    ) -> anyhow::Result<Vec<CollectionSummary>> {
+        let query = sqlx::query!(
+            r#"
+            SELECT
+                c.id AS collection_id,
+                c.title,
+                c.description,
+                c.cover_image_path,
+                c.created_at,
+                c.updated_at,
+                cw.target_path AS "target_path?"
+            FROM collections c
+            LEFT JOIN collection_works cw ON c.id = cw.collection_id
+            WHERE c.user_id = $1
+            ORDER BY c.created_at DESC, c.id DESC, cw.added_at ASC
+            "#,
+            user_id
+        );
+
+        let rows = match &self.conn {
+            PgConn::Pool(pool) => query.fetch_all(pool).await?,
+            PgConn::Tx(tx) => {
+                let mut guard = tx.lock().await;
+                query.fetch_all(&mut **guard).await?
+            }
+        };
+
+        let mut summaries: Vec<CollectionSummary> = Vec::new();
+
+        for row in rows {
+            if let Some(last) = summaries.last_mut() {
+                if last.id == row.collection_id {
+                    if let Some(target_path) = row.target_path {
+                        last.work_target_paths.push(target_path);
+                    }
+                    continue;
+                }
+            }
+
+            let mut work_target_paths = Vec::new();
+            if let Some(target_path) = row.target_path {
+                work_target_paths.push(target_path);
+            }
+
+            summaries.push(CollectionSummary {
+                id: row.collection_id,
+                title: row.title,
+                description: row.description,
+                cover_image_path: row.cover_image_path,
+                work_target_paths,
+                created_at: row.created_at,
+                updated_at: row.updated_at,
+            });
+        }
+
+        Ok(summaries)
     }
 }
