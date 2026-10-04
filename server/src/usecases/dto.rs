@@ -1,3 +1,4 @@
+pub(crate) mod add_collection_work;
 pub(crate) mod collection_work;
 pub(crate) mod collection;
 pub(crate) mod delete_reviews;

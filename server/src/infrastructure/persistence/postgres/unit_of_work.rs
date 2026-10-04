@@ -6,6 +6,7 @@ use tokio::sync::Mutex;
 
 use crate::usecases::port::unit_of_work::{DynTxFuture, TxRepositories, UnitOfWork};
 use super::{
+    collection_work::PostgresCollectionWorkRepository,
     collection::PostgresCollectionRepository,
     review::PostgresReviewRepository, 
     user::PostgresUserRepository
@@ -31,6 +32,7 @@ impl UnitOfWork for PostgresUnitOfWork {
         let tx_shared = Arc::new(Mutex::new(tx));
 
         let repos = Arc::new(TxRepositories {
+            collection_work_repo: Arc::new(PostgresCollectionWorkRepository::new_tx(tx_shared.clone())),
             collection_repo: Arc::new(PostgresCollectionRepository::new_tx(tx_shared.clone())),
             review_repo: Arc::new(PostgresReviewRepository::new_tx(tx_shared.clone())),
             user_repo: Arc::new(PostgresUserRepository::new_tx(tx_shared.clone()))

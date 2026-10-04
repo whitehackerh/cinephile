@@ -248,6 +248,34 @@ impl ::std::convert::From<&Collection> for Collection {
         value.clone()
     }
 }
+///`CollectionPathParam`
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "type": "object",
+///  "required": [
+///    "id"
+///  ],
+///  "properties": {
+///    "id": {
+///      "type": "string",
+///      "format": "uuid"
+///    }
+///  }
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+pub struct CollectionPathParam {
+    pub id: ::uuid::Uuid,
+}
+impl ::std::convert::From<&CollectionPathParam> for CollectionPathParam {
+    fn from(value: &CollectionPathParam) -> Self {
+        value.clone()
+    }
+}
 ///`CollectionWork`
 ///
 /// <details><summary>JSON schema</summary>
@@ -959,6 +987,137 @@ pub struct PatchReviewsRequest {
 impl ::std::convert::From<&PatchReviewsRequest> for PatchReviewsRequest {
     fn from(value: &PatchReviewsRequest) -> Self {
         value.clone()
+    }
+}
+///`PostCollectionWorkRequest`
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "type": "object",
+///  "required": [
+///    "target_path",
+///    "work_type"
+///  ],
+///  "properties": {
+///    "target_path": {
+///      "type": "string"
+///    },
+///    "work_type": {
+///      "type": "string",
+///      "enum": [
+///        "movie",
+///        "series",
+///        "season",
+///        "episode"
+///      ]
+///    }
+///  }
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+pub struct PostCollectionWorkRequest {
+    pub target_path: ::std::string::String,
+    pub work_type: PostCollectionWorkRequestWorkType,
+}
+impl ::std::convert::From<&PostCollectionWorkRequest> for PostCollectionWorkRequest {
+    fn from(value: &PostCollectionWorkRequest) -> Self {
+        value.clone()
+    }
+}
+///`PostCollectionWorkRequestWorkType`
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "type": "string",
+///  "enum": [
+///    "movie",
+///    "series",
+///    "season",
+///    "episode"
+///  ]
+///}
+/// ```
+/// </details>
+#[derive(
+    ::serde::Deserialize,
+    ::serde::Serialize,
+    Clone,
+    Copy,
+    Debug,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd
+)]
+pub enum PostCollectionWorkRequestWorkType {
+    #[serde(rename = "movie")]
+    Movie,
+    #[serde(rename = "series")]
+    Series,
+    #[serde(rename = "season")]
+    Season,
+    #[serde(rename = "episode")]
+    Episode,
+}
+impl ::std::convert::From<&Self> for PostCollectionWorkRequestWorkType {
+    fn from(value: &PostCollectionWorkRequestWorkType) -> Self {
+        value.clone()
+    }
+}
+impl ::std::fmt::Display for PostCollectionWorkRequestWorkType {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match *self {
+            Self::Movie => f.write_str("movie"),
+            Self::Series => f.write_str("series"),
+            Self::Season => f.write_str("season"),
+            Self::Episode => f.write_str("episode"),
+        }
+    }
+}
+impl ::std::str::FromStr for PostCollectionWorkRequestWorkType {
+    type Err = self::error::ConversionError;
+    fn from_str(
+        value: &str,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        match value {
+            "movie" => Ok(Self::Movie),
+            "series" => Ok(Self::Series),
+            "season" => Ok(Self::Season),
+            "episode" => Ok(Self::Episode),
+            _ => Err("invalid value".into()),
+        }
+    }
+}
+impl ::std::convert::TryFrom<&str> for PostCollectionWorkRequestWorkType {
+    type Error = self::error::ConversionError;
+    fn try_from(
+        value: &str,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
+    }
+}
+impl ::std::convert::TryFrom<&::std::string::String>
+for PostCollectionWorkRequestWorkType {
+    type Error = self::error::ConversionError;
+    fn try_from(
+        value: &::std::string::String,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
+    }
+}
+impl ::std::convert::TryFrom<::std::string::String>
+for PostCollectionWorkRequestWorkType {
+    type Error = self::error::ConversionError;
+    fn try_from(
+        value: ::std::string::String,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
     }
 }
 ///`PostCollectionsRequest`

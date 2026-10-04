@@ -10,3 +10,14 @@ pub enum Work {
     TvSeason(TvSeason),
     TvEpisode(TvEpisode),
 }
+
+impl Work {
+    pub fn image_path(&self) -> Option<&str> {
+        match self {
+            Work::Movie(movie) => movie.poster_path().as_deref(),
+            Work::TvSeries(series) => series.poster_path().as_deref(),
+            Work::TvSeason(season) => season.poster_path().as_deref(),
+            Work::TvEpisode(episode) => episode.still_path().as_deref(),
+        }
+    }
+}

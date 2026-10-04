@@ -97,4 +97,22 @@ impl Collection {
             self.works, self.created_at, self.updated_at,
         )
     }
+
+    pub fn sync_cover_image(&mut self) {
+        self.cover_image_path = self
+            .works
+            .iter()
+            .find_map(|w| w.work().image_path())
+            .map(|s| s.to_string());
+    }
+
+    pub fn add_work(&mut self, work: CollectionWork) {
+        self.works.push(work);
+
+        if self.cover_image_path.is_none() {
+            self.sync_cover_image();
+        }
+
+        self.updated_at = Utc::now();
+    }
 }

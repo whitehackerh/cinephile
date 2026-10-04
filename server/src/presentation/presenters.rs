@@ -1,3 +1,4 @@
+pub(crate) mod add_collection_work;
 pub(crate) mod base_response;
 pub(crate) mod collection_work;
 pub(crate) mod collection;

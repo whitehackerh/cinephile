@@ -125,4 +125,10 @@ impl Review {
             self.work, self.created_at, self.updated_at, self.deleted_at
         )
     }
+
+    pub fn update(&mut self, rating: i32, content: Option<String>) {
+        self.rating = rating;
+        self.content = content;
+        self.updated_at = Utc::now();
+    }
 }
