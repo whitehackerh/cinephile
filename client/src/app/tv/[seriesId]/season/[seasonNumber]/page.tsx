@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useTvSeason } from '@/hooks/useTvSeason';
 import { getImageUrl } from '@/utils/tmdb';
+import { AddToCollectionSection } from '@/components/collection/AddToCollectionSection';
 import { DetailReviewSection } from '@/components/review/DetailReviewSection';
 
 export default function TvSeasonPage({ 
@@ -157,6 +158,11 @@ export default function TvSeasonPage({
               </div>
             </div>
           )}
+
+          <AddToCollectionSection
+            targetPath={`/tv/${resolvedParams.seriesId}/season/${resolvedParams.seasonNumber}`}
+            workType="season"
+          />
 
           <DetailReviewSection 
             workType="season" 

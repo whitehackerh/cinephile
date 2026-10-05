@@ -1,9 +1,4 @@
-import { Movie } from '@/types/movie';
-import { TvEpisode } from '@/types/tvEpisode';
-import { TvSeason } from '@/types/tvSeason';
-import { TvSeries } from '@/types/tvSeries';
-
-export type WorkType = 'movie' | 'series' | 'season' | 'episode';
+import { Work, WorkType } from '@/types/work';
 
 export interface PostReviewsRequest {
   rating: number;
@@ -33,13 +28,3 @@ export interface Review {
   updated_at: string;
   deleted_at: string | null;
 }
-
-export type Work = 
-  | ({ work_type: 'movie' } & Movie)
-  | ({ work_type: 'series' } & TvSeries)
-  | ({ work_type: 'season' } & TvSeason)
-  | ({ work_type: 'episode' } & TvEpisode)
-  | Movie
-  | TvSeries 
-  | TvSeason 
-  | TvEpisode;

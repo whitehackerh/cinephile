@@ -5,6 +5,7 @@ import { useMovieDetail } from '@/hooks/useMovieDetail';
 import { getImageUrl } from '@/utils/tmdb';
 import Image from 'next/image';
 import { DetailReviewSection } from '@/components/review/DetailReviewSection';
+import { AddToCollectionSection } from '@/components/collection/AddToCollectionSection';
 
 export default function MovieDetailPage({ 
   params 
@@ -117,6 +118,11 @@ export default function MovieDetailPage({
               </span>
             ))}
           </div>
+
+          <AddToCollectionSection
+            targetPath={`/movie/${movie.id}`}
+            workType="movie"
+          />
 
           <DetailReviewSection 
             workType="movie" 

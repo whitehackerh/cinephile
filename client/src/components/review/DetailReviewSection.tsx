@@ -2,7 +2,7 @@
 
 import { useReview } from '@/hooks/useReview';
 import { ReviewForm } from './ReviewForm';
-import { WorkType } from '@/types/review';
+import { WorkType } from '@/types/work';
 
 interface DetailReviewSectionProps {
   workType: WorkType;

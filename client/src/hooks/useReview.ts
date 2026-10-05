@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { WorkType } from '@/types/review';
+import { WorkType } from '@/types/work';
 import { apiService } from '@/service/api';
 
 interface UseReviewParams {
