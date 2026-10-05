@@ -2,6 +2,7 @@ import { publicClient, authClient } from '@/lib/apiClient';
 import { ApiResponse } from '@/types/api';
 import { Review, PostReviewsRequest, PatchReviewsRequest, GetReviewQueryParams } from '@/types/review';
 import { SignInRequest, SignUpRequest } from '@/lib/validations/auth';
+import { Collection, PostCollectionsRequest, PostCollectionWorksRequest, CollectionSummary } from '@/types/collection';
 import { SearchResponse } from '@/types/search';
 import { Movie } from '@/types/movie';
 import { TvEpisode } from '@/types/tvEpisode';
@@ -136,5 +137,38 @@ export const apiService = {
       throw new Error(response.data.error.message);
     }
     return response.data.data
-  }
+  },
+
+  async postCollections(input: PostCollectionsRequest): Promise<Collection> {
+    const response = await authClient.post<ApiResponse<Collection>>('/collections', input);
+    if (response.data.error) {
+      throw new Error(response.data.error.message);
+    }
+    if (!response.data.data) {
+      throw new Error('Response data is missing');
+    }
+    return response.data.data
+  },
+
+  async postCollectionWorks(id: string, input: PostCollectionWorksRequest): Promise<Collection> {
+    const response = await authClient.post<ApiResponse<Collection>>(`/collections/${id}/works`, input);
+    if (response.data.error) {
+      throw new Error(response.data.error.message);
+    }
+    if (!response.data.data) {
+      throw new Error('Response data is missing');
+    }
+    return response.data.data
+  },
+
+  async getCollections(): Promise<CollectionSummary[]> {
+    const response = await authClient.get<ApiResponse<CollectionSummary[]>>('/collections');
+    if (response.data.error) {
+      throw new Error(response.data.error.message);
+    }
+    if (response.data.data == null) {
+      return [];
+    }
+    return response.data.data
+  },
 };

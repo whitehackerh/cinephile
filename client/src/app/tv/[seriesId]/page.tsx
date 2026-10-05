@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useTvSeries } from '@/hooks/useTvSeries';
 import { getImageUrl } from '@/utils/tmdb';
 import Image from 'next/image';
+import { AddToCollectionSection } from '@/components/collection/AddToCollectionSection';
 import { DetailReviewSection } from '@/components/review/DetailReviewSection';
 
 export default function TvSeriesPage({ 
@@ -167,6 +168,11 @@ export default function TvSeriesPage({
               </div>
             </div>
           )}
+
+          <AddToCollectionSection
+            targetPath={`/tv/${tvSeries.id}`}
+            workType="series"
+          />
 
           <DetailReviewSection 
             workType="series" 
