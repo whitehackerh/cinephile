@@ -26,6 +26,7 @@ use crate::{
         interactor::{
             add_collection_work::AddCollectionWorkInteractor,
             delete_reviews::DeleteReviewsInteractor,
+            get_collection::GetCollectionInteractor,
             get_collections::GetCollectionsInteractor,
             get_review::GetReviewInteractor,
             get_reviews::GetReviewsInteractor,
@@ -43,6 +44,7 @@ use crate::{
         port::{
             add_collection_work::AddCollectionWorkUseCase,
             delete_reviews::DeleteReviewsUseCase,
+            get_collection::GetCollectionUseCase,
             get_collections::GetCollectionsUseCase,
             get_review::GetReviewUseCase,
             get_reviews::GetReviewsUseCase,
@@ -87,6 +89,7 @@ pub struct AppRegistry {
     pub(crate) create_collection_usecase: Arc<dyn CreateCollectionUseCase + Send + Sync>,
     pub(crate) add_collection_work_usecase: Arc<dyn AddCollectionWorkUseCase + Send + Sync>,
     pub(crate) get_collections_usecase: Arc<dyn GetCollectionsUseCase + Send + Sync>,
+    pub(crate) get_collection_usecase: Arc<dyn GetCollectionUseCase + Send + Sync>,
     pub(crate) token_manager: Arc<JwtTokenManager>
 }
 
@@ -165,6 +168,10 @@ impl AppRegistry {
         let get_collections_usecase = Arc::new(GetCollectionsInteractor::new(
             collection_repository.clone() as Arc<dyn CollectionRepository + Send + Sync>
         ));
+        let get_collection_usecase = Arc::new(GetCollectionInteractor::new(
+            collection_repository.clone() as Arc<dyn CollectionRepository + Send + Sync>,
+            tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>
+        ));
 
         Arc::new(Self {
             signup_usecase,
@@ -182,6 +189,7 @@ impl AppRegistry {
             create_collection_usecase,
             add_collection_work_usecase,
             get_collections_usecase,
+            get_collection_usecase,
             token_manager
         })
     }
@@ -211,3 +219,4 @@ impl_from_ref!(GetReviewUseCase, get_review_usecase);
 impl_from_ref!(CreateCollectionUseCase, create_collection_usecase);
 impl_from_ref!(AddCollectionWorkUseCase, add_collection_work_usecase);
 impl_from_ref!(GetCollectionsUseCase, get_collections_usecase);
+impl_from_ref!(GetCollectionUseCase, get_collection_usecase);

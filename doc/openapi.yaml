@@ -558,6 +558,45 @@ paths:
         '500':
           $ref: '#/components/responses/ErrorInternalServer'
 
+  /collections/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Collection ID
+        schema:
+          $ref: '#/components/schemas/CollectionPathParam/properties/id'
+    get:
+      tags:
+        - Collection
+      summary: Get collection by id 
+      description: Get collection by id 
+      operationId: getCollection
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Get collection successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Collection'
+                      error:
+                        type: 'null'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '401':
+          $ref: '#/components/responses/ErrorUnauthorized'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '500':
+          $ref: '#/components/responses/ErrorInternalServer'
+
   /collections/{id}/works:
     post:
       tags:

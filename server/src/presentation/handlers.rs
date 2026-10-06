@@ -2,6 +2,7 @@ pub(crate) mod add_collection_work;
 pub(crate) mod create_collection;
 pub(crate) mod create_review;
 pub(crate) mod delete_reviews;
+pub(crate) mod get_collection;
 pub(crate) mod get_collections;
 pub(crate) mod get_review;
 pub(crate) mod get_reviews;

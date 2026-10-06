@@ -4,6 +4,7 @@ pub(crate) mod create_review;
 pub(crate) mod base_response;
 pub(crate) mod collection_work;
 pub(crate) mod collection;
+pub(crate) mod get_collection;
 pub(crate) mod get_collections;
 pub(crate) mod get_review;
 pub(crate) mod get_reviews;
