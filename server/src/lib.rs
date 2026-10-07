@@ -21,44 +21,46 @@ use crate::{
             password::PasswordManager,
             token::JwtTokenManager
         }
-    }, usecases::{
+    }, presentation::handlers::update_collection, usecases::{
         gateway::tmdb::TmdbGateway,
         interactor::{
             add_collection_work::AddCollectionWorkInteractor,
+            create_collection::CreateCollectionInteractor,
+            create_review::CreateReviewInteractor,
             delete_reviews::DeleteReviewsInteractor,
             get_collection::GetCollectionInteractor,
             get_collections::GetCollectionsInteractor,
             get_review::GetReviewInteractor,
             get_reviews::GetReviewsInteractor,
             movie::MovieInteractor,
-            update_review::UpdateReviewInteractor,
-            create_collection::CreateCollectionInteractor,
-            create_review::CreateReviewInteractor,
             search::SearchInteractor,
             sign_in::SignInInteractor,
             sign_up::SignUpInteractor,
             tv_episode::TvEpisodeInteractor,
             tv_season::TvSeasonInteractor,
-            tv_series::TvSeriesInteractor
+            tv_series::TvSeriesInteractor,
+            update_collection::UpdateCollectionInteractor,
+            update_review::UpdateReviewInteractor
         },
         port::{
             add_collection_work::AddCollectionWorkUseCase,
+            create_collection::CreateCollectionUseCase,
+            create_review::CreateReviewUseCase,
             delete_reviews::DeleteReviewsUseCase,
             get_collection::GetCollectionUseCase,
             get_collections::GetCollectionsUseCase,
             get_review::GetReviewUseCase,
             get_reviews::GetReviewsUseCase,
             movie::MovieUseCase,
-            update_review::UpdateReviewUseCase,
-            create_collection::CreateCollectionUseCase,
-            create_review::CreateReviewUseCase,
             search::SearchUseCase,
             sign_in::SignInUseCase,
             sign_up::SignUpUseCase,
             tv_episode::TvEpisodeUseCase,
             tv_season::TvSeasonUseCase,
             tv_series::TvSeriesUseCase,
-            unit_of_work::UnitOfWork
+            unit_of_work::UnitOfWork,
+            update_collection::UpdateCollectionUseCase,
+            update_review::UpdateReviewUseCase
         },
         repository::{
             collection::CollectionRepository,
@@ -90,6 +92,7 @@ pub struct AppRegistry {
     pub(crate) add_collection_work_usecase: Arc<dyn AddCollectionWorkUseCase + Send + Sync>,
     pub(crate) get_collections_usecase: Arc<dyn GetCollectionsUseCase + Send + Sync>,
     pub(crate) get_collection_usecase: Arc<dyn GetCollectionUseCase + Send + Sync>,
+    pub(crate) update_collection_usecase: Arc<dyn UpdateCollectionUseCase + Send + Sync>,
     pub(crate) token_manager: Arc<JwtTokenManager>
 }
 
@@ -172,6 +175,10 @@ impl AppRegistry {
             collection_repository.clone() as Arc<dyn CollectionRepository + Send + Sync>,
             tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>
         ));
+        let update_collection_usecase = Arc::new(UpdateCollectionInteractor::new(
+            tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>,
+            uow.clone()
+        ));
 
         Arc::new(Self {
             signup_usecase,
@@ -190,6 +197,7 @@ impl AppRegistry {
             add_collection_work_usecase,
             get_collections_usecase,
             get_collection_usecase,
+            update_collection_usecase,
             token_manager
         })
     }
@@ -220,3 +228,4 @@ impl_from_ref!(CreateCollectionUseCase, create_collection_usecase);
 impl_from_ref!(AddCollectionWorkUseCase, add_collection_work_usecase);
 impl_from_ref!(GetCollectionsUseCase, get_collections_usecase);
 impl_from_ref!(GetCollectionUseCase, get_collection_usecase);
+impl_from_ref!(UpdateCollectionUseCase, update_collection_usecase);

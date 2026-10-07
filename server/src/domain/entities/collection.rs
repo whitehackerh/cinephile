@@ -115,4 +115,10 @@ impl Collection {
 
         self.updated_at = Utc::now();
     }
+
+    pub fn update(&mut self, title: String, description: Option<String>) {
+        self.title = title;
+        self.description = description;
+        self.updated_at = Utc::now();
+    }
 }

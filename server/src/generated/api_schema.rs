@@ -1025,6 +1025,45 @@ impl ::std::convert::TryFrom<::std::string::String> for MovieSummaryMediaType {
         value.parse()
     }
 }
+///`PatchCollectionRequest`
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "type": "object",
+///  "required": [
+///    "description",
+///    "title"
+///  ],
+///  "properties": {
+///    "description": {
+///      "oneOf": [
+///        {
+///          "type": "string"
+///        },
+///        {
+///          "type": "null"
+///        }
+///      ]
+///    },
+///    "title": {
+///      "type": "string"
+///    }
+///  }
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+pub struct PatchCollectionRequest {
+    pub description: ::std::option::Option<::std::string::String>,
+    pub title: ::std::string::String,
+}
+impl ::std::convert::From<&PatchCollectionRequest> for PatchCollectionRequest {
+    fn from(value: &PatchCollectionRequest) -> Self {
+        value.clone()
+    }
+}
 ///`PatchReviewRequest`
 ///
 /// <details><summary>JSON schema</summary>
