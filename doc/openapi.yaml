@@ -596,6 +596,43 @@ paths:
           $ref: '#/components/responses/ErrorNotFound'
         '500':
           $ref: '#/components/responses/ErrorInternalServer'
+    
+    patch:
+      tags:
+        - Collection
+      summary: Update collection
+      description: Update collection
+      operationId: updateCollection
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchCollectionRequest'
+      responses:
+        '200':
+          description: Update collection successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Collection'
+                      error:
+                        type: 'null'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '401':
+          $ref: '#/components/responses/ErrorUnauthorized'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '500':
+          $ref: '#/components/responses/ErrorInternalServer'
 
   /collections/{id}/works:
     post:
@@ -1351,6 +1388,19 @@ components:
             - type: 'null'
 
     PostCollectionRequest:
+      type: object
+      required:
+        - title
+        - description
+      properties:
+        title:
+          type: string
+        description:
+          oneOf:
+            - type: string
+            - type: 'null'
+    
+    PatchCollectionRequest:
       type: object
       required:
         - title

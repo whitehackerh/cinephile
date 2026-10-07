@@ -14,4 +14,5 @@ pub(crate) mod search;
 pub(crate) mod tv_episode;
 pub(crate) mod tv_season;
 pub(crate) mod tv_series;
+pub(crate) mod update_collection;
 pub(crate) mod update_review;
