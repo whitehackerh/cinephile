@@ -21,13 +21,15 @@ use crate::{
             password::PasswordManager,
             token::JwtTokenManager
         }
-    }, presentation::handlers::update_collection, usecases::{
+    },
+    usecases::{
         gateway::tmdb::TmdbGateway,
         interactor::{
             add_collection_work::AddCollectionWorkInteractor,
             create_collection::CreateCollectionInteractor,
             create_review::CreateReviewInteractor,
-            delete_reviews::DeleteReviewsInteractor,
+            delete_collection::DeleteCollectionInteractor,
+            delete_review::DeleteReviewInteractor,
             get_collection::GetCollectionInteractor,
             get_collections::GetCollectionsInteractor,
             get_review::GetReviewInteractor,
@@ -46,7 +48,8 @@ use crate::{
             add_collection_work::AddCollectionWorkUseCase,
             create_collection::CreateCollectionUseCase,
             create_review::CreateReviewUseCase,
-            delete_reviews::DeleteReviewsUseCase,
+            delete_collection::DeleteCollectionUseCase,
+            delete_review::DeleteReviewUseCase,
             get_collection::GetCollectionUseCase,
             get_collections::GetCollectionsUseCase,
             get_review::GetReviewUseCase,
@@ -85,7 +88,7 @@ pub struct AppRegistry {
     pub(crate) tv_series_usecase: Arc<dyn TvSeriesUseCase + Send + Sync>,
     pub(crate) create_review_usecase: Arc<dyn CreateReviewUseCase + Send + Sync>,
     pub(crate) update_review_usecase: Arc<dyn UpdateReviewUseCase + Send + Sync>,
-    pub(crate) delete_reviews_usecase: Arc<dyn DeleteReviewsUseCase + Send + Sync>,
+    pub(crate) delete_review_usecase: Arc<dyn DeleteReviewUseCase + Send + Sync>,
     pub(crate) get_reviews_usecase: Arc<dyn GetReviewsUseCase + Send + Sync>,
     pub(crate) get_review_usecase: Arc<dyn GetReviewUseCase + Send + Sync>,
     pub(crate) create_collection_usecase: Arc<dyn CreateCollectionUseCase + Send + Sync>,
@@ -93,6 +96,7 @@ pub struct AppRegistry {
     pub(crate) get_collections_usecase: Arc<dyn GetCollectionsUseCase + Send + Sync>,
     pub(crate) get_collection_usecase: Arc<dyn GetCollectionUseCase + Send + Sync>,
     pub(crate) update_collection_usecase: Arc<dyn UpdateCollectionUseCase + Send + Sync>,
+    pub(crate) delete_collection_usecase: Arc<dyn DeleteCollectionUseCase + Send + Sync>,
     pub(crate) token_manager: Arc<JwtTokenManager>
 }
 
@@ -148,7 +152,7 @@ impl AppRegistry {
             tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>,
             uow.clone()
         ));
-        let delete_reviews_usecase = Arc::new(DeleteReviewsInteractor::new(
+        let delete_review_usecase = Arc::new(DeleteReviewInteractor::new(
             review_repository.clone() as Arc<dyn ReviewRepository + Send + Sync>,
             tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>,
             uow.clone()
@@ -179,6 +183,11 @@ impl AppRegistry {
             tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>,
             uow.clone()
         ));
+        let delete_collection_usecase = Arc::new(DeleteCollectionInteractor::new(
+            tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>,
+            collection_repository.clone() as Arc<dyn CollectionRepository + Send + Sync>,
+            uow.clone()
+        ));
 
         Arc::new(Self {
             signup_usecase,
@@ -190,7 +199,7 @@ impl AppRegistry {
             tv_series_usecase,
             create_review_usecase,
             update_review_usecase,
-            delete_reviews_usecase,
+            delete_review_usecase,
             get_reviews_usecase,
             get_review_usecase,
             create_collection_usecase,
@@ -198,6 +207,7 @@ impl AppRegistry {
             get_collections_usecase,
             get_collection_usecase,
             update_collection_usecase,
+            delete_collection_usecase,
             token_manager
         })
     }
@@ -221,7 +231,7 @@ impl_from_ref!(TvSeasonUseCase, tv_season_usecase);
 impl_from_ref!(TvSeriesUseCase, tv_series_usecase);
 impl_from_ref!(CreateReviewUseCase, create_review_usecase);
 impl_from_ref!(UpdateReviewUseCase, update_review_usecase);
-impl_from_ref!(DeleteReviewsUseCase, delete_reviews_usecase);
+impl_from_ref!(DeleteReviewUseCase, delete_review_usecase);
 impl_from_ref!(GetReviewsUseCase, get_reviews_usecase);
 impl_from_ref!(GetReviewUseCase, get_review_usecase);
 impl_from_ref!(CreateCollectionUseCase, create_collection_usecase);
@@ -229,3 +239,4 @@ impl_from_ref!(AddCollectionWorkUseCase, add_collection_work_usecase);
 impl_from_ref!(GetCollectionsUseCase, get_collections_usecase);
 impl_from_ref!(GetCollectionUseCase, get_collection_usecase);
 impl_from_ref!(UpdateCollectionUseCase, update_collection_usecase);
+impl_from_ref!(DeleteCollectionUseCase, delete_collection_usecase);

@@ -11,10 +11,10 @@ use crate::{
         errors::AppError
     },
     usecases::{
-        dto::delete_reviews::DeleteReviewsInput,
+        dto::delete_review::DeleteReviewInput,
         gateway::tmdb::TmdbGateway,
         port::{
-            delete_reviews::DeleteReviewsUseCase,
+            delete_review::DeleteReviewUseCase,
             unit_of_work::{
                 UnitOfWork,
                 UnitOfWorkExt
@@ -25,13 +25,13 @@ use crate::{
     }
 };
 
-pub(crate) struct DeleteReviewsInteractor {
+pub(crate) struct DeleteReviewInteractor {
     review_repository: Arc<dyn ReviewRepository + Send + Sync>,
     tmdb_gateway: Arc<dyn TmdbGateway + Send + Sync>,
     uow: Arc<dyn UnitOfWork>
 }
 
-impl DeleteReviewsInteractor {
+impl DeleteReviewInteractor {
     pub fn new(
         review_repository: Arc<dyn ReviewRepository + Send + Sync>,
         tmdb_gateway: Arc<dyn TmdbGateway + Send + Sync>,
@@ -42,8 +42,8 @@ impl DeleteReviewsInteractor {
 }
 
 #[async_trait]
-impl DeleteReviewsUseCase for DeleteReviewsInteractor {
-    async fn execute(&self, input: DeleteReviewsInput) -> Result<(), AppError> {
+impl DeleteReviewUseCase for DeleteReviewInteractor {
+    async fn execute(&self, input: DeleteReviewInput) -> Result<(), AppError> {
         let review_without_work = self.review_repository
             .find_by_id(&input.id, &input.user_id)
             .await

@@ -9,21 +9,21 @@ use serde_json::json;
 
 use crate::{
     domain::entities::auth_user::AuthUser,
-    generated::api_schema::ReviewPathParam,
+    generated::api_schema::CollectionPathParam,
     presentation::presenters::base_response::ApiResponse,
     usecases::{
-        dto::delete_reviews::DeleteReviewsInput,
-        port::delete_reviews::DeleteReviewsUseCase
+        dto::delete_collection::DeleteCollectionInput,
+        port::delete_collection::DeleteCollectionUseCase
     }
 };
 
-pub async fn delete_reviews_handler(
+pub async fn delete_collection_handler(
     uri: Uri,
     Extension(auth_user): Extension<AuthUser>,
-    State(usecase): State<Arc<dyn DeleteReviewsUseCase + Send + Sync>>,
-    Path(path): Path<ReviewPathParam>,
+    State(usecase): State<Arc<dyn DeleteCollectionUseCase + Send + Sync>>,
+    Path(path): Path<CollectionPathParam>,
 ) -> impl IntoResponse {
-    match usecase.execute(DeleteReviewsInput {
+    match usecase.execute(DeleteCollectionInput {
         id: path.id,
         user_id: auth_user.id()
     }).await {
