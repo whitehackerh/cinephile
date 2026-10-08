@@ -21,7 +21,8 @@ use crate::{
             password::PasswordManager,
             token::JwtTokenManager
         }
-    }, presentation::handlers::delete_collection, usecases::{
+    },
+    usecases::{
         gateway::tmdb::TmdbGateway,
         interactor::{
             add_collection_work::AddCollectionWorkInteractor,
