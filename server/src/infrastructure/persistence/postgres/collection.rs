@@ -326,4 +326,25 @@ impl CollectionRepository for PostgresCollectionRepository {
 
         Ok(summaries)
     }
+
+    async fn delete(&self, collection: &Collection) -> anyhow::Result<()> {
+        let query = sqlx::query!(
+            r#"
+            DELETE FROM collections
+            WHERE id = $1 AND user_id = $2
+            "#,
+            collection.id(),
+            collection.user_id()
+        );
+
+        match &self.conn {
+            PgConn::Pool(pool) => { query.execute(pool).await?; },
+            PgConn::Tx(tx) => {
+                let mut guard = tx.lock().await;
+                query.execute(&mut **guard).await?;
+            }
+        };
+
+        Ok(())
+    }
 }

@@ -17,4 +17,5 @@ pub(crate) trait CollectionRepository: Send + Sync {
     async fn update(&self, collection: &Collection) -> Result<(), anyhow::Error>;
     async fn fetch_all(&self, user_id: &Uuid) -> anyhow::Result<Vec<CollectionWithoutWork>>;
     async fn fetch_all_with_target_paths(&self, user_id: &Uuid) -> anyhow::Result<Vec<CollectionSummary>>;
+    async fn delete(&self, collection: &Collection) -> Result<(), anyhow::Error>;
 }
