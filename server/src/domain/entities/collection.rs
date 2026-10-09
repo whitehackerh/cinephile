@@ -121,4 +121,14 @@ impl Collection {
         self.description = description;
         self.updated_at = Utc::now();
     }
+
+    pub fn remove_work(&mut self, collection_work_id: Uuid) {
+        if let Some(index) = self.works.iter().position(|w| w.id() == collection_work_id) {
+            self.works.remove(index);
+        }
+
+        self.sync_cover_image();
+
+        self.updated_at = Utc::now();
+    }
 }

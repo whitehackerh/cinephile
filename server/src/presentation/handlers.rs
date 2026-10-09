@@ -8,6 +8,7 @@ pub(crate) mod get_collections;
 pub(crate) mod get_review;
 pub(crate) mod get_reviews;
 pub(crate) mod movie;
+pub(crate) mod remove_collection_work;
 pub(crate) mod search;
 pub(crate) mod sign_up;
 pub(crate) mod sign_in;

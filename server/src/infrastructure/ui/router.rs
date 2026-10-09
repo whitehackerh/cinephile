@@ -1,4 +1,4 @@
-use axum::{routing::{get, patch, post }, Router, middleware::from_fn_with_state};
+use axum::{routing::{get, patch, post, delete}, Router, middleware::from_fn_with_state};
 use std::sync::Arc;
 
 use crate::{
@@ -22,7 +22,8 @@ use crate::{
         get_collection::get_collection_handler,
         update_collection::update_collection_handler,
         delete_collection::delete_collection_handler,
-        add_collection_work::add_collection_work_handler
+        add_collection_work::add_collection_work_handler,
+        remove_collection_work::remove_collection_work_handler
     },
     middleware::auth::AuthMiddleware
 };
@@ -40,6 +41,7 @@ pub fn create_router(registry: Arc<AppRegistry>) -> Router {
         .route("/collections", post(create_collection_handler).get(get_collections_handler))
         .route("/collections/{id}", get(get_collection_handler).patch(update_collection_handler).delete(delete_collection_handler))
         .route("/collections/{id}/works", post(add_collection_work_handler))
+        .route("/collections/{id}/works/{collection_work_id}", delete(remove_collection_work_handler))
         .layer(from_fn_with_state(registry.token_manager.clone(), AuthMiddleware::auth_middleware));
     
     let public_routes = Router::<AppState>::new()
