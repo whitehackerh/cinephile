@@ -59,4 +59,26 @@ impl CollectionWorkRepository for PostgresCollectionWorkRepository {
 
         Ok(())
     }
+
+    async fn delete(&self, collection_work_id: &Uuid) -> anyhow::Result<()> {
+        let query = sqlx::query!(
+            r#"
+            DELETE FROM collection_works
+            WHERE id = $1
+            "#,
+            collection_work_id,
+        );
+
+        match &self.conn {
+            PgConn::Pool(pool) => {
+                query.execute(pool).await?;
+            }
+            PgConn::Tx(tx) => {
+                let mut guard = tx.lock().await;
+                query.execute(&mut **guard).await?;
+            }
+        };
+
+        Ok(())
+    }
 }

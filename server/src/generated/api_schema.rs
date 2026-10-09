@@ -421,6 +421,40 @@ impl ::std::convert::From<&CollectionWork> for CollectionWork {
         value.clone()
     }
 }
+///`CollectionWorkPathParams`
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "type": "object",
+///  "required": [
+///    "collection_work_id",
+///    "id"
+///  ],
+///  "properties": {
+///    "collection_work_id": {
+///      "type": "string",
+///      "format": "uuid"
+///    },
+///    "id": {
+///      "type": "string",
+///      "format": "uuid"
+///    }
+///  }
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+pub struct CollectionWorkPathParams {
+    pub collection_work_id: ::uuid::Uuid,
+    pub id: ::uuid::Uuid,
+}
+impl ::std::convert::From<&CollectionWorkPathParams> for CollectionWorkPathParams {
+    fn from(value: &CollectionWorkPathParams) -> Self {
+        value.clone()
+    }
+}
 ///`CollectionWorkWork`
 ///
 /// <details><summary>JSON schema</summary>

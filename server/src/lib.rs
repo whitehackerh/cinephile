@@ -35,6 +35,7 @@ use crate::{
             get_review::GetReviewInteractor,
             get_reviews::GetReviewsInteractor,
             movie::MovieInteractor,
+            remove_collection_work::RemoveCollectionWorkInteractor,
             search::SearchInteractor,
             sign_in::SignInInteractor,
             sign_up::SignUpInteractor,
@@ -55,6 +56,7 @@ use crate::{
             get_review::GetReviewUseCase,
             get_reviews::GetReviewsUseCase,
             movie::MovieUseCase,
+            remove_collection_work::RemoveCollectionWorkUseCase,
             search::SearchUseCase,
             sign_in::SignInUseCase,
             sign_up::SignUpUseCase,
@@ -97,6 +99,7 @@ pub struct AppRegistry {
     pub(crate) get_collection_usecase: Arc<dyn GetCollectionUseCase + Send + Sync>,
     pub(crate) update_collection_usecase: Arc<dyn UpdateCollectionUseCase + Send + Sync>,
     pub(crate) delete_collection_usecase: Arc<dyn DeleteCollectionUseCase + Send + Sync>,
+    pub(crate) remove_collection_work_usecase: Arc<dyn RemoveCollectionWorkUseCase + Send + Sync>,
     pub(crate) token_manager: Arc<JwtTokenManager>
 }
 
@@ -188,6 +191,10 @@ impl AppRegistry {
             collection_repository.clone() as Arc<dyn CollectionRepository + Send + Sync>,
             uow.clone()
         ));
+        let remove_collection_work_usecase = Arc::new(RemoveCollectionWorkInteractor::new(
+            tmdb_gateway.clone() as Arc<dyn TmdbGateway + Send + Sync>,
+            uow.clone()
+        ));
 
         Arc::new(Self {
             signup_usecase,
@@ -208,6 +215,7 @@ impl AppRegistry {
             get_collection_usecase,
             update_collection_usecase,
             delete_collection_usecase,
+            remove_collection_work_usecase,
             token_manager
         })
     }
@@ -240,3 +248,4 @@ impl_from_ref!(GetCollectionsUseCase, get_collections_usecase);
 impl_from_ref!(GetCollectionUseCase, get_collection_usecase);
 impl_from_ref!(UpdateCollectionUseCase, update_collection_usecase);
 impl_from_ref!(DeleteCollectionUseCase, delete_collection_usecase);
+impl_from_ref!(RemoveCollectionWorkUseCase, remove_collection_work_usecase);

@@ -711,6 +711,51 @@ paths:
           $ref: '#/components/responses/ErrorConflict'
         '500':
           $ref: '#/components/responses/ErrorInternalServer'
+  
+  /collections/{id}/works/{collection_work_id}:
+    delete:
+      tags:
+        - Collection
+      summary: Delete a work of the collection
+      description: Delete a work of the collection
+      operationId: deleteCollectionWork
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Collection ID
+          schema:
+            $ref: '#/components/schemas/CollectionWorkPathParams/properties/id'
+        - name: collection_work_id
+          in: path
+          required: true
+          description: Collection Work ID
+          schema:
+            $ref: '#/components/schemas/CollectionWorkPathParams/properties/collection_work_id'
+      responses:
+        '200':
+          description: Collection work deleted successfully.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                      error:
+                        type: 'null'
+        '400':
+          $ref: '#/components/responses/ErrorBadRequest'
+        '401':
+          $ref: '#/components/responses/ErrorUnauthorized'
+        '404':
+          $ref: '#/components/responses/ErrorNotFound'
+        '500':
+          $ref: '#/components/responses/ErrorInternalServer'
 
 components:
   securitySchemes:
@@ -820,6 +865,19 @@ components:
         id:
           type: string
           format: uuid
+
+    CollectionWorkPathParams:
+      type: object
+      required:
+        - id
+        - collection_work_id
+      properties:
+        id:
+          type: string
+          format: uuid
+        collection_work_id:
+            type: string
+            format: uuid
 
     # ----------------------------------------------------
     # Model Schemas
