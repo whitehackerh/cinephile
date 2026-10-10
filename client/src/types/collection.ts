@@ -16,6 +16,11 @@ export interface PostCollectionsRequest {
     description: string | null;
 }
 
+export interface PatchCollectionsRequest {
+    title: string;
+    description: string | null;
+}
+
 export interface PostCollectionWorksRequest {
     work_type: WorkType;
     target_path: string;
