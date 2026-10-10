@@ -115,6 +115,7 @@ export const AddToCollectionModal = ({
                       {/* Bookmark Button */}
                       <button
                         type="button"
+                        disabled={state.addingId === collection.id}
                         onClick={() =>
                           isAdded
                             ? actions.handleRemoveWork(collection.id, work.id)

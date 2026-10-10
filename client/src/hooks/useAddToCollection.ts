@@ -56,7 +56,14 @@ export function useAddToCollection({
         target_path: targetPath,
         work_type: workType,
       };
-      const createdWork = await apiService.postCollectionWorks(collectionId, input);
+      const createdCollection = await apiService.postCollectionWorks(collectionId, input);
+      const addedWork = createdCollection.works.find(
+        (work) => work.target_path === targetPath
+      );
+
+      if (!addedWork) {
+        throw new Error('Added work was not found in the collection response');
+      }
 
       setCollections((prev) =>
         prev.map((c) =>
@@ -70,7 +77,7 @@ export function useAddToCollection({
                   : [
                       ...c.work_summaries,
                       {
-                        id: createdWork.id,
+                        id: addedWork.id,
                         target_path: targetPath,
                       },
                     ],

@@ -186,11 +186,15 @@ export const apiService = {
     return response.data.data
   },
 
-  async deleteCollectionWorks(id: string, collectionWorkId: string): Promise<void> {
-    const response = await authClient.delete<ApiResponse<void>>(`/collections/${id}/works/${collectionWorkId}`);
+  async deleteCollectionWorks(id: string, collection_work_id: string): Promise<Collection> {
+    const response = await authClient.delete<ApiResponse<Collection>>(`/collections/${id}/works/${collection_work_id}`);
     if (response.data.error) {
       throw new Error(response.data.error.message);
     }
+    if (!response.data.data) {
+      throw new Error('Response data is missing');
+    }
+    return response.data.data;
   },
 
   async getCollections(): Promise<CollectionSummary[]> {
