@@ -17,32 +17,38 @@ export default function HeaderNav() {
   };
 
   return (
-    <nav className="flex gap-10 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 items-center">     
+    <nav className="flex items-center gap-10 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
       {isLoggedIn ? (
         <>
-          <Link 
-            href="/search" 
-            className="hover:text-white transition-colors"
+          <Link
+            href="/search"
+            className="transition-colors hover:text-white"
           >
             Search
           </Link>
-          <Link 
-            href="/reviews" 
-            className="hover:text-white transition-colors"
+          <Link
+            href="/reviews"
+            className="transition-colors hover:text-white"
           >
             Reviews
           </Link>
-          <button 
+          <Link
+            href="/collections"
+            className="transition-colors hover:text-white"
+          >
+            Collections
+          </Link>
+          <button
             onClick={handleSignout}
-            className="hover:text-red-500 transition-colors uppercase"
+            className="uppercase transition-colors hover:text-red-500"
           >
             Sign out
           </button>
         </>
       ) : (
         <>
-          <Link href="/signin" className="hover:text-gold transition-colors">Sign In</Link>
-          <Link href="/signup" className="hover:text-gold transition-colors">Sign Up</Link>
+          <Link href="/signin" className="transition-colors hover:text-gold">Sign In</Link>
+          <Link href="/signup" className="transition-colors hover:text-gold">Sign Up</Link>
         </>
       )}
     </nav>
