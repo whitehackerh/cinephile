@@ -745,7 +745,7 @@ paths:
                   - type: object
                     properties:
                       data:
-                        type: object
+                        $ref: '#/components/schemas/Collection'
                       error:
                         type: 'null'
         '400':
@@ -1583,7 +1583,7 @@ components:
         - title
         - description
         - cover_image_path
-        - work_target_paths
+        - work_summaries
         - created_at
         - updated_at
       properties:
@@ -1600,16 +1600,28 @@ components:
           oneOf:
             - type: string
             - type: 'null'
-        work_target_paths:
+        work_summaries:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/CollectionWorkSummary'
         created_at:
           type: string
           format: date-time
         updated_at:
           type: string
           format: date-time
+
+    CollectionWorkSummary:
+      type: object
+      required:
+        - id
+        - target_path
+      properties:
+        id:
+          type: string
+          format: uuid
+        target_path:
+          type: string
 
   responses:
     ErrorBadRequest:

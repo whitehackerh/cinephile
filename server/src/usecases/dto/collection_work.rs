@@ -19,3 +19,8 @@ pub(crate) struct CollectionWorkForReconstruct {
     pub work_type: String,
     pub added_at: DateTime<Utc>
 }
+
+pub(crate) struct CollectionWorkSummary {
+    pub id: Uuid,
+    pub target_path: String
+}

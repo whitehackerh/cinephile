@@ -4,7 +4,8 @@ use uuid::Uuid;
 
 use crate::usecases::dto::collection_work::{
     CollectionWork,
-    CollectionWorkForReconstruct
+    CollectionWorkForReconstruct,
+    CollectionWorkSummary
 };
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -33,7 +34,7 @@ pub(crate) struct CollectionSummary {
     pub title: String,
     pub description: Option<String>,
     pub cover_image_path: Option<String>,
-    pub work_target_paths: Vec<String>,
+    pub work_summaries: Vec<CollectionWorkSummary>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }

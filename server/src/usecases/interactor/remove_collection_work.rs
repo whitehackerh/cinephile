@@ -5,14 +5,18 @@ use std::sync::Arc;
 use crate::{
     domain::{
         entities::{
-            collection_work::CollectionWork,
-            collection::Collection,
-            work::Work
+            collection::Collection, collection_work::CollectionWork, work::Work
         },
         errors::AppError
     },
     usecases::{
-        dto::remove_collection_work::RemoveCollectionWorkInput,
+        dto::{
+            collection_work::CollectionWork as CollectionWorkDto,
+            remove_collection_work::{
+                RemoveCollectionWorkInput,
+                RemoveCollectionWorkOutput
+            }
+        },
         gateway::tmdb::TmdbGateway,
         port::{
             remove_collection_work::RemoveCollectionWorkUseCase,
@@ -67,10 +71,10 @@ impl RemoveCollectionWorkInteractor {
 
 #[async_trait]
 impl RemoveCollectionWorkUseCase for RemoveCollectionWorkInteractor {
-    async fn execute(&self, input: RemoveCollectionWorkInput) -> Result<(), AppError> {
+    async fn execute(&self, input: RemoveCollectionWorkInput) -> Result<RemoveCollectionWorkOutput, AppError> {
         let tmdb_gateway = Arc::clone(&self.tmdb_gateway);
 
-        self.uow.execute(move |repos| {
+        let collection: Collection = self.uow.execute(move |repos| {
             Box::pin(async move {
                 let collection_for_reconstruct = repos.collection_repo
                     .find_by_id_with_works_for_update(&input.id, &input.user_id)
@@ -116,7 +120,7 @@ impl RemoveCollectionWorkUseCase for RemoveCollectionWorkInteractor {
 
                 repos.collection_repo.update(&collection).await?;
 
-                Ok(())
+                Ok(collection)
             })
         })
         .await
@@ -127,6 +131,23 @@ impl RemoveCollectionWorkUseCase for RemoveCollectionWorkInteractor {
             }
         })?;
 
-        Ok(())
+        Ok(RemoveCollectionWorkOutput {
+            id: collection.id(),
+            title: collection.title().to_string(),
+            description: collection.description().clone(),
+            cover_image_path: collection.cover_image_path().clone(),
+            works: collection.works()
+                .into_iter()
+                .map(|w| CollectionWorkDto {
+                    id: w.id(),
+                    target_path: w.target_path().to_string(),
+                    work_type: w.work_type().to_string(),
+                    work: w.work().clone().into(),
+                    added_at: w.added_at()
+                })
+                .collect(),
+            created_at: collection.created_at(),
+            updated_at: collection.updated_at()
+        })
     }
 }
