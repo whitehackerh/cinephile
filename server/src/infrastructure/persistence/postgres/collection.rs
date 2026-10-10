@@ -8,7 +8,10 @@ use crate::{
     infrastructure::persistence::postgres::executor::PgConn,
     usecases::{
         dto::{
-            collection_work::CollectionWorkForReconstruct,
+            collection_work::{
+                CollectionWorkForReconstruct,
+                CollectionWorkSummary
+            },
             collection::{
                 CollectionForReconstruct,
                 CollectionSummary,
@@ -279,6 +282,7 @@ impl CollectionRepository for PostgresCollectionRepository {
                 c.cover_image_path,
                 c.created_at,
                 c.updated_at,
+                cw.id AS "collection_work_id?",
                 cw.target_path AS "target_path?"
             FROM collections c
             LEFT JOIN collection_works cw ON c.id = cw.collection_id
@@ -301,16 +305,26 @@ impl CollectionRepository for PostgresCollectionRepository {
         for row in rows {
             if let Some(last) = summaries.last_mut() {
                 if last.id == row.collection_id {
-                    if let Some(target_path) = row.target_path {
-                        last.work_target_paths.push(target_path);
+                    if let (Some(collection_work_id), Some(target_path)) =
+                        (row.collection_work_id, row.target_path)
+                    {
+                        last.work_summaries.push(CollectionWorkSummary {
+                            id: collection_work_id,
+                            target_path,
+                        });
                     }
                     continue;
                 }
             }
 
-            let mut work_target_paths = Vec::new();
-            if let Some(target_path) = row.target_path {
-                work_target_paths.push(target_path);
+            let mut work_summaries = Vec::new();
+            if let (Some(collection_work_id), Some(target_path)) =
+                (row.collection_work_id, row.target_path)
+            {
+                work_summaries.push(CollectionWorkSummary {
+                    id: collection_work_id,
+                    target_path,
+                });
             }
 
             summaries.push(CollectionSummary {
@@ -318,7 +332,7 @@ impl CollectionRepository for PostgresCollectionRepository {
                 title: row.title,
                 description: row.description,
                 cover_image_path: row.cover_image_path,
-                work_target_paths,
+                work_summaries,
                 created_at: row.created_at,
                 updated_at: row.updated_at,
             });

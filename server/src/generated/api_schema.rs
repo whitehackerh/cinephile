@@ -290,7 +290,7 @@ impl ::std::convert::From<&CollectionPathParam> for CollectionPathParam {
 ///    "id",
 ///    "title",
 ///    "updated_at",
-///    "work_target_paths"
+///    "work_summaries"
 ///  ],
 ///  "properties": {
 ///    "cover_image_path": {
@@ -328,10 +328,10 @@ impl ::std::convert::From<&CollectionPathParam> for CollectionPathParam {
 ///      "type": "string",
 ///      "format": "date-time"
 ///    },
-///    "work_target_paths": {
+///    "work_summaries": {
 ///      "type": "array",
 ///      "items": {
-///        "type": "string"
+///        "$ref": "#/definitions/CollectionWorkSummary"
 ///      }
 ///    }
 ///  }
@@ -346,7 +346,7 @@ pub struct CollectionSummary {
     pub id: ::uuid::Uuid,
     pub title: ::std::string::String,
     pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
-    pub work_target_paths: ::std::vec::Vec<::std::string::String>,
+    pub work_summaries: ::std::vec::Vec<CollectionWorkSummary>,
 }
 impl ::std::convert::From<&CollectionSummary> for CollectionSummary {
     fn from(value: &CollectionSummary) -> Self {
@@ -452,6 +452,39 @@ pub struct CollectionWorkPathParams {
 }
 impl ::std::convert::From<&CollectionWorkPathParams> for CollectionWorkPathParams {
     fn from(value: &CollectionWorkPathParams) -> Self {
+        value.clone()
+    }
+}
+///`CollectionWorkSummary`
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "type": "object",
+///  "required": [
+///    "id",
+///    "target_path"
+///  ],
+///  "properties": {
+///    "id": {
+///      "type": "string",
+///      "format": "uuid"
+///    },
+///    "target_path": {
+///      "type": "string"
+///    }
+///  }
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+pub struct CollectionWorkSummary {
+    pub id: ::uuid::Uuid,
+    pub target_path: ::std::string::String,
+}
+impl ::std::convert::From<&CollectionWorkSummary> for CollectionWorkSummary {
+    fn from(value: &CollectionWorkSummary) -> Self {
         value.clone()
     }
 }

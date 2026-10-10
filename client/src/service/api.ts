@@ -2,7 +2,7 @@ import { publicClient, authClient } from '@/lib/apiClient';
 import { ApiResponse } from '@/types/api';
 import { Review, PostReviewsRequest, PatchReviewsRequest, GetReviewQueryParams } from '@/types/review';
 import { SignInRequest, SignUpRequest } from '@/lib/validations/auth';
-import { Collection, PostCollectionsRequest, PostCollectionWorksRequest, CollectionSummary } from '@/types/collection';
+import { Collection, PostCollectionsRequest, PatchCollectionsRequest, PostCollectionWorksRequest, CollectionSummary } from '@/types/collection';
 import { SearchResponse } from '@/types/search';
 import { Movie } from '@/types/movie';
 import { TvEpisode } from '@/types/tvEpisode';
@@ -112,10 +112,6 @@ export const apiService = {
     if (response.data.error) {
       throw new Error(response.data.error.message);
     }
-    if (!response.data.data) {
-      throw new Error('Response data is missing');
-    }
-    return response.data.data
   },
 
   async getReviews(): Promise<Review[]> {
@@ -150,6 +146,35 @@ export const apiService = {
     return response.data.data
   },
 
+  async getCollection(id: string): Promise<Collection> {
+    const response = await authClient.get<ApiResponse<Collection>>(`/collections/${id}`);
+    if (response.data.error) {
+      throw new Error(response.data.error.message);
+    }
+    if (!response.data.data) {
+      throw new Error('Response data is missing');
+    }
+    return response.data.data;
+  },
+
+  async patchCollections(id: string, input: PatchCollectionsRequest): Promise<Collection> {
+    const response = await authClient.patch<ApiResponse<Collection>>(`/collections/${id}`, input);
+    if (response.data.error) {
+      throw new Error(response.data.error.message);
+    }
+    if (!response.data.data) {
+      throw new Error('Response data is missing');
+    }
+    return response.data.data;
+  },
+
+  async deleteCollections(id: string): Promise<void> {
+    const response = await authClient.delete<ApiResponse<void>>(`/collections/${id}`);
+    if (response.data.error) {
+      throw new Error(response.data.error.message);
+    }
+  },
+
   async postCollectionWorks(id: string, input: PostCollectionWorksRequest): Promise<Collection> {
     const response = await authClient.post<ApiResponse<Collection>>(`/collections/${id}/works`, input);
     if (response.data.error) {
@@ -159,6 +184,17 @@ export const apiService = {
       throw new Error('Response data is missing');
     }
     return response.data.data
+  },
+
+  async deleteCollectionWorks(id: string, collection_work_id: string): Promise<Collection> {
+    const response = await authClient.delete<ApiResponse<Collection>>(`/collections/${id}/works/${collection_work_id}`);
+    if (response.data.error) {
+      throw new Error(response.data.error.message);
+    }
+    if (!response.data.data) {
+      throw new Error('Response data is missing');
+    }
+    return response.data.data;
   },
 
   async getCollections(): Promise<CollectionSummary[]> {

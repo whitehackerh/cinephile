@@ -56,22 +56,64 @@ export function useAddToCollection({
         target_path: targetPath,
         work_type: workType,
       };
-      await apiService.postCollectionWorks(collectionId, input);
+      const createdCollection = await apiService.postCollectionWorks(collectionId, input);
+      const addedWork = createdCollection.works.find(
+        (work) => work.target_path === targetPath
+      );
+
+      if (!addedWork) {
+        throw new Error('Added work was not found in the collection response');
+      }
 
       setCollections((prev) =>
         prev.map((c) =>
           c.id === collectionId
             ? {
                 ...c,
-                work_target_paths: c.work_target_paths.includes(targetPath)
-                  ? c.work_target_paths
-                  : [...c.work_target_paths, targetPath],
+                work_summaries: c.work_summaries.some(
+                  (work) => work.target_path === targetPath
+                )
+                  ? c.work_summaries
+                  : [
+                      ...c.work_summaries,
+                      {
+                        id: addedWork.id,
+                        target_path: targetPath,
+                      },
+                    ],
               }
             : c
         )
       );
     } catch (err) {
       console.error("Failed to add work to collection", err);
+    } finally {
+      setAddingId(null);
+    }
+  };
+
+  const handleRemoveWork = async (
+    collectionId: string,
+    collectionWorkId: string
+  ) => {
+    setAddingId(collectionId);
+    try {
+      await apiService.deleteCollectionWorks(collectionId, collectionWorkId);
+
+      setCollections((prev) =>
+        prev.map((c) =>
+          c.id === collectionId
+            ? {
+                ...c,
+                work_summaries: c.work_summaries.filter(
+                  (work) => work.id !== collectionWorkId
+                ),
+              }
+            : c
+        )
+      );
+    } catch (err) {
+      console.error("Failed to remove work from collection", err);
     } finally {
       setAddingId(null);
     }
@@ -121,6 +163,7 @@ export function useAddToCollection({
       },
       setNewDescription,
       handleAddWork,
+      handleRemoveWork,
       handleCreateCollection,
     },
   };

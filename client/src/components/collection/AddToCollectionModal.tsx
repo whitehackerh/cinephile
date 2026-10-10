@@ -13,12 +13,12 @@ interface AddToCollectionModalProps {
   workType: WorkType;
 }
 
-export const AddToCollectionModal: React.FC<AddToCollectionModalProps> = ({
+export const AddToCollectionModal = ({
   isOpen,
   onClose,
   targetPath,
   workType,
-}) => {
+}: AddToCollectionModalProps) => {
   const { state, actions } = useAddToCollection({
     isOpen,
     onClose,
@@ -59,8 +59,11 @@ export const AddToCollectionModal: React.FC<AddToCollectionModalProps> = ({
             ) : (
               <div className="max-h-60 overflow-y-auto space-y-2 pr-1">
                 {state.collections.map((collection) => {
-                  const isAdded = collection.work_target_paths.includes(targetPath);
-                  const itemCount = collection.work_target_paths.length;
+                  const work = collection.work_summaries.find(
+                    (work) => work.target_path === targetPath
+                  );
+                  const isAdded = work !== undefined;
+                  const itemCount = collection.work_summaries.length;
 
                   return (
                     <div
@@ -109,21 +112,43 @@ export const AddToCollectionModal: React.FC<AddToCollectionModalProps> = ({
                         </div>
                       </div>
 
-                      {/* Right side: Add Button */}
+                      {/* Bookmark Button */}
                       <button
-                        disabled={isAdded || state.addingId === collection.id}
-                        onClick={() => actions.handleAddWork(collection.id)}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all shrink-0 ${
+                        type="button"
+                        disabled={state.addingId === collection.id}
+                        onClick={() =>
                           isAdded
-                            ? "bg-gray-700/50 text-gray-400 cursor-not-allowed"
-                            : "bg-blue-600 hover:bg-blue-500 text-white shadow-sm"
+                            ? actions.handleRemoveWork(collection.id, work.id)
+                            : actions.handleAddWork(collection.id)
+                        }
+                        aria-label={
+                          isAdded
+                            ? `Remove from ${collection.title}`
+                            : `Add to ${collection.title}`
+                        }
+                        aria-pressed={isAdded}
+                        title={
+                          isAdded
+                            ? "Remove from collection"
+                            : "Add to collection"
+                        }
+                        className={`shrink-0 p-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-wait ${
+                          isAdded
+                            ? "text-blue-500 hover:text-blue-400"
+                            : "text-gray-400 hover:text-white"
                         }`}
                       >
-                        {state.addingId === collection.id
-                          ? "Adding..."
-                          : isAdded
-                          ? "Added"
-                          : "Add"}
+                        <svg
+                          className="w-5 h-5"
+                          viewBox="0 0 24 24"
+                          fill={isAdded ? "currentColor" : "none"}
+                          stroke="currentColor"
+                          strokeWidth={1.8}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M6 4.75A1.75 1.75 0 0 1 7.75 3h8.5A1.75 1.75 0 0 1 18 4.75V21l-6-4-6 4V4.75Z" />
+                        </svg>
                       </button>
                     </div>
                   );
@@ -139,13 +164,6 @@ export const AddToCollectionModal: React.FC<AddToCollectionModalProps> = ({
                 className="w-full py-2.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors border border-gray-700"
               >
                 + Create New Collection
-              </button>
-              <button
-                type="button"
-                onClick={onClose}
-                className="w-full py-2 rounded-xl text-sm font-medium text-gray-400 hover:text-white transition-colors"
-              >
-                Cancel
               </button>
             </div>
           </div>

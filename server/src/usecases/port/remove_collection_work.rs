@@ -1,8 +1,11 @@
 use async_trait::async_trait;
 use crate::domain::errors::AppError;
-use crate::usecases::dto::remove_collection_work::RemoveCollectionWorkInput;
+use crate::usecases::dto::remove_collection_work::{
+    RemoveCollectionWorkInput,
+    RemoveCollectionWorkOutput
+};
 
 #[async_trait]
 pub(crate) trait RemoveCollectionWorkUseCase: Send + Sync {
-    async fn execute(&self, input: RemoveCollectionWorkInput) -> Result<(), AppError>;
+    async fn execute(&self, input: RemoveCollectionWorkInput) -> Result<RemoveCollectionWorkOutput, AppError>;
 }

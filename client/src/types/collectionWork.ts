@@ -7,3 +7,8 @@ export interface CollectionWork {
     work: Work;
     added_at: string;
 }
+
+export interface CollectionWorkSummary {
+    id: string;
+    target_path: string;
+}

@@ -1,5 +1,8 @@
 use crate::{
-    generated::api_schema::CollectionSummary,
+    generated::api_schema::{
+        CollectionSummary,
+        CollectionWorkSummary
+    },
     usecases::dto::get_collections::GetCollectionsOutput
 };
 
@@ -15,7 +18,12 @@ impl GetCollectionsPresenter {
                 id: c.id,
                 title: c.title,
                 updated_at: c.updated_at,
-                work_target_paths: c.work_target_paths
+                work_summaries: c.work_summaries.into_iter()
+                    .map(|w| CollectionWorkSummary {
+                        id: w.id,
+                        target_path: w.target_path
+                    })
+                    .collect()
             })
             .collect()
     }
