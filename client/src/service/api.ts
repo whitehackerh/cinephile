@@ -186,7 +186,7 @@ export const apiService = {
     return response.data.data
   },
 
-  async deleteCollectionWork(id: string, collectionWorkId: string): Promise<void> {
+  async deleteCollectionWorks(id: string, collectionWorkId: string): Promise<void> {
     const response = await authClient.delete<ApiResponse<void>>(`/collections/${id}/works/${collectionWorkId}`);
     if (response.data.error) {
       throw new Error(response.data.error.message);

@@ -1,4 +1,4 @@
-import { CollectionWork } from '@/types/collectionWork';
+import { CollectionWork, CollectionWorkSummary } from '@/types/collectionWork';
 import { WorkType } from '@/types/work';
 
 export interface Collection {
@@ -31,7 +31,7 @@ export interface CollectionSummary {
     title: string;
     description: string | null;
     cover_image_path: string | null;
-    work_target_paths: string[];
+    work_summaries: CollectionWorkSummary[];
     created_at: string;
     updated_at: string
 }
