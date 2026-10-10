@@ -1,6 +1,7 @@
 
 'use client';
 
+import Link from 'next/link';
 import CollectionCard from '@/components/collection/CollectionCard';
 import { useCollections } from '@/hooks/useCollections';
 
@@ -24,6 +25,10 @@ export default function CollectionsPage() {
         </div>
       ) : collections.length === 0 ? (
         <div className="border border-dashed border-white/15 px-6 py-16 text-center">
+          <p className="text-sm text-gray-400">No collections yet. Find a movie or TV show to start your first collection.</p>
+          <Link href="/search" className="mt-4 inline-block border border-white/20 px-4 py-2 text-xs uppercase tracking-widest hover:border-gold hover:text-gold">
+            Search movies &amp; TV
+          </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">

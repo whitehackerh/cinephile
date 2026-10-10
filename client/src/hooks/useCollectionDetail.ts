@@ -97,11 +97,8 @@ export function useCollectionDetail(collectionId: string) {
     setDeletingWorkId(collectionWorkId);
     setError(null);
     try {
-      await apiService.deleteCollectionWorks(collectionId, collectionWorkId);
-      setCollection((current) => current
-        ? { ...current, works: current.works.filter((work) => work.id !== collectionWorkId) }
-        : current
-      );
+      const updatedCollection = await apiService.deleteCollectionWorks(collectionId, collectionWorkId);
+      setCollection(updatedCollection);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to remove work.');
     } finally {
