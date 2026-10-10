@@ -5,7 +5,9 @@ use std::sync::Arc;
 use crate::{
     domain::{
         entities::{
-            collection::Collection, collection_work::CollectionWork, work::Work
+            collection::Collection,
+            collection_work::CollectionWork,
+            work::Work
         },
         errors::AppError
     },
